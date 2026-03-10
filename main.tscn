@@ -5,7 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
 [ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://test_panel.tscn" id="8_kek77"]
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="9_dg77c"]
+[ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Texture2D" uid="uid://ek4cxnjd2irx" path="res://assets/textures/Table_1m x 1m.png" id="10_4c57u"]
+[ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
+[ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="11_dg77c"]
 [ext_resource type="PackedScene" uid="uid://c8l60rnugru40" path="res://addons/godot-xr-tools/objects/pickable.tscn" id="11_efxa6"]
 [ext_resource type="Texture2D" uid="uid://d3fi80lrqtj11" path="res://assets/textures/Pickable_1m x 1m.png" id="12_dg77c"]
 
@@ -99,3 +102,34 @@ screen_size = Vector2(1.5, 1)
 scene = ExtResource("8_kek77")
 transparent = 1
 scene_properties_keys = PackedStringArray()
+
+[node name="RoadManager" type="Node3D" parent="." unique_id=1699536803]
+script = ExtResource("9_kek77")
+metadata/_custom_type_script = "uid://bgmxg26pbs61k"
+
+[node name="Road_001" type="Node3D" parent="RoadManager" unique_id=2131193097]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.654288, 0, -0.2646662)
+script = ExtResource("10_efxa6")
+use_lowpoly_preview = true
+edge_containers = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_target_dirs = Array[int]([-1, -1])
+edge_rp_locals = Array[NodePath]([NodePath("RP_002"), NodePath("RP_001")])
+edge_rp_local_dirs = Array[int]([1, 0])
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=1844256102]
+transform = Transform3D(0.053059284, 0, -0.99859136, 0, 1, 0, 0.99859136, 0, 0.053059284, 43.8629, 0.25, -0.5209826)
+script = ExtResource("11_dg77c")
+traffic_dir = Array[int]([2, 1])
+lanes = Array[int]([5, 5])
+prior_mag = 16.0
+next_mag = 16.0
+next_pt_init = NodePath("../RP_001")
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=2015995033]
+transform = Transform3D(0.053059403, 0, -0.99859136, 0, 1, 0, 0.99859136, 0, 0.053059403, 0, 0.25, 0)
+script = ExtResource("11_dg77c")
+traffic_dir = Array[int]([2, 1])
+lanes = Array[int]([5, 5])
+next_mag = 16.0
+prior_pt_init = NodePath("../RP_002")
