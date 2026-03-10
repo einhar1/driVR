@@ -2,11 +2,14 @@
 
 [ext_resource type="PackedScene" uid="uid://btknduttnmoxf" path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" id="1_dw050"]
 [ext_resource type="PackedScene" uid="uid://b4kad2kuba1yn" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_hand_low.tscn" id="2_b26j0"]
+[ext_resource type="PackedScene" uid="uid://cc6ngdqie8o8c" path="res://addons/godot-xr-tools/effects/vignette.tscn" id="2_n7ghd"]
 [ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="3_n7ghd"]
 [ext_resource type="PackedScene" uid="uid://fiul51tsyoop" path="res://addons/godot-xr-tools/functions/function_teleport.tscn" id="4_nvl01"]
 [ext_resource type="PackedScene" uid="uid://l2n30mpbkdyw" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/right_hand_low.tscn" id="5_ivps1"]
+[ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="6_urp6f"]
 [ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="7_bwjto"]
 [ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="8_606se"]
+[ext_resource type="PackedScene" uid="uid://cqhw276realc" path="res://addons/godot-xr-tools/functions/function_pointer.tscn" id="9_n7ghd"]
 
 [node name="XROrigin3D" type="XROrigin3D" unique_id=564256576]
 
@@ -14,6 +17,10 @@
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="VRCommonShaderCache" parent="XRCamera3D" unique_id=2133842901 instance=ExtResource("1_dw050")]
+
+[node name="Vignette" parent="XRCamera3D" unique_id=2123343853 instance=ExtResource("2_n7ghd")]
+auto_rotation_limit = 0.0
+auto_velocity_limit = 1.0
 
 [node name="XRController3D_left" type="XRController3D" parent="." unique_id=161679040]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, -0.5)
@@ -26,7 +33,7 @@ tracker = &"left_hand"
 [node name="FunctionTeleport" parent="XRController3D_left" unique_id=1610788672 instance=ExtResource("4_nvl01")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
 
-[node name="MovementTurn" parent="XRController3D_left" unique_id=613121482 instance=ExtResource("7_bwjto")]
+[node name="MovementDirect" parent="XRController3D_left" unique_id=1780206633 instance=ExtResource("6_urp6f")]
 
 [node name="XRController3D_right" type="XRController3D" parent="." unique_id=924367288]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -0.5)
@@ -35,5 +42,11 @@ tracker = &"right_hand"
 [node name="RightHand" parent="XRController3D_right" unique_id=1279781485 instance=ExtResource("5_ivps1")]
 
 [node name="FunctionPickup" parent="XRController3D_right/RightHand" unique_id=1952243274 instance=ExtResource("3_n7ghd")]
+
+[node name="MovementTurn" parent="XRController3D_right" unique_id=229773348 instance=ExtResource("7_bwjto")]
+
+[node name="FunctionPointer" parent="XRController3D_right" unique_id=39867883 instance=ExtResource("9_n7ghd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.05, -0.1)
+laser_length = 1
 
 [node name="PlayerBody" parent="." unique_id=678788726 instance=ExtResource("8_606se")]

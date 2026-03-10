@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://d2esvnd00rxvu"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1325332154]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1570591131]
+offset_right = 300.0
+offset_bottom = 200.0
+color = Color(0.9372549, 0.5019608, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1711078287]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 116.0
+offset_bottom = 106.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1014282030]
+layout_mode = 2
+
+[node name="Button_1" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1619816860]
+layout_mode = 2
+text = "Test button 1"
+
+[node name="Button_2" type="Button" parent="MarginContainer/VBoxContainer" unique_id=760565994]
+layout_mode = 2
+text = "Test button 2"
+
+[node name="Button_3" type="Button" parent="MarginContainer/VBoxContainer" unique_id=2055898194]
+layout_mode = 2
+text = "Test button 3"

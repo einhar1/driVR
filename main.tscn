@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://ces1j6plojyra" path="res://addons/godot-xr-tools/xr/start_xr.gd" id="1_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://player.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
+[ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://test_panel.tscn" id="8_kek77"]
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="9_dg77c"]
 [ext_resource type="Texture2D" uid="uid://ek4cxnjd2irx" path="res://assets/textures/Table_1m x 1m.png" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://c8l60rnugru40" path="res://addons/godot-xr-tools/objects/pickable.tscn" id="11_efxa6"]
@@ -90,3 +92,10 @@ mesh = SubResource("BoxMesh_ycdy4")
 shape = SubResource("ConvexPolygonShape3D_vivmo")
 
 [node name="XROrigin3D" parent="." unique_id=564256576 instance=ExtResource("6_7mycd")]
+
+[node name="Viewport2Din3D" parent="." unique_id=495527837 instance=ExtResource("7_5vw27")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8191048, -2.4807882)
+screen_size = Vector2(1.5, 1)
+scene = ExtResource("8_kek77")
+transparent = 1
+scene_properties_keys = PackedStringArray()
