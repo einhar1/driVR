@@ -17,32 +17,48 @@ VR driving/interaction application built with **Godot 4.6** targeting **Meta Que
 - `godotopenxrvendors` – OpenXR loaders (Meta, Pico, etc.)
 - `road-generator` (v0.9.0) – Procedural highway/intersection mesh generation
 
-## Export notes (Meta Quest 2)
+## Export to Meta Quest
 
-This repo already contains an Android export preset named **"META Quest 2"**.
+This repo already includes an Android export preset named **`Meta Quest`**.
 
-Before exporting, verify:
+For a first-time setup:
 
-- Android export templates are installed in Godot.
-- Your Android SDK/JDK setup is configured in the Godot editor settings.
-- A valid Android signing keystore is configured (the preset has signing enabled).
-- `package/unique_name` is set appropriately (currently `com.einar.driVR`).
+1. Install **Godot 4.6** with Android export templates.
+1. Install the **Android SDK** and a **Java JDK**, then point Godot to them in **Editor Settings → Export → Android**.
+1. Open this project in Godot and make sure it loads without missing dependencies.
+1. Confirm the Android package name is suitable for your device/builds.
 
-Then export using the Android preset to generate an APK/AAB for headset deployment.
+   Current value: `com.einar.driVR`
 
-## Deploy over USB cable (Meta Quest 2)
+1. Configure signing in Godot.
+   - For local testing, a debug keystore is enough.
+   - For distribution, use your own release keystore.
 
-Use this for first-time setup and the most stable/fast installs.
+1. In **Project → Export**, select **`Meta Quest`** and export an **APK** for headset testing.
 
-- Enable Developer Mode for your Quest 2.
-- Connect Quest 2 to your PC via USB-C.
+Project-specific export details:
+
+- Target architecture: `arm64-v8a`
+- XR mode: enabled
+- Meta plugin: enabled
+- Quest support: Quest 2, Quest 3, and Quest Pro
+- Optional Meta features already enabled in the preset: eye tracking, face tracking, body tracking, hand tracking, passthrough, render model
+
+If export fails, the usual culprits are missing Android templates, incorrect SDK/JDK paths, or signing not being configured.
+
+## Deploy over USB (recommended first run)
+
+Use USB for the first install and for the least fiddly workflow.
+
+- Enable **Developer Mode** for your Quest headset in the Meta mobile app.
+- Connect the headset to your PC with USB-C.
 - Put on the headset and accept the USB debugging prompt.
 - Verify connection:
   - `adb devices`
 
-When the headset appears in the device list, deploy from Godot using the **"META Quest 2"** preset.
+When the headset appears in the device list, export or deploy using the **`Meta Quest`** preset.
 
-## Wireless deploy (Meta Quest 2)
+## Wireless deploy
 
 You can deploy wirelessly after one-time USB debugging authorization.
 
@@ -53,7 +69,7 @@ You can deploy wirelessly after one-time USB debugging authorization.
 - Verify wireless connection:
   - `adb devices`
 
-You can then deploy from Godot to the Quest without a cable (both devices must be on the same LAN).
+You can then deploy from Godot without a cable, as long as the PC and headset are on the same network.
 
 ## Android logging (adb logcat variants)
 
@@ -78,7 +94,7 @@ Common options for different log output formats:
 
 ## Project Structure
 
-```
+```text
 main.tscn              → Entry point: world environment, lighting, floor, XROrigin3D, road manager
 player.tscn            → XROrigin3D with camera, controllers, hands, movement providers
 road_demos/            → Demo scenes for road generation, navigation, traffic simulation
