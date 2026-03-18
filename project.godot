@@ -22,7 +22,7 @@ XRToolsRumbleManager="*uid://by853dk86g1qw"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg", "res://addons/road-generator/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg", "res://addons/godot_mcp/plugin.cfg", "res://addons/road-generator/plugin.cfg")
 
 [layer_names]
 
