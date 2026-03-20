@@ -1,16 +1,14 @@
 [gd_scene format=3 uid="uid://dl1th8eca7bu3"]
 
 [ext_resource type="Script" uid="uid://ces1j6plojyra" path="res://addons/godot-xr-tools/xr/start_xr.gd" id="1_lquwl"]
+[ext_resource type="PackedScene" uid="uid://ci52bv1m15cbs" path="res://cars/Doge.tscn" id="3_dg77c"]
 [ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://player.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
 [ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://test_panel.tscn" id="8_kek77"]
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="9_dg77c"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
-[ext_resource type="Texture2D" uid="uid://ek4cxnjd2irx" path="res://assets/textures/Table_1m x 1m.png" id="10_4c57u"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="11_dg77c"]
-[ext_resource type="PackedScene" uid="uid://c8l60rnugru40" path="res://addons/godot-xr-tools/objects/pickable.tscn" id="11_efxa6"]
-[ext_resource type="Texture2D" uid="uid://d3fi80lrqtj11" path="res://assets/textures/Pickable_1m x 1m.png" id="12_dg77c"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4c57u"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -35,28 +33,6 @@ size = Vector2(100, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vivmo"]
 size = Vector3(100, 1, 100)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_efxa6"]
-albedo_texture = ExtResource("10_4c57u")
-uv1_triplanar = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_dg77c"]
-material = SubResource("StandardMaterial3D_efxa6")
-size = Vector3(1, 1, 0.5)
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ycdy4"]
-points = PackedVector3Array(0.5, 0.5, 0.25, 0.5, 0.5, -0.25, -0.5, 0.5, 0.25, 0.5, -0.5, 0.25, 0.5, -0.5, -0.25, -0.5, 0.5, -0.25, -0.5, -0.5, 0.25, -0.5, -0.5, -0.25)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
-albedo_texture = ExtResource("12_dg77c")
-uv1_triplanar = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_ycdy4"]
-material = SubResource("StandardMaterial3D_w48qg")
-size = Vector3(0.1, 0.1, 0.1)
-
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_vivmo"]
-points = PackedVector3Array(0.05, 0.05, 0.05, 0.05, 0.05, -0.05, -0.05, 0.05, 0.05, 0.05, -0.05, 0.05, 0.05, -0.05, -0.05, -0.05, 0.05, -0.05, -0.05, -0.05, 0.05, -0.05, -0.05, -0.05)
-
 [node name="Main" type="Node3D" unique_id=354370114]
 script = ExtResource("1_lquwl")
 
@@ -76,23 +52,8 @@ mesh = SubResource("PlaneMesh_w48qg")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_vivmo")
 
-[node name="Table" type="StaticBody3D" parent="." unique_id=632211338]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0689431)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Table" unique_id=721288477]
-mesh = SubResource("BoxMesh_dg77c")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Table" unique_id=2013719145]
-shape = SubResource("ConvexPolygonShape3D_ycdy4")
-
-[node name="PickableObject" parent="." unique_id=723713351 instance=ExtResource("11_efxa6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56093484, -1.0270619)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PickableObject" unique_id=77452369]
-mesh = SubResource("BoxMesh_ycdy4")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="PickableObject" unique_id=1112131927]
-shape = SubResource("ConvexPolygonShape3D_vivmo")
+[node name="car" parent="Floor" unique_id=1236407626 instance=ExtResource("3_dg77c")]
+transform = Transform3D(-0.027642468, 0, -0.9996179, 0, 1, 0, 0.9996179, 0, -0.027642468, 5.0082645, 0.284724, 2.5998197)
 
 [node name="XROrigin3D" parent="." unique_id=564256576 instance=ExtResource("6_7mycd")]
 
