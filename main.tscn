@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://player.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
 [ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://test_panel.tscn" id="8_kek77"]
+[ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="9_4c57u"]
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="9_dg77c"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
@@ -55,17 +56,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_vivmo")
 
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.0082645, 0.284724, 2.5998197)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.6244316, 0.284724, 21.298025)
 
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
 
-[node name="Viewport2Din3D" parent="." unique_id=495527837 instance=ExtResource("7_5vw27")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8191048, -2.4807882)
+[node name="RoadLaneAgent" parent="car" index="12" unique_id=841133961]
+road_manager_path = NodePath("../../RoadManager")
+
+[node name="AutoDriver" parent="car" index="13" unique_id=872334889]
+auto_drive_speed = 3.0
+total_distance_target = 10.0
+
+[node name="Viewport2Din3D" parent="car" unique_id=495527837 instance=ExtResource("7_5vw27")]
+transform = Transform3D(0.8676787, 0, -0.4971254, 0, 1, 0, 0.4971254, 0, 0.8676787, 2.484583, 1.164591, -1.8959079)
 screen_size = Vector2(1.5, 1)
 scene = ExtResource("8_kek77")
 transparent = 1
-scene_properties_keys = PackedStringArray()
+scene_properties_keys = PackedStringArray("test_panel_controller.gd")
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=1699536803]
 script = ExtResource("9_kek77")
@@ -74,7 +82,9 @@ metadata/_custom_type_script = "uid://bgmxg26pbs61k"
 [node name="Road_001" type="Node3D" parent="RoadManager" unique_id=2131193097]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.654288, 0, -0.2646662)
 script = ExtResource("10_efxa6")
+material_resource = ExtResource("9_4c57u")
 use_lowpoly_preview = true
+generate_ai_lanes = true
 edge_containers = Array[NodePath]([NodePath("")])
 edge_rp_targets = Array[NodePath]([NodePath("")])
 edge_rp_target_dirs = Array[int]([-1])
@@ -102,7 +112,9 @@ next_pt_init = NodePath("../RP_001")
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=2033327340]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 40)
 script = ExtResource("10_efxa6")
+material_resource = ExtResource("9_4c57u")
 use_lowpoly_preview = true
+generate_ai_lanes = true
 
 [node name="RP_001" type="Node3D" parent="RoadManager/Road_002" unique_id=149168244]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 0)
