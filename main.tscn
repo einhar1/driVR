@@ -46,7 +46,7 @@ shadow_enabled = true
 [node name="Floor" type="StaticBody3D" parent="." unique_id=775169825]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1967738789]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067198, -10.437976, 8.441921)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
 mesh = SubResource("PlaneMesh_w48qg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=65229293]
@@ -98,7 +98,7 @@ prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_001")
 
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=2033327340]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -10.310443, 40)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 40)
 script = ExtResource("10_efxa6")
 use_lowpoly_preview = true
 
