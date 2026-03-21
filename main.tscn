@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dl1th8eca7bu3"]
 
-[ext_resource type="Script" uid="uid://ces1j6plojyra" path="res://addons/godot-xr-tools/xr/start_xr.gd" id="1_lquwl"]
+[ext_resource type="Script" uid="uid://b0i0r7v3fe27s" path="res://scripts/xr/start_xr_with_spawn_alignment.gd" id="1_lquwl"]
 [ext_resource type="PackedScene" uid="uid://ci52bv1m15cbs" path="res://cars/Doge.tscn" id="3_dg77c"]
 [ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://player.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
@@ -35,6 +35,7 @@ size = Vector3(100, 1, 100)
 
 [node name="Main" type="Node3D" unique_id=354370114]
 script = ExtResource("1_lquwl")
+align_vertical = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=84664636]
 environment = SubResource("Environment_dg77c")
@@ -53,10 +54,11 @@ mesh = SubResource("PlaneMesh_w48qg")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_vivmo")
 
-[node name="car" parent="Floor" unique_id=1236407626 instance=ExtResource("3_dg77c")]
-transform = Transform3D(-0.027642468, 0, -0.9996179, 0, 1, 0, 0.9996179, 0, -0.027642468, 5.0082645, 0.284724, 2.5998197)
+[node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.0082645, 0.284724, 2.5998197)
 
-[node name="XROrigin3D" parent="." unique_id=564256576 instance=ExtResource("6_7mycd")]
+[node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
 
 [node name="Viewport2Din3D" parent="." unique_id=495527837 instance=ExtResource("7_5vw27")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8191048, -2.4807882)
@@ -141,3 +143,5 @@ prior_mag = 10.476922
 next_mag = 16.0
 prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_001")
+
+[editable path="car"]
