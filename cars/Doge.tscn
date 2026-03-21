@@ -3,6 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://duy0dbkychify" path="res://cars/BaseCar.tscn" id="1_cfkas"]
 [ext_resource type="PackedScene" uid="uid://benmjny2guowm" path="res://cars/Models/Doge/Wheel.glb" id="2_eoiid"]
 [ext_resource type="PackedScene" uid="uid://bty2rpvw2dh0h" path="res://cars/Models/Doge/doge-body.glb" id="3_om8jj"]
+[ext_resource type="Script" uid="uid://drtuldr1h8wv1" path="res://addons/road-generator/nodes/road_lane_agent.gd" id="4_1n2xg"]
+[ext_resource type="Script" uid="uid://7u8dwvap5lvb" path="res://scripts/car_auto_driver.gd" id="5_y15c2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_n7qdn"]
 radius = 0.291194
@@ -77,3 +79,13 @@ shape = SubResource("CapsuleShape3D_7kmqy")
 
 [node name="DriversSeatAnchor" type="Node3D" parent="." index="11" unique_id=553812832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39138448, 0.9466648, 0.2596386)
+
+[node name="RoadLaneAgent" type="Node" parent="." index="12" unique_id=841133961]
+script = ExtResource("4_1n2xg")
+auto_register = false
+metadata/_custom_type_script = "uid://drtuldr1h8wv1"
+
+[node name="AutoDriver" type="Node" parent="." index="13" unique_id=872334889 node_paths=PackedStringArray("car")]
+script = ExtResource("5_y15c2")
+car = NodePath("..")
+auto_drive_speed = 10.0

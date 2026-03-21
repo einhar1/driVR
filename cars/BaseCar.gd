@@ -5,9 +5,15 @@ extends VehicleBody3D
 @export var STEER_LIMIT = 0.6
 var steer_target = 0
 @export var engine_force_value = 40
+@onready var auto_driver: Node = get_node_or_null("AutoDriver")
 
 
 func _physics_process(delta):
+	# Check if auto-driver is active
+	if auto_driver and auto_driver.auto_drive_enabled:
+		# Let auto_driver handle movement this frame
+		return
+
 	var speed = linear_velocity.length()*Engine.get_frames_per_second()*delta
 	traction(speed)
 	$Hud/speed.text=str(round(speed*3.8))+"  KMPH"
@@ -49,7 +55,3 @@ func _physics_process(delta):
 
 func traction(speed):
 	apply_central_force(Vector3.DOWN*speed)
-
-
-
-

@@ -1,9 +1,12 @@
 [gd_scene format=3 uid="uid://d2esvnd00rxvu"]
 
+[ext_resource type="Script" uid="uid://dn4yuohil3nto" path="res://scripts/test_panel_controller.gd" id="1_f6qhu"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_rov3b"]
 font_size = 26
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1325332154]
+script = ExtResource("1_f6qhu")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1570591131]
 offset_right = 300.0
@@ -21,7 +24,7 @@ layout_mode = 2
 
 [node name="Button_1" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1619816860]
 layout_mode = 2
-text = "Alternativ 1"
+text = "Kör bil"
 
 [node name="Button_2" type="Button" parent="MarginContainer/VBoxContainer" unique_id=760565994]
 layout_mode = 2
@@ -38,3 +41,5 @@ offset_right = 180.0
 offset_bottom = 57.0
 text = "Fråga"
 label_settings = SubResource("LabelSettings_rov3b")
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button_1" to="." method="_on_button_1_pressed"]
