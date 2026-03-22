@@ -58,7 +58,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_vivmo")
 
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
-transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, 6.5757713, 0.28472495, 2.4218102)
+transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, -0.21912575, 0.25730777, 22.864073)
 
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
