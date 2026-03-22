@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="11_dg77c"]
+[ext_resource type="Script" uid="uid://c0kjs0pm4uvnr" path="res://scripts/question_manager.gd" id="11_ycdy4"]
+[ext_resource type="Resource" uid="uid://cunmwpynlecwm" path="res://resources/question_bank.tres" id="12_w48qg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4c57u"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -36,6 +38,7 @@ size = Vector3(100, 1, 100)
 
 [node name="Main" type="Node3D" unique_id=354370114]
 script = ExtResource("1_lquwl")
+align_once_per_run = null
 align_vertical = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=84664636]
@@ -155,5 +158,9 @@ prior_mag = 10.476922
 next_mag = 16.0
 prior_pt_init = NodePath("../RP_003")
 next_pt_init = NodePath("../RP_001")
+
+[node name="QuestionManager" type="Node" parent="." unique_id=945438787]
+script = ExtResource("11_ycdy4")
+question_bank = ExtResource("12_w48qg")
 
 [editable path="car"]

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="QuestionData" format=3 uid="uid://cvxqmh3afje4s"]
+
+[ext_resource type="Script" uid="uid://cc00klym0vj0m" path="res://resources/question_data.gd" id="1_qakm4"]
+
+[resource]
+script = ExtResource("1_qakm4")
+question = "F¨år man köra mot rött?"
+options = PackedStringArray("Ja", "Nej", "Kanske")
+correct_index = 1
+metadata/_custom_type_script = "uid://cc00klym0vj0m"

@@ -24,7 +24,8 @@ layout_mode = 2
 
 [node name="Button_1" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1619816860]
 layout_mode = 2
-text = "Kör bil"
+text = "Alternativ 1
+"
 
 [node name="Button_2" type="Button" parent="MarginContainer/VBoxContainer" unique_id=760565994]
 layout_mode = 2
@@ -35,11 +36,15 @@ layout_mode = 2
 text = "Alternativ 3"
 
 [node name="Label" type="Label" parent="." unique_id=1693554888]
-offset_left = 110.0
-offset_top = 21.0
-offset_right = 180.0
-offset_bottom = 57.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 288.0
+offset_bottom = 70.0
 text = "Fråga"
 label_settings = SubResource("LabelSettings_rov3b")
+autowrap_mode = 3
+clip_text = true
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button_2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button_3" to="." method="_on_button_3_pressed"]

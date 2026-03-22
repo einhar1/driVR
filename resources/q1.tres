@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="QuestionData" format=3 uid="uid://d0qkr1chvjrut"]
+
+[ext_resource type="Script" uid="uid://cc00klym0vj0m" path="res://resources/question_data.gd" id="1_cbabc"]
+
+[resource]
+script = ExtResource("1_cbabc")
+question = "Vilken färg har en stoppskylt?"
+options = PackedStringArray("Röd", "Grön", "Blå")
+metadata/_custom_type_script = "uid://cc00klym0vj0m"
