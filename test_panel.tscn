@@ -15,9 +15,9 @@ color = Color(0.69803923, 0.6901961, 0.70980394, 0.6313726)
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1711078287]
 offset_left = 90.0
-offset_top = 79.0
+offset_top = 98.0
 offset_right = 201.0
-offset_bottom = 180.0
+offset_bottom = 196.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1014282030]
 layout_mode = 2
@@ -39,11 +39,10 @@ text = "Alternativ 3"
 offset_left = 12.0
 offset_top = 12.0
 offset_right = 288.0
-offset_bottom = 70.0
+offset_bottom = 90.0
 text = "Fråga"
 label_settings = SubResource("LabelSettings_rov3b")
 autowrap_mode = 3
-clip_text = true
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_1" to="." method="_on_button_1_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_2" to="." method="_on_button_2_pressed"]
