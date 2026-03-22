@@ -71,14 +71,16 @@ auto_drive_speed = 3.0
 total_distance_target = 10.0
 
 [node name="Viewport2Din3D" parent="car" unique_id=495527837 instance=ExtResource("7_5vw27")]
-transform = Transform3D(0.8676787, 0, -0.4971254, 0, 1, 0, 0.4971254, 0, 0.8676787, 2.484583, 1.164591, -1.8959079)
+transform = Transform3D(0.9168263, -0.046914328, -0.3965209, 0.00076565176, 0.993278, -0.11574942, 0.39928594, 0.1058184, 0.91069984, 1.7341366, 1.8052609, -1.9738231)
 screen_size = Vector2(1.5, 1)
 scene = ExtResource("8_kek77")
 transparent = 1
-scene_properties_keys = PackedStringArray("test_panel_controller.gd", "Question Label", "max_question_font_size", "min_question_font_size", "length_for_min_size")
+scene_properties_keys = PackedStringArray("test_panel_controller.gd", "Question Label", "max_question_font_size", "min_question_font_size", "length_for_min_size", "Viewport Auto Size", "auto_size_viewport_to_content", "viewport_padding_px")
 max_question_font_size = 26
 min_question_font_size = 14
 length_for_min_size = 120
+auto_size_viewport_to_content = true
+viewport_padding_px = 8
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=1699536803]
 script = ExtResource("9_kek77")
