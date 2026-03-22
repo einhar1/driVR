@@ -38,7 +38,6 @@ size = Vector3(100, 1, 100)
 
 [node name="Main" type="Node3D" unique_id=354370114]
 script = ExtResource("1_lquwl")
-align_once_per_run = null
 align_vertical = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=84664636]
@@ -59,7 +58,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_vivmo")
 
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.6244316, 0.284724, 21.298025)
+transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, 6.5757713, 0.28472495, 2.4218102)
 
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
@@ -76,7 +75,10 @@ transform = Transform3D(0.8676787, 0, -0.4971254, 0, 1, 0, 0.4971254, 0, 0.86767
 screen_size = Vector2(1.5, 1)
 scene = ExtResource("8_kek77")
 transparent = 1
-scene_properties_keys = PackedStringArray("test_panel_controller.gd")
+scene_properties_keys = PackedStringArray("test_panel_controller.gd", "Question Label", "max_question_font_size", "min_question_font_size", "length_for_min_size")
+max_question_font_size = 26
+min_question_font_size = 14
+length_for_min_size = 120
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=1699536803]
 script = ExtResource("9_kek77")
