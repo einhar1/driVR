@@ -10,6 +10,7 @@ extends XRToolsStartXR
 
 @export_group("Spawn Alignment")
 @export var align_on_xr_started: bool = true
+@export var align_once_per_run: bool = true
 @export_range(1, 20, 1) var alignment_frames: int = 5
 @export var align_vertical: bool = true
 @export var min_offset_meters: float = 0.001
@@ -17,9 +18,11 @@ extends XRToolsStartXR
 @export var xr_camera_path: NodePath = ^"car/DriversSeatAnchor/XROrigin3D/XRCamera3D"
 
 var _camera_baseline_local_position: Vector3 = Vector3.ZERO
+var _has_applied_spawn_alignment: bool = false
 
 
 func _ready() -> void:
+	_has_applied_spawn_alignment = false
 	_cache_camera_baseline()
 	xr_started.connect(_on_xr_started)
 	super._ready()
@@ -28,7 +31,10 @@ func _ready() -> void:
 func _on_xr_started() -> void:
 	if not align_on_xr_started:
 		return
+	if align_once_per_run and _has_applied_spawn_alignment:
+		return
 	await _align_origin_for_spawn()
+	_has_applied_spawn_alignment = true
 
 
 ## Samples tracking over multiple frames and applies one averaged alignment.
