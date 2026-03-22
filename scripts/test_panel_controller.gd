@@ -33,11 +33,13 @@ func _ready() -> void:
 func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if not p_question:
 		return
+
+	var display_question: String = _normalize_swedish_text(p_question.question)
 	
 	# Update label with question text
 	if is_instance_valid(label):
-		label.text = p_question.question
-		_apply_question_label_style(p_question.question)
+		label.text = display_question
+		_apply_question_label_style(display_question)
 	
 	# Update button texts with answer options
 	var options_count: int = p_question.options.size()
@@ -108,10 +110,36 @@ func _apply_question_label_style(p_question_text: String) -> void:
 		label.label_settings = LabelSettings.new()
 
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.clip_text = true
+	label.clip_text = false
+	label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 
 	var text_length: int = p_question_text.length()
 	var clamped_threshold: int = maxi(1, length_for_min_size)
 	var t: float = clampf(float(text_length) / float(clamped_threshold), 0.0, 1.0)
 	var dynamic_size: int = int(round(lerpf(float(max_question_font_size), float(min_question_font_size), t)))
 	label.label_settings.font_size = clampi(dynamic_size, min_question_font_size, max_question_font_size)
+
+
+## Normalizes common malformed dead-key sequences for Swedish characters.
+func _normalize_swedish_text(p_text: String) -> String:
+	var normalized: String = p_text
+
+	# Spacing diaeresis (U+00A8) dead-key patterns.
+	normalized = normalized.replace("¨a", "ä")
+	normalized = normalized.replace("¨A", "Ä")
+	normalized = normalized.replace("¨o", "ö")
+	normalized = normalized.replace("¨O", "Ö")
+	normalized = normalized.replace("¨u", "ü")
+	normalized = normalized.replace("¨U", "Ü")
+	normalized = normalized.replace("¨å", "å")
+	normalized = normalized.replace("¨Å", "Å")
+
+	# Combining diaeresis (U+0308) patterns.
+	normalized = normalized.replace("\u0308a", "ä")
+	normalized = normalized.replace("\u0308A", "Ä")
+	normalized = normalized.replace("\u0308o", "ö")
+	normalized = normalized.replace("\u0308O", "Ö")
+	normalized = normalized.replace("\u0308u", "ü")
+	normalized = normalized.replace("\u0308U", "Ü")
+
+	return normalized

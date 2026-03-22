@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_qakm4")
-question = "F¨år man köra mot rött?"
+question = "Får man köra mot rött?"
 options = PackedStringArray("Ja", "Nej", "Kanske")
 correct_index = 1
 metadata/_custom_type_script = "uid://cc00klym0vj0m"
