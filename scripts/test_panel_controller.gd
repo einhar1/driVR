@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+signal advance_requested()
+
 @onready var button_1: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_1") as Button
 @onready var button_2: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_2") as Button
 @onready var button_3: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_3") as Button
@@ -18,18 +20,20 @@ var question_manager: Node
 var car: Node
 
 func _ready() -> void:
-	# Find the QuestionManager in the scene
+	# Find the QuestionManager in the active scene tree.
 	question_manager = get_tree().current_scene.find_child("QuestionManager", true, false)
 	
-	# Find the car
+	# Find the persistent car.
 	car = get_tree().current_scene.get_node_or_null("car")
 	
 	if question_manager:
-		# Connect to question changes
-		question_manager.question_changed.connect(_on_question_changed)
-		question_manager.answer_validated.connect(_on_answer_validated)
+		# Connect to question changes.
+		if not question_manager.question_changed.is_connected(_on_question_changed):
+			question_manager.question_changed.connect(_on_question_changed)
+		if not question_manager.answer_validated.is_connected(_on_answer_validated):
+			question_manager.answer_validated.connect(_on_answer_validated)
 		
-		# Display the first question
+		# Display the first question.
 		_on_question_changed(question_manager.get_current_question(), 0)
 	else:
 		push_error("QuestionManager not found in scene")
@@ -72,29 +76,46 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if auto_size_viewport_to_content:
 		call_deferred("_sync_viewport_to_content")
 
-func _on_answer_validated(p_is_correct: bool, _p_selected_index: int, p_correct_index: int) -> void:
-	if p_is_correct:
-		# Start auto-drive if answer is correct
+func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_index: int) -> void:
+	var current_question: QuestionData = question_manager.get_current_question()
+	var has_outcomes: bool = current_question != null and not current_question.answer_outcomes.is_empty()
+
+	if has_outcomes:
+		# Question has per-answer driving outcomes — always move, regardless of correctness.
+		_apply_outcome_and_drive(p_selected_index)
+	elif p_is_correct:
 		_start_car_movement()
-		# Move to next question after a short delay
-		get_tree().create_timer(3.0).timeout.connect(_on_movement_complete)
 	else:
-		# Show feedback (optional: change button color or play sound)
+		# Show feedback (optional: change button color or play sound).
 		print("Incorrect answer! Correct answer was index: %d" % p_correct_index)
+
+
+## Tells the active scenario scene which outcome was chosen, then starts driving.
+func _apply_outcome_and_drive(p_selected_index: int) -> void:
+	var scene_runner: Node = get_tree().current_scene.find_child(
+		"QuestionSceneRunner", true, false
+	)
+	if is_instance_valid(scene_runner) and scene_runner.has_method("apply_answer_outcome"):
+		scene_runner.apply_answer_outcome(p_selected_index)
+	_start_car_movement()
 
 func _start_car_movement() -> void:
 	if not is_instance_valid(car):
 		push_error("Car not found")
 		return
-	
+
 	var auto_driver: Node = car.get_node_or_null("AutoDriver")
 	if not is_instance_valid(auto_driver):
 		push_error("Could not find auto-driver")
 		return
-	
+
+	# Advance to the next question only when the car has fully stopped.
+	if not auto_driver.is_connected("auto_drive_completed", _on_movement_complete):
+		auto_driver.connect("auto_drive_completed", _on_movement_complete, CONNECT_ONE_SHOT)
 	auto_driver.call("start_auto_drive")
 
 func _on_movement_complete() -> void:
+	await get_tree().create_timer(1.5).timeout
 	if question_manager:
 		question_manager.next_question()
 

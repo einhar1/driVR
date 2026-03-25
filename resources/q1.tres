@@ -6,4 +6,5 @@
 script = ExtResource("1_cbabc")
 question = "Vilken färg har en stoppskylt?"
 options = PackedStringArray("Röd", "Grön", "Blå")
+scene_path = "uid://cvpx5uviptes"
 metadata/_custom_type_script = "uid://cc00klym0vj0m"

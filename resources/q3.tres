@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="QuestionData" format=3 uid="uid://bu022nqxah5mi"]
+
+[ext_resource type="Script" uid="uid://cc00klym0vj0m" path="res://resources/question_data.gd" id="1_2xnt6"]
+
+[resource]
+script = ExtResource("1_2xnt6")
+question = "Hur vill du köra?"
+options = PackedStringArray("Vänster", "Höger", "Rakt")
+scene_path = "uid://csx7mj6vihbqs"
+answer_outcomes = PackedStringArray("left", "right", "straight")
+metadata/_custom_type_script = "uid://cc00klym0vj0m"

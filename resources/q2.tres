@@ -7,4 +7,5 @@ script = ExtResource("1_qakm4")
 question = "Får man köra mot rött?"
 options = PackedStringArray("Ja", "Nej", "Kanske")
 correct_index = 1
+scene_path = "uid://yvmx0rvhddyv"
 metadata/_custom_type_script = "uid://cc00klym0vj0m"
