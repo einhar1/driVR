@@ -12,12 +12,12 @@ script = ExtResource("1_f6qhu")
 offset_top = 144.0
 offset_right = 300.0
 offset_bottom = 344.0
-color = Color(0.69803923, 0.6901961, 0.70980394, 0.6313726)
+color = Color(0.69803923, 0.6901961, 0.70980394, 0.84313726)
 
 [node name="ColorRect2" type="ColorRect" parent="." unique_id=558437109]
 offset_right = 300.0
 offset_bottom = 129.0
-color = Color(0.69803923, 0.6901961, 0.70980394, 0.6313726)
+color = Color(0.69803923, 0.6901961, 0.70980394, 0.84313726)
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1711078287]
 offset_left = 90.0

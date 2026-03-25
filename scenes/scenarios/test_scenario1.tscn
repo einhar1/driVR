@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://cvpx5uviptes"]
+
+[ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_lc2to"]
+[ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_lc2to"]
+[ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_fdylj"]
+[ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="4_fdylj"]
+[ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_tl7i5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ycdy4"]
+albedo_texture = ExtResource("1_lc2to")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fdylj"]
+material = SubResource("StandardMaterial3D_ycdy4")
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tl7i5"]
+size = Vector3(100, 1, 100)
+
+[node name="TestScenario1" type="Node3D" unique_id=2006070304]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1016406379]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1506633518]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
+mesh = SubResource("PlaneMesh_fdylj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1196861786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_tl7i5")
+
+[node name="SpawnPoint" type="Node3D" parent="." unique_id=1541967525]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.7449794, 0, 6.4329767)
+
+[node name="RoadManager" type="Node3D" parent="." unique_id=1522731037]
+script = ExtResource("2_lc2to")
+metadata/_custom_type_script = "uid://bgmxg26pbs61k"
+
+[node name="Road_001" type="Node3D" parent="RoadManager" unique_id=1778012444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.026728153, 0, 8.452724)
+script = ExtResource("3_fdylj")
+material_resource = ExtResource("4_fdylj")
+use_lowpoly_preview = true
+generate_ai_lanes = true
+edge_containers = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_target_dirs = Array[int]([-1, -1])
+edge_rp_locals = Array[NodePath]([NodePath("RP_001"), NodePath("RP_002")])
+edge_rp_local_dirs = Array[int]([0, 1])
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=1529609578]
+transform = Transform3D(5.9799353e-05, 2.7342153e-08, -1, 0, 1, 2.7342153e-08, 1, -1.6350431e-12, 5.9799353e-05, -62.8664, 0.25, 0)
+script = ExtResource("4_tl7i5")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+next_mag = 17.439634
+prior_pt_init = NodePath("../RP_002")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=1307284130]
+transform = Transform3D(5.9680144e-05, -1.3306653e-19, -1, 2.2296618e-15, 1, 0, 1, -2.2296618e-15, 5.9680144e-05, 34.87927, 0.24999905, -0.0020837784)
+script = ExtResource("4_tl7i5")
+traffic_dir = Array[int]([2, 2, 1, 1])
+lanes = Array[int]([2, 4, 4, 2])
+prior_mag = 17.439634
+next_mag = 17.439634
+next_pt_init = NodePath("../RP_001")

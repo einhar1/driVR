@@ -4,8 +4,9 @@
 [ext_resource type="Script" uid="uid://bkos42ouel41h" path="res://resources/question_bank.gd" id="2_g86g8"]
 [ext_resource type="Resource" uid="uid://d0qkr1chvjrut" path="res://resources/q1.tres" id="2_hv8n1"]
 [ext_resource type="Resource" uid="uid://cvxqmh3afje4s" path="res://resources/q2.tres" id="3_w4row"]
+[ext_resource type="Resource" uid="uid://bu022nqxah5mi" path="res://resources/q3.tres" id="4_w4row"]
 
 [resource]
 script = ExtResource("2_g86g8")
-questions = Array[ExtResource("1_6ijxp")]([ExtResource("2_hv8n1"), ExtResource("3_w4row")])
+questions = Array[ExtResource("1_6ijxp")]([ExtResource("2_hv8n1"), ExtResource("3_w4row"), ExtResource("4_w4row")])
 metadata/_custom_type_script = "uid://bkos42ouel41h"

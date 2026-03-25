@@ -2,74 +2,86 @@
 
 ## Overview
 
-VR driving/interaction application built with **Godot 4.6** (GL Compatibility renderer) targeting **Meta Quest** via OpenXR. Uses **Jolt Physics** at 90 ticks/second. Features road generation, VR hand interaction, and traffic simulation.
+VR driving-theory quiz app built with **Godot 4.6** (GL Compatibility) targeting **Meta Quest** via OpenXR. Uses **Jolt Physics** at 90 ticks/second. The player sits inside an auto-driving car while answering quiz questions shown on an in-car panel; each question can load its own 3D scenario scene.
 
 ## Architecture
 
 ```
-main.tscn            → Entry point: world environment, lighting, floor, objects, player, road manager
-player.tscn          → XROrigin3D with camera, left/right controllers, hands, functions, PlayerBody
-test_panel.tscn      → Minimal 2D UI test (rendered in-world via Viewport2Din3D)
-road_demos/          → Road generator demo scenes (menu, intersections, navigation, procedural gen)
+scenes/main.tscn      → Entry point: environment, car (with player inside), quiz system
+scenes/player.tscn    → XROrigin3D with camera, left/right hand controllers, pointer
+scenes/test_panel.tscn→ 2D quiz UI rendered in-world via Viewport2Din3D
+scenes/scenarios/     → Per-question 3D environments (loaded dynamically)
+cars/                 → VehicleBody3D car + autonomous lane-following driver
+scripts/              → Quiz logic, auto-driver, UI controller, XR startup
+resources/            → QuestionData/QuestionBank resources (.tres)
+road_demos/           → Road-generator demo scenes (not part of main app)
 addons/
-  godot-xr-tools/    → VR toolkit v4.4.1-dev (hands, pickup, teleport, movement providers)
+  godot-xr-tools/    → VR toolkit v4.4.1-dev (hands, pointer, movement providers)
   godot_meta_toolkit/ → Meta GDExtension
-  godotopenxrvendors/ → Platform-specific OpenXR loaders (Meta, Pico, etc.)
-  road-generator/    → Road/highway mesh generator v0.9.0 (RoadContainer, RoadPoint, RoadLane, RoadIntersection)
-assets/textures/     → 1m×1m reference textures
+  godotopenxrvendors/ → Platform-specific OpenXR loaders
+  road-generator/     → Road/highway mesh generator v0.9.0
+  godot_mcp/          → MCP editor plugin
 ```
 
 ### XR Init Flow
 
-`main.tscn` runs `start_xr.gd` → detects OpenXR/WebXR → emits `xr_started`/`xr_failed_to_initialize`.
+`main.tscn` runs `start_xr_with_spawn_alignment.gd` → initializes OpenXR → samples HMD position over several frames → aligns XROrigin3D to the car's driver-seat anchor so the headset matches the authored seat pose.
 
 ### Main Scene Tree (`main.tscn`)
 
 ```
-Main (Node3D) [start_xr.gd]
+Main (Node3D) [start_xr_with_spawn_alignment.gd]
 ├── WorldEnvironment (ProceduralSkyMaterial)
-├── DirectionalLight3D (shadow_enabled)
-├── Floor (StaticBody3D, layer=1)
-├── Table (StaticBody3D, layer=1)
-├── PickableObject (XRTools pickable, layer=3)
-├── XROrigin3D (player.tscn instance)
-├── Viewport2Din3D (renders test_panel.tscn)
-└── RoadManager (road_manager.gd)
+├── DirectionalLight3D
+├── car (Doge.tscn — VehicleBody3D)
+│   ├── DriversSeatAnchor
+│   │   └── XROrigin3D (player.tscn instance)
+│   ├── RoadLaneAgent
+│   ├── AutoDriver [car_auto_driver.gd]
+│   └── Viewport2Din3D (renders test_panel.tscn)
+├── QuestionManager [question_manager.gd]
+├── QuestionSceneRunner [question_scene_runner.gd]
+└── DefaultEnvironment (Floor, RoadManager — hidden during question scenes)
 ```
+
+**Key**: XROrigin3D is a child of `car/DriversSeatAnchor`, not a root-level node. The player sees the world from inside the car.
 
 ### Player Hierarchy (`player.tscn`)
 
 ```
 XROrigin3D
-├── XRCamera3D (Y=1.7m) [VRCommonShaderCache, Vignette]
+├── XRCamera3D (Y=1.7m)
+│   └── VRCommonShaderCache
 ├── XRController3D_left
-│   ├── LeftHand → FunctionPickup
-│   ├── FunctionTeleport
-│   └── MovementDirect
+│   └── LeftHand (XRTools hand model)
 ├── XRController3D_right
-│   ├── RightHand → FunctionPickup
-│   ├── MovementTurn
-│   └── FunctionPointer (laser_length=1)
-└── PlayerBody (CharacterBody3D)
+│   ├── RightHand (XRTools hand model)
+│   └── FunctionPointer (laser_length=1m)
 ```
 
-Asymmetric controller setup: left = direct movement + teleport, right = turning + pointer. Both hands have pickup.
+### Quiz System
+
+Signal-driven architecture with three decoupled components:
+
+1. **QuestionManager** (`scripts/question_manager.gd`) — State machine. Holds `QuestionBank`, tracks current index, validates answers. Emits `question_changed`, `answer_validated`, `question_change_requested`.
+2. **QuestionSceneRunner** (`scripts/question_scene_runner.gd`) — Listens to `question_change_requested`. Loads/unloads per-question `.tscn` scenes, hides `DefaultEnvironment`, places the car at the scene's `SpawnPoint`.
+3. **test_panel_controller** (`scripts/test_panel_controller.gd`) — 2D UI inside `Viewport2Din3D`. Displays question text + answer buttons. Listens to QuestionManager signals.
+
+Data: `QuestionData` (Resource) stores question text, options, correct index, optional `scene_path`, and `spawn_point_path`. `QuestionBank` holds an array of `QuestionData`.
+
+### Car & Auto-Driver
+
+- `BaseCar.gd` — `VehicleBody3D` controller. Keyboard/gamepad input or autonomous mode via `AutoDriver`.
+- `car_auto_driver.gd` — Lane-following using `RoadLaneAgent` (addon). Configurable lookahead, steering gain, speed limits. Auto lane-switching. Emits `auto_drive_completed`.
+- `CameraFollow.gd` — Third-person follow cam (used outside VR / debug).
 
 ### Road Generator
 
-Addon (`addons/road-generator/`) generates 3D highway meshes with dynamic lane counts. Key nodes: `RoadContainer`, `RoadPoint`, `RoadSegment`, `RoadLane`, `RoadIntersection`, `RoadLaneAgent`. Demo scenes in `road_demos/` show procedural generation, AStar pathfinding over lanes, and AI traffic spawning with actor pooling.
-
-**Movement providers** (in `addons/godot-xr-tools/functions/`): turn, jump, climb, grapple, flight, teleport. Base class: `XRToolsMovementProvider`.
+Addon (`addons/road-generator/`). Key nodes: `RoadContainer`, `RoadPoint`, `RoadLane`, `RoadIntersection`, `RoadLaneAgent`. Demo scenes in `road_demos/` show procedural generation, AStar pathfinding, and AI traffic with actor pooling — see `road_demos/README.md`.
 
 ## GDScript Conventions
 
-- **Type hints** on all variables and function returns
-- **Naming**: `snake_case` for functions/variables, `_private_prefix` for private, `p_param` for parameters, `PascalCase` for classes/enums
-- **Signals** defined at top of class with typed parameters
-- **`@export`** with groups and range hints; **`@onready`** for child node references (prefer `%` unique name notation)
-- **`##` doc comments** (Godot docstring format)
-- **`@tool`** + `@icon()` for editor-visible scripts
-- XRTools uses `is_xr_class(name: String) -> bool` for inheritance checking
+See `.github/instructions/gdscript.instructions.md` for full rules. Key points: mandatory type hints, `p_param` parameter prefix, `##` doc comments, `@onready` with `%` unique names, signals at top of class.
 
 ## Physics Layers
 
@@ -79,18 +91,17 @@ Addon (`addons/road-generator/`) generates 3D highway meshes with dynamic lane c
 21=Pointable Objects  22=Hand Pose Areas  23=UI Objects
 ```
 
-Assign collision layers/masks carefully — mismatched layers are a common source of interaction bugs.
+Mismatched layers/masks are a common source of interaction bugs.
 
 ## Build & Run
 
 - **Editor**: F5 to run, or export via Project → Export
 - **CLI export**: `godot --export-debug "Meta Quest"`
 - **Android build**: `./gradlew assembleDebug` from `android/build/`
+- **Deploy/logs**: See `README.md` for ADB deploy and logcat commands
 - **Package ID**: `com.einar.driVR`
 
-### Quest Export Features
-
-arm64-v8a only. Enabled: eye tracking, face tracking, body tracking, hand tracking, passthrough, render model. Supports Quest 2/3/Pro (Quest 1 disabled).
+Quest 2/3/Pro (arm64-v8a). Enabled: eye/face/body/hand tracking, passthrough, render model.
 
 ## Key Configuration (project.godot)
 
@@ -98,14 +109,16 @@ arm64-v8a only. Enabled: eye tracking, face tracking, body tracking, hand tracki
 - Physics: Jolt, 90 ticks/sec
 - XR: OpenXR enabled, shaders enabled
 - Autoloads: `XRToolsUserSettings`, `XRToolsRumbleManager`
-- Editor plugins: `godot-xr-tools`, `road-generator`
+- Editor plugins: `godot-xr-tools`, `road-generator`, `godot_mcp`
 - VRAM: ETC2/ASTC compression enabled
 
 ## Conventions
 
-- Don't modify files under `addons/` unless you're patching a plugin — these are managed externally.
-- New VR interactions should follow the XRTools pattern: extend the appropriate base class (`XRToolsMovementProvider`, `XRToolsFunctionPickup`, etc.) and register via `is_xr_class()`.
-- New scenes go in root or a domain-specific folder; textures in `assets/textures/`.
-- OpenXR input bindings live in `openxr_action_map.tres` — add new actions there, not in project input map.
-- Road features use `RoadContainer` + `RoadPoint` nodes; AI vehicles depend on `RoadLaneAgent` for lane following.
-- For procedural road content, follow the pattern in `road_demos/procedural_generator/` — distance-cull RoadPoints and pool actors for performance.
+- Don't modify files under `addons/` unless patching a plugin — these are managed externally.
+- New VR interactions should extend XRTools base classes (`XRToolsMovementProvider`, etc.) and register via `is_xr_class()`.
+- New scenes go in `scenes/` or a domain-specific folder; textures in `assets/textures/`.
+- OpenXR input bindings live in `openxr_action_map.tres` — add new actions there, not in the project input map.
+- Road features use `RoadContainer` + `RoadPoint`; AI vehicles use `RoadLaneAgent` for lane following.
+- For procedural road content, follow `road_demos/procedural_generator/` — distance-cull RoadPoints and pool actors.
+- UI scripts inside `Viewport2Din3D` must resolve gameplay nodes via `get_tree().current_scene`, not `get_tree().root.get_child(0)` (autoloads may be first children).
+- Per-question scenario scenes must include a `SpawnPoint` node at root level for car placement.
