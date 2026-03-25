@@ -5,6 +5,9 @@ extends Node
 ## Reference to the RoadLaneAgent
 @onready var lane_agent: RoadLaneAgent = get_parent().get_node("RoadLaneAgent") as RoadLaneAgent
 
+## Emitted when the car reaches its distance target and comes to a full stop.
+signal auto_drive_completed
+
 ## Auto-drive settings
 @export var auto_drive_speed: float = 15.0
 @export var auto_drive_enabled: bool = false
@@ -54,8 +57,25 @@ var _preferred_lane_family: String = ""
 var _tracked_lane: RoadLane = null
 var _tracked_lane_offset: float = 0.0
 
+## When set, remaining distance is measured to this world position instead of using total_distance_target.
+var _stop_at_position: Vector3 = Vector3.ZERO
+var _use_position_stop: bool = false
+
 const MAX_ASSIGN_RETRIES: int = 120
 const NEAREST_LANE_SEARCH_DISTANCE: float = 250.0
+
+
+func _refresh_road_manager_path() -> void:
+	var main_scene: Node = get_tree().current_scene
+	if not is_instance_valid(main_scene) or not is_instance_valid(lane_agent):
+		return
+
+	var road_manager: Node = main_scene.get_node_or_null("RoadManager")
+	if not is_instance_valid(road_manager):
+		road_manager = main_scene.get_node_or_null("DefaultEnvironment/RoadManager")
+
+	if is_instance_valid(road_manager):
+		lane_agent.road_manager_path = lane_agent.get_path_to(road_manager)
 
 
 ## Try to assign the car to the nearest lane.
@@ -93,11 +113,7 @@ func _ready() -> void:
 		push_error("RoadLaneAgent node missing under car")
 		return
 
-	var main_scene: Node = get_tree().current_scene
-	if is_instance_valid(main_scene):
-		var road_manager: Node = main_scene.get_node_or_null("RoadManager")
-		if is_instance_valid(road_manager):
-			lane_agent.road_manager_path = lane_agent.get_path_to(road_manager)
+	_refresh_road_manager_path()
 
 	var try_count: int = 0
 	while try_count < MAX_ASSIGN_RETRIES:
@@ -291,7 +307,13 @@ func _physics_process(delta: float) -> void:
 	var forward_speed_mps: float = max(car.linear_velocity.dot(_get_car_forward_flat()), 0.0)
 	total_distance_traveled += speed_mps * delta
 
-	var remaining_distance: float = max(total_distance_target - total_distance_traveled, 0.0)
+	var remaining_distance: float
+	if _use_position_stop:
+		var flat_car: Vector3 = Vector3(car.global_position.x, 0.0, car.global_position.z)
+		var flat_stop: Vector3 = Vector3(_stop_at_position.x, 0.0, _stop_at_position.z)
+		remaining_distance = maxf(flat_car.distance_to(flat_stop), 0.0)
+	else:
+		remaining_distance = maxf(total_distance_target - total_distance_traveled, 0.0)
 	if remaining_distance <= 0.0:
 		_begin_stop()
 
@@ -330,6 +352,7 @@ func _physics_process(delta: float) -> void:
 
 	if _is_stopping and speed_mps <= stop_complete_speed:
 		stop_auto_drive()
+		auto_drive_completed.emit()
 
 
 func _compute_steering_target(p_target_position: Vector3, p_speed_mps: float) -> float:
@@ -365,6 +388,8 @@ func _begin_stop() -> void:
 	_is_stopping = true
 
 func start_auto_drive() -> void:
+	_refresh_road_manager_path()
+
 	if not _is_ready_for_drive:
 		_is_ready_for_drive = _try_assign_lane()
 		if not _is_ready_for_drive:
@@ -389,6 +414,40 @@ func stop_auto_drive() -> void:
 	brake_command = 0.0
 	_tracked_lane = null
 	_tracked_lane_offset = 0.0
+	_use_position_stop = false
+	_stop_at_position = Vector3.ZERO
+
+
+## Forces the car onto the closest lane heading toward [param p_target_position].
+## Temporarily bypasses lane-family locking so turn lanes at intersections are
+## considered.  Returns [code]true[/code] if a suitable lane was found and assigned.
+func force_lane_toward(p_target_position: Vector3) -> bool:
+	_refresh_road_manager_path()
+
+	var direction: Vector3 = p_target_position - car.global_position
+	direction.y = 0.0
+	if direction.length_squared() <= 0.0001:
+		return false
+	direction = direction.normalized()
+
+	# Temporarily clear family lock to consider all lanes (including turn lanes).
+	var saved_family: String = _preferred_lane_family
+	_preferred_lane_family = ""
+	var best_lane: RoadLane = _find_best_lane_for_position(car.global_position, direction)
+	_preferred_lane_family = saved_family
+
+	if is_instance_valid(best_lane):
+		lane_agent.assign_lane(best_lane)
+		_set_tracked_lane(best_lane)
+		_preferred_lane_family = _lane_family_of(best_lane)
+		_is_ready_for_drive = true
+		# Store the target so start_auto_drive() can use it for position-based stopping.
+		_stop_at_position = p_target_position
+		_use_position_stop = true
+		return true
+
+	return false
+
 
 func toggle_auto_drive() -> void:
 	if auto_drive_enabled:
