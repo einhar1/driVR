@@ -19,13 +19,38 @@ extends XRToolsStartXR
 
 var _camera_baseline_local_position: Vector3 = Vector3.ZERO
 var _has_applied_spawn_alignment: bool = false
+var _desktop_debug_added: bool = false
 
 
 func _ready() -> void:
 	_has_applied_spawn_alignment = false
 	_cache_camera_baseline()
 	xr_started.connect(_on_xr_started)
+	xr_failed_to_initialize.connect(_add_desktop_debug)
 	super._ready()
+
+	# Fallback: XR runtime found but no headset connected.
+	if not Engine.is_editor_hint():
+		_start_desktop_fallback()
+
+
+func _start_desktop_fallback() -> void:
+	await get_tree().create_timer(2.0).timeout
+	if not is_xr_active() and not _desktop_debug_added:
+		_add_desktop_debug()
+
+
+## Spawns the desktop debug node for headset-free testing.
+func _add_desktop_debug() -> void:
+	if _desktop_debug_added:
+		return
+	_desktop_debug_added = true
+	var debug_script: Script = load("res://scripts/desktop_debug.gd")
+	if debug_script:
+		var debug_node: Node = Node.new()
+		debug_node.set_script(debug_script)
+		debug_node.name = "DesktopDebug"
+		add_child(debug_node)
 
 
 func _on_xr_started() -> void:
