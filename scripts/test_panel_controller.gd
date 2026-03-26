@@ -34,7 +34,10 @@ func _ready() -> void:
 			question_manager.answer_validated.connect(_on_answer_validated)
 		
 		# Display the first question.
-		_on_question_changed(question_manager.get_current_question(), 0)
+		var current_question_index: int = 0
+		if question_manager.has_method("get_current_question_index"):
+			current_question_index = question_manager.get_current_question_index()
+		_on_question_changed(question_manager.get_current_question(), current_question_index)
 	else:
 		push_error("QuestionManager not found in scene")
 
