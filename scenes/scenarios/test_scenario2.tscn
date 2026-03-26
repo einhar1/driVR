@@ -22,7 +22,7 @@ size = Vector3(100, 1, 100)
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1357764512]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=352508834]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.38289, 0.49216533, 8.854498)
 mesh = SubResource("PlaneMesh_4x055")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1169328242]

@@ -8,4 +8,5 @@ question = "Får man köra mot rött?"
 options = PackedStringArray("Ja", "Nej", "Kanske")
 correct_index = 1
 scene_path = "uid://yvmx0rvhddyv"
+answer_outcomes = null
 metadata/_custom_type_script = "uid://cc00klym0vj0m"
