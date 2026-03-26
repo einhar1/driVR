@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://chiilsnbytu4m"]
+[gd_scene format=3 uid="uid://boawrkupmf76x"]
 
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_f8k0k"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_aftvq"]
@@ -27,7 +27,6 @@ script = ExtResource("7_qucya")
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1085047969]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=62543283]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
 mesh = SubResource("PlaneMesh_tp20u")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1247155218]

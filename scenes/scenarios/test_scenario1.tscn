@@ -35,27 +35,11 @@ size = Vector2(30, 98)
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1016406379]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1506633518]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
 mesh = SubResource("PlaneMesh_fdylj")
-
-[node name="plant_bushDetailed2" parent="Floor/MeshInstance3D" unique_id=2128476617 instance=ExtResource("8_vdqxo")]
-transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, 9.040574, 0.14526129, -13.514556)
-
-[node name="plant_bushDetailed4" parent="Floor/MeshInstance3D" unique_id=1692944627 instance=ExtResource("8_vdqxo")]
-transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -4.789937, 0.14526129, 16.864305)
-
-[node name="plant_bushDetailed5" parent="Floor/MeshInstance3D" unique_id=232437840 instance=ExtResource("8_vdqxo")]
-transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -4.0060496, 0.14526129, 15.513876)
-
-[node name="plant_bushDetailed3" parent="Floor/MeshInstance3D" unique_id=1963400485 instance=ExtResource("8_vdqxo")]
-transform = Transform3D(-1.741411, 0, -1.793736, 0, 2.5, 0, 1.793736, 0, -1.741411, 10.155037, 0.14526129, 13.258851)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1196861786]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_tl7i5")
-
-[node name="tree_pineDefaultA2" parent="Floor" unique_id=822446624 instance=ExtResource("3_ws1tk")]
-transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, -6.4920163, 0.05, -8.089385)
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1541967525]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.7449794, 0, 6.4329767)
@@ -93,46 +77,61 @@ prior_mag = 17.439634
 next_mag = 17.439634
 next_pt_init = NodePath("../RP_001")
 
-[node name="building-type-a2" parent="RoadManager/Road_001/RP_002" unique_id=1668593349 instance=ExtResource("6_tl7i5")]
-transform = Transform3D(-0.15427792, 0, -7.9985123, 0, 8, 0, 7.9985123, 0, -0.15427792, -15.544037, 0.012815619, 34.514153)
+[node name="tree_pineDefaultA2" parent="." unique_id=822446624 instance=ExtResource("3_ws1tk")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, -6.4920163, 0.05, -8.089385)
 
-[node name="building-type-a4" parent="RoadManager/Road_001/RP_002" unique_id=37754553 instance=ExtResource("6_tl7i5")]
-transform = Transform3D(-0.08363485, 0, 7.9995627, 0, 8, 0, -7.9995627, 0, -0.08363485, 15.66611, 0.012815619, 46.671295)
+[node name="flower_redA2" parent="." unique_id=1400290657 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.485146, 0.29999906, -3.3987007)
 
-[node name="building-type-a3" parent="RoadManager/Road_001/RP_002" unique_id=245956188 instance=ExtResource("6_tl7i5")]
-transform = Transform3D(-0.11469355, 0, 7.9987817, 0, 8, 0, -6.57081, 0, -0.13961881, -15.806511, 0.012815619, 48.122066)
+[node name="flower_redA3" parent="." unique_id=1119628209 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -6.4514246, 0.29999906, -3.3987007)
 
-[node name="building-type-a5" parent="RoadManager/Road_001/RP_002" unique_id=912565215 instance=ExtResource("6_tl7i5")]
-transform = Transform3D(-0.21708727, 0, -7.995634, 0, 8, 0, 6.568224, 0, -0.26426506, 15.8167925, 0.012815619, 60.07523)
+[node name="flower_redA4" parent="." unique_id=1299051791 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -19.973448, 0.29999906, 20.1478)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="RoadManager/Road_001/RP_002" unique_id=432773505]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.239244, -4.7683716e-07, 49.072277)
+[node name="flower_redA5" parent="." unique_id=1116486822 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -19.76033, 0.29999906, 20.649979)
+
+[node name="plant_bushDetailed2" parent="." unique_id=1001856025 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, 6.7470727, 0.14526129, -4.298502)
+
+[node name="flower_redC2" parent="." unique_id=1481173068 instance=ExtResource("11_vf71x")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -6.0016656, 0.29999906, -3.6279259)
+
+[node name="flower_yellowA2" parent="." unique_id=2086428162 instance=ExtResource("9_tdubw")]
+transform = Transform3D(0.00011936029, -2.6613306e-19, -2, 4.4593235e-15, 2, 0, 2, -4.4593235e-15, 0.00011936029, -20.457973, 0.35032564, 20.04841)
+
+[node name="flower_yellowA3" parent="." unique_id=484890190 instance=ExtResource("9_tdubw")]
+transform = Transform3D(0.00011936029, -2.6613306e-19, -2, 4.4593235e-15, 2, 0, 2, -4.4593235e-15, 0.00011936029, -20.225082, 0.35032564, 20.73159)
+
+[node name="building-type-a2" parent="." unique_id=1668593349 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(-7.9985213, -1.0645322e-18, 0.15380056, -3.4398757e-16, 8, -1.7833977e-14, -0.15380056, -1.7837294e-14, -7.9985213, 0.33745956, 0.26281467, -7.0913363)
+
+[node name="building-type-a4" parent="." unique_id=37754553 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(7.999558, -1.0645322e-18, 0.08411227, -1.8647744e-16, 8, 1.7836318e-14, -0.08411227, -1.7837294e-14, 7.999558, -11.8178215, 0.26281467, 24.119537)
+
+[node name="building-type-a3" parent="." unique_id=245956188 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(6.570803, -1.0645322e-18, 0.14009619, -2.5572782e-16, 8, 1.7834577e-14, -0.1150857, -1.7837294e-14, 7.9987736, -13.27047, 0.26281467, -7.3529987)
+
+[node name="building-type-a5" parent="." unique_id=912565215 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(-6.568237, -1.0645322e-18, 0.26378787, -4.840312e-16, 8, -1.782756e-14, -0.21669528, -1.7837294e-14, -7.99565, -25.221748, 0.26281467, 24.271019)
+
+[node name="plant_bushDetailed3" parent="." unique_id=2128476617 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -6.0264263, 0.14526129, -5.0725555)
+
+[node name="plant_bushDetailed4" parent="." unique_id=1692944627 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -19.856937, 0.14526129, 25.306305)
+
+[node name="plant_bushDetailed5" parent="." unique_id=232437840 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -19.07305, 0.14526129, 23.955875)
+
+[node name="plant_bushDetailed6" parent="." unique_id=1963400485 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(-1.741411, 0, -1.793736, 0, 2.5, 0, 1.793736, 0, -1.741411, -4.9119635, 0.14526129, 21.700851)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=432773505]
+transform = Transform3D(5.9680144e-05, -1.3306653e-19, -1, 2.2296618e-15, 1, 0, 1, -2.2296618e-15, 5.9680144e-05, -14.221245, 0.24999857, -16.785675)
 mesh = SubResource("PlaneMesh_eyj0f")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="RoadManager/Road_001/RP_002" unique_id=478477348]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.27528, -4.7683716e-07, 48.686203)
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=478477348]
+transform = Transform3D(5.9680144e-05, -1.3306653e-19, -1, 2.2296618e-15, 1, 0, 1, -2.2296618e-15, 5.9680144e-05, -13.832157, 0.24999857, 33.728825)
 mesh = SubResource("PlaneMesh_eyj0f")
-
-[node name="flower_yellowA2" parent="RoadManager/Road_001/RP_002" unique_id=2086428162 instance=ExtResource("9_tdubw")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 11.594469, 0.1003266, 55.311203)
-
-[node name="flower_yellowA3" parent="RoadManager/Road_001/RP_002" unique_id=484890190 instance=ExtResource("9_tdubw")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 12.277663, 0.1003266, 55.078354)
-
-[node name="flower_redA2" parent="RoadManager/Road_001" unique_id=1400290657 instance=ExtResource("7_wc8o0")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.458418, 0.29999906, -11.851425)
-
-[node name="flower_redA3" parent="RoadManager/Road_001" unique_id=1119628209 instance=ExtResource("7_wc8o0")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -6.4246964, 0.29999906, -11.851425)
-
-[node name="flower_redA4" parent="RoadManager/Road_001" unique_id=1299051791 instance=ExtResource("7_wc8o0")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -19.94672, 0.29999906, 11.695077)
-
-[node name="flower_redA5" parent="RoadManager/Road_001" unique_id=1116486822 instance=ExtResource("7_wc8o0")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -19.733603, 0.29999906, 12.197253)
-
-[node name="plant_bushDetailed2" parent="RoadManager/Road_001" unique_id=1001856025 instance=ExtResource("8_vdqxo")]
-transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, 6.773801, 0.14526129, -12.751226)
-
-[node name="flower_redC2" parent="RoadManager/Road_001" unique_id=1481173068 instance=ExtResource("11_vf71x")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.9749374, 0.29999906, -12.08065)

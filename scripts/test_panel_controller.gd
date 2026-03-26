@@ -18,6 +18,7 @@ signal advance_requested()
 
 var question_manager: Node
 var car: Node
+var _last_selected_index: int = -1
 
 func _ready() -> void:
 	# Find the QuestionManager in the active scene tree.
@@ -34,7 +35,10 @@ func _ready() -> void:
 			question_manager.answer_validated.connect(_on_answer_validated)
 		
 		# Display the first question.
-		_on_question_changed(question_manager.get_current_question(), 0)
+		var current_question_index: int = 0
+		if question_manager.has_method("get_current_question_index"):
+			current_question_index = question_manager.get_current_question_index()
+		_on_question_changed(question_manager.get_current_question(), current_question_index)
 	else:
 		push_error("QuestionManager not found in scene")
 
@@ -77,27 +81,12 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 		call_deferred("_sync_viewport_to_content")
 
 func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_index: int) -> void:
-	var current_question: QuestionData = question_manager.get_current_question()
-	var has_outcomes: bool = current_question != null and not current_question.answer_outcomes.is_empty()
-
-	if has_outcomes:
-		# Question has per-answer driving outcomes — always move, regardless of correctness.
-		_apply_outcome_and_drive(p_selected_index)
-	elif p_is_correct:
+	_last_selected_index = p_selected_index
+	if p_is_correct:
 		_start_car_movement()
 	else:
 		# Show feedback (optional: change button color or play sound).
 		print("Incorrect answer! Correct answer was index: %d" % p_correct_index)
-
-
-## Tells the active scenario scene which outcome was chosen, then starts driving.
-func _apply_outcome_and_drive(p_selected_index: int) -> void:
-	var scene_runner: Node = get_tree().current_scene.find_child(
-		"QuestionSceneRunner", true, false
-	)
-	if is_instance_valid(scene_runner) and scene_runner.has_method("apply_answer_outcome"):
-		scene_runner.apply_answer_outcome(p_selected_index)
-	_start_car_movement()
 
 func _start_car_movement() -> void:
 	if not is_instance_valid(car):
@@ -112,7 +101,44 @@ func _start_car_movement() -> void:
 	# Advance to the next question only when the car has fully stopped.
 	if not auto_driver.is_connected("auto_drive_completed", _on_movement_complete):
 		auto_driver.connect("auto_drive_completed", _on_movement_complete, CONNECT_ONE_SHOT)
+
+	var current_question: QuestionData = question_manager.get_current_question()
+	if _try_start_outcome_drive(current_question, auto_driver):
+		return
+
 	auto_driver.call("start_auto_drive")
+
+
+## Attempts to start an outcome-based lane-following drive.
+## Returns [code]true[/code] if an outcome drive was started.
+func _try_start_outcome_drive(
+	p_question: QuestionData,
+	p_auto_driver: Node,
+) -> bool:
+	if not p_question or not p_question.has_outcomes():
+		return false
+	if _last_selected_index < 0 or _last_selected_index >= p_question.answer_outcomes.size():
+		return false
+
+	var outcome: String = p_question.answer_outcomes[_last_selected_index]
+	var scene_runner: Node = get_tree().current_scene.find_child(
+		"QuestionSceneRunner", true, false)
+	if not is_instance_valid(scene_runner):
+		return false
+
+	var question_scene: Node = scene_runner.get_node_or_null("QuestionSceneRoot")
+	if not is_instance_valid(question_scene):
+		return false
+	if not question_scene.has_method("get_lane_for_outcome"):
+		return false
+
+	var lane: RoadLane = question_scene.call("get_lane_for_outcome", outcome) as RoadLane
+	var stop_target: Vector3 = question_scene.call("get_stop_target_for_outcome", outcome)
+	if not is_instance_valid(lane):
+		return false
+
+	p_auto_driver.call("start_auto_drive_with_lane", lane, stop_target)
+	return true
 
 func _on_movement_complete() -> void:
 	await get_tree().create_timer(1.5).timeout

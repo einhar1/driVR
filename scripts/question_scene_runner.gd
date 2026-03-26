@@ -151,37 +151,3 @@ func _apply_car_spawn_transform(p_target_transform: Transform3D) -> void:
 		rigid_body.linear_velocity = Vector3.ZERO
 		rigid_body.angular_velocity = Vector3.ZERO
 	_persistent_car.reset_physics_interpolation()
-
-
-## Applies the driving outcome corresponding to the selected answer index.
-## Looks up the outcome tag in the current question's [member QuestionData.answer_outcomes],
-## then delegates to the active scene's [code]apply_outcome()[/code] method.
-func apply_answer_outcome(p_selected_index: int) -> void:
-	if not is_instance_valid(_active_scene_root):
-		return
-
-	if not is_instance_valid(_question_manager):
-		return
-
-	var question: QuestionData = _question_manager.get_current_question()
-	if question == null or question.answer_outcomes.is_empty():
-		return
-
-	if p_selected_index < 0 or p_selected_index >= question.answer_outcomes.size():
-		push_warning("QuestionSceneRunner: answer index %d out of answer_outcomes range" % p_selected_index)
-		return
-
-	var outcome: String = question.answer_outcomes[p_selected_index]
-	if outcome.is_empty():
-		return
-
-	if not _active_scene_root.has_method("apply_outcome"):
-		push_warning("QuestionSceneRunner: Active scene does not implement apply_outcome()")
-		return
-
-	var auto_driver: Node = _persistent_car.get_node_or_null("AutoDriver")
-	if not is_instance_valid(auto_driver):
-		push_warning("QuestionSceneRunner: AutoDriver not found on car")
-		return
-
-	_active_scene_root.apply_outcome(outcome, auto_driver)
