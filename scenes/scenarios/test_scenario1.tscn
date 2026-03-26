@@ -3,8 +3,14 @@
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_lc2to"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_lc2to"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_fdylj"]
+[ext_resource type="PackedScene" uid="uid://cvlscx0d5h7uc" path="res://environment/rural/GLTF format/tree_pineDefaultA.glb" id="3_ws1tk"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="4_fdylj"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_tl7i5"]
+[ext_resource type="PackedScene" uid="uid://cy1no6ib41wak" path="res://environment/city/GLB format/building-type-a.glb" id="6_tl7i5"]
+[ext_resource type="PackedScene" uid="uid://bqw5q0akvvfy8" path="res://environment/rural/GLTF format/flower_redA.glb" id="7_wc8o0"]
+[ext_resource type="PackedScene" uid="uid://caexn0wf3lce6" path="res://environment/rural/GLTF format/plant_bushDetailed.glb" id="8_vdqxo"]
+[ext_resource type="PackedScene" uid="uid://bmnq7skuya2b" path="res://environment/rural/GLTF format/flower_yellowA.glb" id="9_tdubw"]
+[ext_resource type="PackedScene" uid="uid://dbe27a1lqtbts" path="res://environment/rural/GLTF format/flower_redC.glb" id="11_vf71x"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ycdy4"]
 albedo_texture = ExtResource("1_lc2to")
@@ -17,6 +23,13 @@ size = Vector2(100, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_tl7i5"]
 size = Vector3(100, 1, 100)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ws1tk"]
+albedo_color = Color(0.37526086, 0.37526086, 0.37526086, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_eyj0f"]
+material = SubResource("StandardMaterial3D_ws1tk")
+size = Vector2(30, 98)
+
 [node name="TestScenario1" type="Node3D" unique_id=2006070304]
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1016406379]
@@ -25,9 +38,24 @@ size = Vector3(100, 1, 100)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
 mesh = SubResource("PlaneMesh_fdylj")
 
+[node name="plant_bushDetailed2" parent="Floor/MeshInstance3D" unique_id=2128476617 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, 9.040574, 0.14526129, -13.514556)
+
+[node name="plant_bushDetailed4" parent="Floor/MeshInstance3D" unique_id=1692944627 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -4.789937, 0.14526129, 16.864305)
+
+[node name="plant_bushDetailed5" parent="Floor/MeshInstance3D" unique_id=232437840 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, -4.0060496, 0.14526129, 15.513876)
+
+[node name="plant_bushDetailed3" parent="Floor/MeshInstance3D" unique_id=1963400485 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(-1.741411, 0, -1.793736, 0, 2.5, 0, 1.793736, 0, -1.741411, 10.155037, 0.14526129, 13.258851)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1196861786]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_tl7i5")
+
+[node name="tree_pineDefaultA2" parent="Floor" unique_id=822446624 instance=ExtResource("3_ws1tk")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, -6.4920163, 0.05, -8.089385)
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1541967525]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.7449794, 0, 6.4329767)
@@ -64,3 +92,47 @@ lanes = Array[int]([2, 4, 4, 2])
 prior_mag = 17.439634
 next_mag = 17.439634
 next_pt_init = NodePath("../RP_001")
+
+[node name="building-type-a2" parent="RoadManager/Road_001/RP_002" unique_id=1668593349 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(-0.15427792, 0, -7.9985123, 0, 8, 0, 7.9985123, 0, -0.15427792, -15.544037, 0.012815619, 34.514153)
+
+[node name="building-type-a4" parent="RoadManager/Road_001/RP_002" unique_id=37754553 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(-0.08363485, 0, 7.9995627, 0, 8, 0, -7.9995627, 0, -0.08363485, 15.66611, 0.012815619, 46.671295)
+
+[node name="building-type-a3" parent="RoadManager/Road_001/RP_002" unique_id=245956188 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(-0.11469355, 0, 7.9987817, 0, 8, 0, -6.57081, 0, -0.13961881, -15.806511, 0.012815619, 48.122066)
+
+[node name="building-type-a5" parent="RoadManager/Road_001/RP_002" unique_id=912565215 instance=ExtResource("6_tl7i5")]
+transform = Transform3D(-0.21708727, 0, -7.995634, 0, 8, 0, 6.568224, 0, -0.26426506, 15.8167925, 0.012815619, 60.07523)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RoadManager/Road_001/RP_002" unique_id=432773505]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.239244, -4.7683716e-07, 49.072277)
+mesh = SubResource("PlaneMesh_eyj0f")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RoadManager/Road_001/RP_002" unique_id=478477348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.27528, -4.7683716e-07, 48.686203)
+mesh = SubResource("PlaneMesh_eyj0f")
+
+[node name="flower_yellowA2" parent="RoadManager/Road_001/RP_002" unique_id=2086428162 instance=ExtResource("9_tdubw")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 11.594469, 0.1003266, 55.311203)
+
+[node name="flower_yellowA3" parent="RoadManager/Road_001/RP_002" unique_id=484890190 instance=ExtResource("9_tdubw")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 12.277663, 0.1003266, 55.078354)
+
+[node name="flower_redA2" parent="RoadManager/Road_001" unique_id=1400290657 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.458418, 0.29999906, -11.851425)
+
+[node name="flower_redA3" parent="RoadManager/Road_001" unique_id=1119628209 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -6.4246964, 0.29999906, -11.851425)
+
+[node name="flower_redA4" parent="RoadManager/Road_001" unique_id=1299051791 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -19.94672, 0.29999906, 11.695077)
+
+[node name="flower_redA5" parent="RoadManager/Road_001" unique_id=1116486822 instance=ExtResource("7_wc8o0")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -19.733603, 0.29999906, 12.197253)
+
+[node name="plant_bushDetailed2" parent="RoadManager/Road_001" unique_id=1001856025 instance=ExtResource("8_vdqxo")]
+transform = Transform3D(2.1621342, 0, -1.2550602, 0, 2.5, 0, 1.2550602, 0, 2.1621342, 6.773801, 0.14526129, -12.751226)
+
+[node name="flower_redC2" parent="RoadManager/Road_001" unique_id=1481173068 instance=ExtResource("11_vf71x")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.9749374, 0.29999906, -12.08065)

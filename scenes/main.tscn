@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://scenes/test_panel.tscn" id="8_kek77"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
+[ext_resource type="PackedScene" uid="uid://cy1no6ib41wak" path="res://environment/city/GLB format/building-type-a.glb" id="10_jbj1t"]
 [ext_resource type="Script" uid="uid://di1s5v2qjtpjk" path="res://addons/road-generator/nodes/road_intersection.gd" id="10_ycdy4"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="11_dg77c"]
 [ext_resource type="Script" uid="uid://dobpxeffv3jad" path="res://addons/road-generator/procgen/intersection_ngon.gd" id="11_w48qg"]
@@ -15,6 +16,8 @@
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="12_jkv2x"]
 [ext_resource type="Resource" uid="uid://cunmwpynlecwm" path="res://resources/question_bank.tres" id="12_w48qg"]
 [ext_resource type="Script" uid="uid://d2dqv1s8mj3hn" path="res://scripts/question_scene_runner.gd" id="14_w48qg"]
+[ext_resource type="PackedScene" uid="uid://caexn0wf3lce6" path="res://environment/rural/GLTF format/plant_bushDetailed.glb" id="18_gqmmt"]
+[ext_resource type="PackedScene" uid="uid://bqw5q0akvvfy8" path="res://environment/rural/GLTF format/flower_redA.glb" id="19_yc10j"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jkv2x"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -101,6 +104,9 @@ mesh = SubResource("PlaneMesh_muem4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_dp3eg")
 
+[node name="building-type-a2" parent="DefaultEnvironment/Floor" unique_id=1668593349 instance=ExtResource("10_jbj1t")]
+transform = Transform3D(7.967638, -0.3559296, 0.6245481, 0.35484114, 7.9920783, 0.027814439, -0.62516713, 0, 7.9755354, -5.1841235, -0.0752643, 9.164035)
+
 [node name="RoadManager" type="Node3D" parent="DefaultEnvironment" unique_id=1699536803]
 script = ExtResource("9_kek77")
 metadata/_custom_type_script = "uid://bgmxg26pbs61k"
@@ -181,6 +187,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.25, 0)
 script = ExtResource("10_ycdy4")
 settings = SubResource("Resource_vivmo")
 edge_points = [NodePath("../RP_001"), NodePath("../RP_005"), NodePath("../RP_006")]
+
+[node name="plant_bushDetailed2" parent="DefaultEnvironment/RoadManager/Road_002" unique_id=2128476617 instance=ExtResource("18_gqmmt")]
+transform = Transform3D(2.182097, 0, -2.0587502, 0, 3, 0, 2.0587502, 0, 2.182097, 1.1471342, 0.075899825, -28.037977)
+
+[node name="flower_redA2" parent="DefaultEnvironment/RoadManager/Road_002" unique_id=1400290657 instance=ExtResource("19_yc10j")]
+transform = Transform3D(2.985022, 0.16648397, 0.24884945, -0.16988027, 2.9949925, 0.03406936, -0.2465434, -0.0479908, 2.9894671, -11.755159, 0.37634018, -26.733446)
 
 [node name="Road_001" type="Node3D" parent="DefaultEnvironment/RoadManager" unique_id=980787354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, 40)
