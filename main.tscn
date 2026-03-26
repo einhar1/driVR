@@ -97,6 +97,7 @@ metadata/_custom_type_script = "uid://bgmxg26pbs61k"
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=2033327340]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 40)
 script = ExtResource("10_efxa6")
+use_lowpoly_preview = true
 edge_containers = Array[NodePath]([NodePath("../Road_001")])
 edge_rp_targets = Array[NodePath]([NodePath("RP_003")])
 edge_rp_target_dirs = Array[int]([0])
