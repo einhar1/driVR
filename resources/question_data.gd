@@ -16,10 +16,5 @@ class_name QuestionData
 ## Optional node path inside the question scene used as the car spawn anchor.
 @export var spawn_point_path: NodePath = NodePath("SpawnPoint")
 
-## Per-answer driving outcome tags (same index order as options).
-## When set, the scenario scene decides which lane to drive based on the selected answer.
-## Leave empty for questions that use the default drive-on-correct behaviour.
-@export var answer_outcomes: PackedStringArray = PackedStringArray()
-
 func _to_string() -> String:
 	return "QuestionData: %s" % question

@@ -79,28 +79,12 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if auto_size_viewport_to_content:
 		call_deferred("_sync_viewport_to_content")
 
-func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_index: int) -> void:
-	var current_question: QuestionData = question_manager.get_current_question()
-	var has_outcomes: bool = current_question != null and not current_question.answer_outcomes.is_empty()
-
-	if has_outcomes:
-		# Question has per-answer driving outcomes — always move, regardless of correctness.
-		_apply_outcome_and_drive(p_selected_index)
-	elif p_is_correct:
+func _on_answer_validated(p_is_correct: bool, _p_selected_index: int, p_correct_index: int) -> void:
+	if p_is_correct:
 		_start_car_movement()
 	else:
 		# Show feedback (optional: change button color or play sound).
 		print("Incorrect answer! Correct answer was index: %d" % p_correct_index)
-
-
-## Tells the active scenario scene which outcome was chosen, then starts driving.
-func _apply_outcome_and_drive(p_selected_index: int) -> void:
-	var scene_runner: Node = get_tree().current_scene.find_child(
-		"QuestionSceneRunner", true, false
-	)
-	if is_instance_valid(scene_runner) and scene_runner.has_method("apply_answer_outcome"):
-		scene_runner.apply_answer_outcome(p_selected_index)
-	_start_car_movement()
 
 func _start_car_movement() -> void:
 	if not is_instance_valid(car):

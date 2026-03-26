@@ -57,10 +57,6 @@ var _preferred_lane_family: String = ""
 var _tracked_lane: RoadLane = null
 var _tracked_lane_offset: float = 0.0
 
-## When set, remaining distance is measured to this world position instead of using total_distance_target.
-var _stop_at_position: Vector3 = Vector3.ZERO
-var _use_position_stop: bool = false
-
 const MAX_ASSIGN_RETRIES: int = 120
 const NEAREST_LANE_SEARCH_DISTANCE: float = 250.0
 
@@ -117,6 +113,8 @@ func _ready() -> void:
 
 	var try_count: int = 0
 	while try_count < MAX_ASSIGN_RETRIES:
+		if _is_ready_for_drive:
+			break
 		if _try_assign_lane():
 			_is_ready_for_drive = true
 			break
@@ -165,7 +163,11 @@ func _lane_forward_at_position(p_lane: RoadLane, p_world_position: Vector3) -> V
 	return lane_forward_world.normalized()
 
 
-func _find_best_lane_for_position(p_position: Vector3, p_forward: Vector3) -> RoadLane:
+func _find_best_lane_for_position(
+	p_position: Vector3,
+	p_forward: Vector3,
+	p_exclude_lane: RoadLane = null,
+) -> RoadLane:
 	if not is_instance_valid(lane_agent.road_manager):
 		return null
 
@@ -192,6 +194,9 @@ func _find_best_lane_for_position(p_position: Vector3, p_forward: Vector3) -> Ro
 	var best_lane: RoadLane = null
 	var best_score: float = INF
 	for lane in candidates:
+		if is_instance_valid(p_exclude_lane) and lane == p_exclude_lane:
+			continue
+
 		var lane_point: Vector3 = lane_agent.get_closest_path_point(lane, p_position)
 		var lane_distance: float = p_position.distance_to(lane_point)
 		if lane_distance > NEAREST_LANE_SEARCH_DISTANCE:
@@ -307,13 +312,7 @@ func _physics_process(delta: float) -> void:
 	var forward_speed_mps: float = max(car.linear_velocity.dot(_get_car_forward_flat()), 0.0)
 	total_distance_traveled += speed_mps * delta
 
-	var remaining_distance: float
-	if _use_position_stop:
-		var flat_car: Vector3 = Vector3(car.global_position.x, 0.0, car.global_position.z)
-		var flat_stop: Vector3 = Vector3(_stop_at_position.x, 0.0, _stop_at_position.z)
-		remaining_distance = maxf(flat_car.distance_to(flat_stop), 0.0)
-	else:
-		remaining_distance = maxf(total_distance_target - total_distance_traveled, 0.0)
+	var remaining_distance: float = max(total_distance_target - total_distance_traveled, 0.0)
 	if remaining_distance <= 0.0:
 		_begin_stop()
 
@@ -414,39 +413,6 @@ func stop_auto_drive() -> void:
 	brake_command = 0.0
 	_tracked_lane = null
 	_tracked_lane_offset = 0.0
-	_use_position_stop = false
-	_stop_at_position = Vector3.ZERO
-
-
-## Forces the car onto the closest lane heading toward [param p_target_position].
-## Temporarily bypasses lane-family locking so turn lanes at intersections are
-## considered.  Returns [code]true[/code] if a suitable lane was found and assigned.
-func force_lane_toward(p_target_position: Vector3) -> bool:
-	_refresh_road_manager_path()
-
-	var direction: Vector3 = p_target_position - car.global_position
-	direction.y = 0.0
-	if direction.length_squared() <= 0.0001:
-		return false
-	direction = direction.normalized()
-
-	# Temporarily clear family lock to consider all lanes (including turn lanes).
-	var saved_family: String = _preferred_lane_family
-	_preferred_lane_family = ""
-	var best_lane: RoadLane = _find_best_lane_for_position(car.global_position, direction)
-	_preferred_lane_family = saved_family
-
-	if is_instance_valid(best_lane):
-		lane_agent.assign_lane(best_lane)
-		_set_tracked_lane(best_lane)
-		_preferred_lane_family = _lane_family_of(best_lane)
-		_is_ready_for_drive = true
-		# Store the target so start_auto_drive() can use it for position-based stopping.
-		_stop_at_position = p_target_position
-		_use_position_stop = true
-		return true
-
-	return false
 
 
 func toggle_auto_drive() -> void:

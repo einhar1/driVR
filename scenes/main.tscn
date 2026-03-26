@@ -28,6 +28,9 @@ background_mode = 2
 sky = SubResource("Sky_efxa6")
 tonemap_mode = 2
 
+[sub_resource type="LabelSettings" id="LabelSettings_yc8e5"]
+font_size = 32
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8y0u"]
 albedo_texture = ExtResource("2_a8y0u")
 uv1_triplanar = true
@@ -58,7 +61,36 @@ shadow_enabled = true
 
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
 transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, -0.21912575, 0.25730777, 22.602861)
-engine_force_value = 40.0
+
+[node name="look" parent="car" index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2149, 0)
+
+[node name="Camera3D" parent="car/look" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.974347, 0.225053, 0, -0.225053, 0.974347, 0, 1.97324, 6.19962)
+
+[node name="Hud" parent="car" index="6"]
+layer = 2
+
+[node name="speed" parent="car/Hud" index="0"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -23.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 50
+
+[node name="Label" parent="car/Hud" index="1"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Arow keys to drive
+Space to drift and break
+"
+label_settings = SubResource("LabelSettings_yc8e5")
 
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
@@ -85,6 +117,8 @@ viewport_padding_px = 8
 [node name="QuestionManager" type="Node" parent="." unique_id=945438787]
 script = ExtResource("11_ycdy4")
 question_bank = ExtResource("12_w48qg")
+debug_run_single_question = true
+debug_question_index = 2
 
 [node name="QuestionSceneRunner" type="Node3D" parent="." unique_id=549882979]
 script = ExtResource("14_w48qg")
