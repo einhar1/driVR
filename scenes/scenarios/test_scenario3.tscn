@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_16v57"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_6cbni"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="5_h34yr"]
-[ext_resource type="Script" path="res://scenes/scenarios/test_scenario3.gd" id="6_sc3gd"]
+[ext_resource type="Script" uid="uid://crjvm13jmp87i" path="res://scenes/scenarios/test_scenario3.gd" id="6_sc3gd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
 albedo_texture = ExtResource("1_sfs3c")
@@ -25,7 +25,6 @@ script = ExtResource("6_sc3gd")
 [node name="Floor" type="StaticBody3D" parent="." unique_id=2042139356]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=124625373]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
 mesh = SubResource("PlaneMesh_h34yr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=436929762]
@@ -33,9 +32,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_4bjd8")
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1832728889]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4562836, 0, 30.28656)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.991737, 0, 38.703568)
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=679089299]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.147211, 0, -7.811783)
 script = ExtResource("2_0pfko")
 metadata/_custom_type_script = "uid://bgmxg26pbs61k"
 
@@ -46,12 +46,13 @@ edge_rp_targets = Array[NodePath]([NodePath("RP_002"), NodePath("RP_004"), NodeP
 edge_rp_target_dirs = Array[int]([0, 1, 0, 1])
 
 [node name="Road_001" type="Node3D" parent="RoadManager" unique_id=20796118]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1374569, 0, -40.072876)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3190441, 0, -40.32227)
 script = ExtResource("3_16v57")
 material_resource = ExtResource("5_h34yr")
 use_lowpoly_preview = true
 generate_ai_lanes = true
 draw_lanes_editor = true
+draw_lanes_game = true
 edge_containers = Array[NodePath]([NodePath(""), NodePath("../4way_1x1"), NodePath(""), NodePath("../4way_1x1")])
 edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_001"), NodePath(""), NodePath("RP_002")])
 edge_rp_target_dirs = Array[int]([-1, 1, -1, 0])
@@ -66,7 +67,7 @@ lanes = Array[int]([5, 5])
 next_pt_init = NodePath("../RP_002")
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=16857113]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1374569, 0.25, 24.072876)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.319, 0.25, 24.322)
 script = ExtResource("4_6cbni")
 traffic_dir = Array[int]([2, 1])
 lanes = Array[int]([5, 5])
@@ -82,7 +83,7 @@ lanes = Array[int]([5, 5])
 prior_pt_init = NodePath("../RP_004")
 
 [node name="RP_004" type="Node3D" parent="RoadManager/Road_001" unique_id=2046902632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1374569, 0.25, 56.072876)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.319, 0.25, 56.322)
 script = ExtResource("4_6cbni")
 traffic_dir = Array[int]([2, 1])
 lanes = Array[int]([5, 5])
@@ -91,16 +92,18 @@ next_mag = 8.0
 next_pt_init = NodePath("../RP_003")
 
 [node name="Road_002" type="Node3D" parent="RoadManager" unique_id=1361405646]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.456501, 0, -0.24939346)
 script = ExtResource("3_16v57")
 material_resource = ExtResource("5_h34yr")
 use_lowpoly_preview = true
 generate_ai_lanes = true
 draw_lanes_editor = true
-edge_containers = Array[NodePath]([NodePath(""), NodePath("../4way_1x1"), NodePath(""), NodePath("../4way_1x1")])
-edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_004"), NodePath(""), NodePath("RP_003")])
-edge_rp_target_dirs = Array[int]([-1, 0, -1, 1])
-edge_rp_locals = Array[NodePath]([NodePath("RP_001"), NodePath("RP_002"), NodePath("RP_003"), NodePath("RP_004")])
-edge_rp_local_dirs = Array[int]([0, 1, 0, 0])
+draw_lanes_game = true
+edge_containers = Array[NodePath]([NodePath(""), NodePath("../4way_1x1"), NodePath(""), NodePath("")])
+edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_004"), NodePath(""), NodePath("")])
+edge_rp_target_dirs = Array[int]([-1, 0, -1, -1])
+edge_rp_locals = Array[NodePath]([NodePath("RP_001"), NodePath("RP_002"), NodePath("RP_004"), NodePath("RP_005")])
+edge_rp_local_dirs = Array[int]([0, 1, 0, 1])
 
 [node name="RP_001" type="Node3D" parent="RoadManager/Road_002" unique_id=667902440]
 transform = Transform3D(0.0041987337, 0.025441423, 0.99966747, 0, 0.9996763, -0.025441647, -0.9999912, 0.0001068227, 0.0041973745, 34.192, 0.25, 0.027)
@@ -112,7 +115,7 @@ next_mag = 16.0
 prior_pt_init = NodePath("../RP_002")
 
 [node name="RP_002" type="Node3D" parent="RoadManager/Road_002" unique_id=1801097892]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 16, 0.25, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15.543, 0.25, 0.249)
 script = ExtResource("4_6cbni")
 traffic_dir = Array[int]([2, 1])
 lanes = Array[int]([5, 5])
@@ -120,28 +123,29 @@ prior_mag = 8.0
 next_mag = 8.0
 next_pt_init = NodePath("../RP_001")
 
-[node name="RP_003" type="Node3D" parent="RoadManager/Road_002" unique_id=557711218]
-transform = Transform3D(-0.0003217896, -0.012673886, -0.99991965, 0, 0.9999197, -0.0126738865, 0.99999994, -4.0783248e-06, -0.00032176374, -63.414, 0.25, -0.057)
-script = ExtResource("4_6cbni")
-traffic_dir = Array[int]([2, 1])
-lanes = Array[int]([5, 5])
-next_mag = 16.0
-prior_pt_init = NodePath("../RP_004")
-
 [node name="RP_004" type="Node3D" parent="RoadManager/Road_002" unique_id=865292123]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -16, 0.25, 0)
+transform = Transform3D(0.008943156, 0, 0.99996, 0, 1, 0, -0.99996, 0, 0.008943156, -16.457, 0.25, 0.24900007)
 script = ExtResource("4_6cbni")
 traffic_dir = Array[int]([2, 1])
 lanes = Array[int]([5, 5])
 prior_mag = 8.0
-next_mag = 8.0
-prior_pt_init = NodePath("../RP_003")
+next_mag = 24.518066
+prior_pt_init = NodePath("../RP_005")
+
+[node name="RP_005" type="Node3D" parent="RoadManager/Road_002" unique_id=353939617]
+transform = Transform3D(0.008943156, 0, 0.99996, 0, 1, 0, -0.99996, 0, 0.008943156, -65.49117, 0.25, -0.18953705)
+script = ExtResource("4_6cbni")
+traffic_dir = Array[int]([2, 1])
+lanes = Array[int]([5, 5])
+prior_mag = 24.518066
+next_mag = 24.518066
+next_pt_init = NodePath("../RP_004")
 
 [node name="WaypointLeft" type="Marker3D" parent="." unique_id=1480387453]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.31491, 0.25, -2.6550236)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.317957, 0.25, -10.615031)
 
 [node name="WaypointRight" type="Marker3D" parent="." unique_id=2058791082]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.05904, 0.25, 2.5467567)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.21784, 0.25, -5.5964527)
 
 [node name="WaypointStraight" type="Marker3D" parent="." unique_id=1215478374]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1333923, 0.2500038, -35.307022)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.960932, 0.25000477, -42.44703)

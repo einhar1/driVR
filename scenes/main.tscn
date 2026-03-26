@@ -31,9 +31,6 @@ background_mode = 2
 sky = SubResource("Sky_efxa6")
 tonemap_mode = 2
 
-[sub_resource type="LabelSettings" id="LabelSettings_yc8e5"]
-font_size = 32
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8y0u"]
 albedo_texture = ExtResource("2_a8y0u")
 uv1_triplanar = true
@@ -65,43 +62,13 @@ shadow_enabled = true
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
 transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, -0.21912575, 0.25730777, 22.602861)
 
-[node name="look" parent="car" index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2149, 0)
-
-[node name="Camera3D" parent="car/look" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.974347, 0.225053, 0, -0.225053, 0.974347, 0, 1.97324, 6.19962)
-
-[node name="Hud" parent="car" index="6"]
-layer = 2
-
-[node name="speed" parent="car/Hud" index="0"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -23.0
-offset_right = 20.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_font_sizes/font_size = 50
-
-[node name="Label" parent="car/Hud" index="1"]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Arow keys to drive
-Space to drift and break
-"
-label_settings = SubResource("LabelSettings_yc8e5")
-
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
 
-[node name="RoadLaneAgent" parent="car" index="12" unique_id=841133961]
+[node name="RoadLaneAgent" parent="car" index="10" unique_id=841133961]
 road_manager_path = NodePath("../../DefaultEnvironment/RoadManager")
 
-[node name="AutoDriver" parent="car" index="13" unique_id=872334889]
+[node name="AutoDriver" parent="car" index="11" unique_id=872334889]
 auto_drive_speed = 3.0
 total_distance_target = 10.0
 
@@ -131,15 +98,11 @@ script = ExtResource("14_w48qg")
 [node name="Floor" type="StaticBody3D" parent="DefaultEnvironment" unique_id=1724515695]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="DefaultEnvironment/Floor" unique_id=1912141570]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.067, 0, 8.442)
 mesh = SubResource("PlaneMesh_muem4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DefaultEnvironment/Floor" unique_id=298942217]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_dp3eg")
-
-[node name="building-type-a2" parent="DefaultEnvironment/Floor" unique_id=1668593349 instance=ExtResource("10_jbj1t")]
-transform = Transform3D(7.967638, -0.3559296, 0.6245481, 0.35484114, 7.9920783, 0.027814439, -0.62516713, 0, 7.9755354, -5.1841235, -0.0752643, 9.164035)
 
 [node name="RoadManager" type="Node3D" parent="DefaultEnvironment" unique_id=1699536803]
 script = ExtResource("9_kek77")
@@ -222,12 +185,6 @@ script = ExtResource("10_ycdy4")
 settings = SubResource("Resource_vivmo")
 edge_points = [NodePath("../RP_001"), NodePath("../RP_005"), NodePath("../RP_006")]
 
-[node name="plant_bushDetailed2" parent="DefaultEnvironment/RoadManager/Road_002" unique_id=2128476617 instance=ExtResource("18_gqmmt")]
-transform = Transform3D(2.182097, 0, -2.0587502, 0, 3, 0, 2.0587502, 0, 2.182097, 1.1471342, 0.075899825, -28.037977)
-
-[node name="flower_redA2" parent="DefaultEnvironment/RoadManager/Road_002" unique_id=1400290657 instance=ExtResource("19_yc10j")]
-transform = Transform3D(2.985022, 0.16648397, 0.24884945, -0.16988027, 2.9949925, 0.03406936, -0.2465434, -0.0479908, 2.9894671, -11.755159, 0.37634018, -26.733446)
-
 [node name="Road_001" type="Node3D" parent="DefaultEnvironment/RoadManager" unique_id=980787354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, 40)
 script = ExtResource("10_efxa6")
@@ -276,5 +233,14 @@ script = ExtResource("11_dg77c")
 traffic_dir = Array[int]([1, 1])
 lanes = Array[int]([0, 2])
 prior_pt_init = NodePath("../Intersection")
+
+[node name="plant_bushDetailed2" parent="DefaultEnvironment" unique_id=2128476617 instance=ExtResource("18_gqmmt")]
+transform = Transform3D(2.182097, 0, -2.0587502, 0, 3, 0, 2.0587502, 0, 2.182097, 2.1471343, 0.075899825, 11.962023)
+
+[node name="flower_redA2" parent="DefaultEnvironment" unique_id=1400290657 instance=ExtResource("19_yc10j")]
+transform = Transform3D(2.985022, 0.16648397, 0.24884945, -0.16988027, 2.9949925, 0.03406936, -0.2465434, -0.0479908, 2.9894671, -10.755159, 0.37634018, 13.266554)
+
+[node name="building-type-a2" parent="DefaultEnvironment" unique_id=1668593349 instance=ExtResource("10_jbj1t")]
+transform = Transform3D(7.967638, -0.3559296, 0.6245481, 0.35484114, 7.9920783, 0.027814439, -0.62516713, 0, 7.9755354, -5.1841235, -0.0752643, 9.164035)
 
 [editable path="car"]
