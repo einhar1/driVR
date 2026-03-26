@@ -57,11 +57,13 @@ var _preferred_lane_family: String = ""
 var _tracked_lane: RoadLane = null
 var _tracked_lane_offset: float = 0.0
 var _next_lane_override: RoadLane = null
+var _outcome_lane_entered: bool = false
 var _stop_target: Vector3 = Vector3.ZERO
 var _use_stop_target: bool = false
 
 const MAX_ASSIGN_RETRIES: int = 120
 const NEAREST_LANE_SEARCH_DISTANCE: float = 250.0
+const FAR_REMAINING_DISTANCE: float = 1000.0
 
 
 func _refresh_road_manager_path() -> void:
@@ -262,8 +264,13 @@ func _update_lane_progress(p_forward_step: float) -> void:
 		if not is_instance_valid(next_lane):
 			_tracked_lane_offset = lane_length
 			return
+		var prev_name: String = _tracked_lane.name if is_instance_valid(_tracked_lane) else "null"
 		if _next_lane_override == next_lane:
+			_outcome_lane_entered = true
 			_next_lane_override = null
+			print("[AutoDriver] Override consumed — entered lane '%s' (from '%s')" % [next_lane.name, prev_name])
+		else:
+			print("[AutoDriver] Lane transition: '%s' → '%s'" % [prev_name, next_lane.name])
 		_tracked_lane_offset -= lane_length
 		lane_agent.assign_lane(next_lane)
 		_set_tracked_lane(next_lane)
@@ -289,8 +296,18 @@ func _sample_target_point(p_lookahead: float) -> Vector3:
 		else:
 			next_lane = sample_lane.get_node_or_null(sample_lane.lane_next) as RoadLane
 		if not is_instance_valid(next_lane):
-			sample_offset = lane_length
-			break
+			# Extrapolate past the lane end in the lane's exit direction
+			var overshoot: float = sample_offset - lane_length
+			var end_pt: Vector3 = sample_lane.to_global(
+				sample_lane.curve.sample_baked(lane_length)
+			)
+			var near_end_pt: Vector3 = sample_lane.to_global(
+				sample_lane.curve.sample_baked(max(lane_length - 1.0, 0.0))
+			)
+			var exit_dir: Vector3 = (end_pt - near_end_pt).normalized()
+			if exit_dir.length_squared() < 0.001:
+				return end_pt
+			return end_pt + exit_dir * overshoot
 		sample_offset -= lane_length
 		sample_lane = next_lane
 		lane_length = sample_lane.curve.get_baked_length()
@@ -323,11 +340,13 @@ func _physics_process(delta: float) -> void:
 
 	var remaining_distance: float
 	if _use_stop_target:
-		var to_target: Vector3 = _stop_target - car.global_position
-		var forward_dist: float = to_target.dot(_get_car_forward_flat())
-		if forward_dist <= 0.0:
-			_begin_stop()
-		remaining_distance = max(forward_dist, 0.0)
+		if not _outcome_lane_entered:
+			remaining_distance = FAR_REMAINING_DISTANCE
+		else:
+			var distance_to_target: float = car.global_position.distance_to(_stop_target)
+			remaining_distance = distance_to_target
+			if distance_to_target <= stop_complete_speed:
+				_begin_stop()
 	else:
 		remaining_distance = max(total_distance_target - total_distance_traveled, 0.0)
 		if remaining_distance <= 0.0:
@@ -431,6 +450,7 @@ func stop_auto_drive() -> void:
 	_tracked_lane = null
 	_tracked_lane_offset = 0.0
 	_next_lane_override = null
+	_outcome_lane_entered = false
 	_stop_target = Vector3.ZERO
 	_use_stop_target = false
 
@@ -439,8 +459,11 @@ func stop_auto_drive() -> void:
 ## The car brakes to a stop near [param p_stop_target] instead of using [member total_distance_target].
 func start_auto_drive_with_lane(p_lane: RoadLane, p_stop_target: Vector3) -> void:
 	_next_lane_override = p_lane
+	_outcome_lane_entered = false
 	_stop_target = p_stop_target
 	_use_stop_target = true
+	print("[AutoDriver] start_auto_drive_with_lane — override='%s', stop_target=%s" % [
+		p_lane.name if is_instance_valid(p_lane) else "null", p_stop_target])
 	start_auto_drive()
 
 

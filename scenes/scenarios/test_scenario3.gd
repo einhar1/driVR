@@ -47,7 +47,7 @@ func _create_straight_lane() -> void:
 
 	var curve := Curve3D.new()
 	curve.add_point(Vector3(2.0, 0.0, 16.0)) # South entry
-	curve.add_point(Vector3(2.0, 0.0, -16.0)) # North exit
+	curve.add_point(Vector3(2.0, 0.0, -50.0)) # Well past WaypointStraight
 	path_node.curve = curve
 
 	path_node.add_to_group("road_lanes")
