@@ -52,7 +52,11 @@ func validate_answer(p_selected_index: int) -> bool:
 	if not current_question:
 		return false
 	
-	var is_correct: bool = (p_selected_index == current_question.correct_index)
+	var is_correct: bool
+	if current_question.has_outcomes():
+		is_correct = true
+	else:
+		is_correct = (p_selected_index == current_question.correct_index)
 	emit_signal("answer_validated", is_correct, p_selected_index, current_question.correct_index)
 	
 	return is_correct

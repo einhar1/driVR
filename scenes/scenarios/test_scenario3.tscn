@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_16v57"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_6cbni"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="5_h34yr"]
+[ext_resource type="Script" path="res://scenes/scenarios/test_scenario3.gd" id="6_sc3gd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
 albedo_texture = ExtResource("1_sfs3c")
@@ -19,6 +20,7 @@ size = Vector2(100, 100)
 size = Vector3(100, 1, 100)
 
 [node name="TestScenario3" type="Node3D" unique_id=1814148716]
+script = ExtResource("6_sc3gd")
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=2042139356]
 
@@ -48,6 +50,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1374569, 0, -40.072876)
 script = ExtResource("3_16v57")
 material_resource = ExtResource("5_h34yr")
 use_lowpoly_preview = true
+generate_ai_lanes = true
+draw_lanes_editor = true
 edge_containers = Array[NodePath]([NodePath(""), NodePath("../4way_1x1"), NodePath(""), NodePath("../4way_1x1")])
 edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_001"), NodePath(""), NodePath("RP_002")])
 edge_rp_target_dirs = Array[int]([-1, 1, -1, 0])
@@ -90,6 +94,8 @@ next_pt_init = NodePath("../RP_003")
 script = ExtResource("3_16v57")
 material_resource = ExtResource("5_h34yr")
 use_lowpoly_preview = true
+generate_ai_lanes = true
+draw_lanes_editor = true
 edge_containers = Array[NodePath]([NodePath(""), NodePath("../4way_1x1"), NodePath(""), NodePath("../4way_1x1")])
 edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("RP_004"), NodePath(""), NodePath("RP_003")])
 edge_rp_target_dirs = Array[int]([-1, 0, -1, 1])

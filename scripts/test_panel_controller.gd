@@ -18,6 +18,7 @@ signal advance_requested()
 
 var question_manager: Node
 var car: Node
+var _last_selected_index: int = -1
 
 func _ready() -> void:
 	# Find the QuestionManager in the active scene tree.
@@ -79,7 +80,8 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if auto_size_viewport_to_content:
 		call_deferred("_sync_viewport_to_content")
 
-func _on_answer_validated(p_is_correct: bool, _p_selected_index: int, p_correct_index: int) -> void:
+func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_index: int) -> void:
+	_last_selected_index = p_selected_index
 	if p_is_correct:
 		_start_car_movement()
 	else:
@@ -99,7 +101,44 @@ func _start_car_movement() -> void:
 	# Advance to the next question only when the car has fully stopped.
 	if not auto_driver.is_connected("auto_drive_completed", _on_movement_complete):
 		auto_driver.connect("auto_drive_completed", _on_movement_complete, CONNECT_ONE_SHOT)
+
+	var current_question: QuestionData = question_manager.get_current_question()
+	if _try_start_outcome_drive(current_question, auto_driver):
+		return
+
 	auto_driver.call("start_auto_drive")
+
+
+## Attempts to start an outcome-based lane-following drive.
+## Returns [code]true[/code] if an outcome drive was started.
+func _try_start_outcome_drive(
+	p_question: QuestionData,
+	p_auto_driver: Node,
+) -> bool:
+	if not p_question or not p_question.has_outcomes():
+		return false
+	if _last_selected_index < 0 or _last_selected_index >= p_question.answer_outcomes.size():
+		return false
+
+	var outcome: String = p_question.answer_outcomes[_last_selected_index]
+	var scene_runner: Node = get_tree().current_scene.find_child(
+		"QuestionSceneRunner", true, false)
+	if not is_instance_valid(scene_runner):
+		return false
+
+	var question_scene: Node = scene_runner.get_node_or_null("QuestionSceneRoot")
+	if not is_instance_valid(question_scene):
+		return false
+	if not question_scene.has_method("get_lane_for_outcome"):
+		return false
+
+	var lane: RoadLane = question_scene.call("get_lane_for_outcome", outcome) as RoadLane
+	var stop_target: Vector3 = question_scene.call("get_stop_target_for_outcome", outcome)
+	if not is_instance_valid(lane):
+		return false
+
+	p_auto_driver.call("start_auto_drive_with_lane", lane, stop_target)
+	return true
 
 func _on_movement_complete() -> void:
 	await get_tree().create_timer(1.5).timeout
