@@ -264,7 +264,7 @@ func _update_lane_progress(p_forward_step: float) -> void:
 		if not is_instance_valid(next_lane):
 			_tracked_lane_offset = lane_length
 			return
-		var prev_name: String = _tracked_lane.name if is_instance_valid(_tracked_lane) else "null"
+		var prev_name: String = str(_tracked_lane.name) if is_instance_valid(_tracked_lane) else "null"
 		if _next_lane_override == next_lane:
 			_outcome_lane_entered = true
 			_next_lane_override = null
@@ -463,7 +463,7 @@ func start_auto_drive_with_lane(p_lane: RoadLane, p_stop_target: Vector3) -> voi
 	_stop_target = p_stop_target
 	_use_stop_target = true
 	print("[AutoDriver] start_auto_drive_with_lane — override='%s', stop_target=%s" % [
-		p_lane.name if is_instance_valid(p_lane) else "null", p_stop_target])
+		str(p_lane.name) if is_instance_valid(p_lane) else "null", p_stop_target])
 	start_auto_drive()
 
 
