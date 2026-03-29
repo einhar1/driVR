@@ -33,6 +33,8 @@ size = Vector2(30, 98)
 [node name="TestScenario1" type="Node3D" unique_id=2006070304]
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1016406379]
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1506633518]
 mesh = SubResource("PlaneMesh_fdylj")
