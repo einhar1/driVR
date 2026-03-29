@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bhcfk3bjh0s3k"]
+
+[ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_3go5b"]
+[ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_vc3tq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
+albedo_texture = ExtResource("1_3go5b")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vc3tq"]
+material = SubResource("StandardMaterial3D_x6krw")
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f5hs6"]
+size = Vector3(100, 1, 100)
+
+[node name="Parkering" type="Node3D" unique_id=1335064262]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=516828348]
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1441449792]
+mesh = SubResource("PlaneMesh_vc3tq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=647881216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_f5hs6")
+
+[node name="SpawnPoint" type="Node3D" parent="." unique_id=435798600]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.345837, 0, 6.520788)
+
+[node name="DriveWaypoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.345837, 0.25, -20.0)
+
+[node name="RoadManager" type="Node3D" parent="." unique_id=1142058169]
+script = ExtResource("2_vc3tq")
+metadata/_custom_type_script = "uid://bgmxg26pbs61k"

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="QuestionData" format=3 uid="uid://dapy14wq1s6sl"]
+
+[ext_resource type="Script" uid="uid://cc00klym0vj0m" path="res://resources/question_data.gd" id="1_63gk4"]
+
+[resource]
+script = ExtResource("1_63gk4")
+question = "Har du väjningsplikt här?"
+options = PackedStringArray("Ja", "Nej", "Kanske")
+correct_index = 1
+scene_path = "uid://dfoq323ibfsbi"
+answer_outcomes = null
+metadata/_custom_type_script = "uid://cc00klym0vj0m"

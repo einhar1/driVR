@@ -3,9 +3,9 @@
 [ext_resource type="Script" uid="uid://b0i0r7v3fe27s" path="res://scripts/xr/start_xr_with_spawn_alignment.gd" id="1_lquwl"]
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="2_a8y0u"]
 [ext_resource type="PackedScene" uid="uid://ci52bv1m15cbs" path="res://cars/Doge.tscn" id="3_dg77c"]
-[ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://scenes/player.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://scenes/components/player.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
-[ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://scenes/test_panel.tscn" id="8_kek77"]
+[ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://scenes/components/test_panel.tscn" id="8_kek77"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
 [ext_resource type="PackedScene" uid="uid://cy1no6ib41wak" path="res://assets/environment/city/GLB format/building-type-a.glb" id="10_jbj1t"]
@@ -60,7 +60,7 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
-transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, -0.21912575, 0.25730777, 22.602861)
+transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, 12.634, 0, 7.57)
 metadata/_edit_group_ = true
 
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
@@ -70,11 +70,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
 road_manager_path = NodePath("../../DefaultEnvironment/RoadManager")
 
 [node name="AutoDriver" parent="car" index="11" unique_id=872334889]
-auto_drive_speed = 3.0
-total_distance_target = 10.0
+auto_drive_speed = 5.0
+total_distance_target = 20.0
+lookahead_distance = 8.0
+speed_lookahead_gain = 0.35
+steering_gain = 1.2000000000000002
+steering_response_speed = 1.9000000000000001
+max_steering_command = 0.3
+high_speed_reference = 22.0
 
 [node name="Viewport2Din3D" parent="car" unique_id=495527837 instance=ExtResource("7_5vw27")]
-transform = Transform3D(0.9168263, -0.046914328, -0.3965209, 0.00076565176, 0.993278, -0.11574942, 0.39928594, 0.1058184, 0.91069984, 1.7341366, 1.8052609, -1.9738231)
+transform = Transform3D(0.9492146, 0.035696276, 0.31259924, 0.00076565176, 0.993278, -0.11574942, -0.31462952, 0.110110216, 0.94280714, -1.534647, 1.8052609, -1.9954456)
 screen_size = Vector2(1.5, 1)
 scene = ExtResource("8_kek77")
 transparent = 1
@@ -88,7 +94,8 @@ viewport_padding_px = 8
 [node name="QuestionManager" type="Node" parent="." unique_id=945438787]
 script = ExtResource("11_ycdy4")
 question_bank = ExtResource("12_w48qg")
-debug_question_index = 2
+debug_run_single_question = true
+debug_question_index = 3
 
 [node name="QuestionSceneRunner" type="Node3D" parent="." unique_id=549882979]
 script = ExtResource("14_w48qg")

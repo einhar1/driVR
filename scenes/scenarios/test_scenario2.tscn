@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_x6krw"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_4x055"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="4_x6krw"]
+[ext_resource type="PackedScene" uid="uid://ca3tyiutrx00p" path="res://assets/objects/stop_sign.glb" id="6_4x055"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
 albedo_texture = ExtResource("1_0pk8i")
@@ -32,6 +33,9 @@ shape = SubResource("BoxShape3D_j7qjp")
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1000643397]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.958193, 0, 17.783163)
+
+[node name="DriveWaypoint" type="Marker3D" parent="." unique_id=210449607]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.435448, 0.24999714, 18.025848)
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=1153249291]
 script = ExtResource("2_0pk8i")
@@ -65,3 +69,6 @@ lanes = Array[int]([5, 5])
 prior_mag = 49.87214
 next_mag = 49.87214
 next_pt_init = NodePath("../RP_001")
+
+[node name="Sketchfab_Scene" parent="." unique_id=1256540249 instance=ExtResource("6_4x055")]
+transform = Transform3D(-2.7866224e-07, 0, 6.375049, 0, 6.375049, 0, -6.375049, 0, -2.7866224e-07, 3.3723602, 0.07220249, 24.079515)
