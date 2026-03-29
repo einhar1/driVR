@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_qakm4")
-question = "Får man köra mot rött?"
-options = PackedStringArray("Ja", "Nej", "Kanske")
+question = "Vad betyder detta märke?"
+options = PackedStringArray("Parkering förbjuden", "Stanna", "Lämna företräde")
 correct_index = 1
 scene_path = "uid://yvmx0rvhddyv"
 answer_outcomes = null

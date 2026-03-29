@@ -1,29 +1,23 @@
 [gd_scene format=3 uid="uid://d2esvnd00rxvu"]
 
-[ext_resource type="Script" uid="uid://dn4yuohil3nto" path="res://scripts/test_panel_controller.gd" id="1_f6qhu"]
+[ext_resource type="Script" uid="uid://dn4yuohil3nto" path="res://scenes/test_panel_controller.gd" id="1_uti8e"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rov3b"]
 font_size = 26
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1325332154]
-script = ExtResource("1_f6qhu")
+script = ExtResource("1_uti8e")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1570591131]
-offset_top = 144.0
 offset_right = 300.0
-offset_bottom = 344.0
-color = Color(0.69803923, 0.6901961, 0.70980394, 0.84313726)
-
-[node name="ColorRect2" type="ColorRect" parent="." unique_id=558437109]
-offset_right = 300.0
-offset_bottom = 129.0
+offset_bottom = 200.0
 color = Color(0.69803923, 0.6901961, 0.70980394, 0.84313726)
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1711078287]
 offset_left = 90.0
-offset_top = 242.0
+offset_top = 98.0
 offset_right = 201.0
-offset_bottom = 343.0
+offset_bottom = 199.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1014282030]
 layout_mode = 2
@@ -43,21 +37,12 @@ text = "Alternativ 3"
 
 [node name="Label" type="Label" parent="." unique_id=1693554888]
 offset_left = 12.0
-offset_top = 156.0
+offset_top = 12.0
 offset_right = 288.0
-offset_bottom = 234.0
+offset_bottom = 90.0
 text = "Fråga"
 label_settings = SubResource("LabelSettings_rov3b")
 autowrap_mode = 3
-
-[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=1766816465]
-offset_left = 7.0
-offset_top = 9.0
-offset_right = 293.0
-offset_bottom = 125.0
-text = "• Svara rätt på frågan så kör bilen frammåt några meter.
-• Inget händer vid fel svar.
-• Frågorna finns lagrade i mappen resources. 🤩🥸👉👈"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_1" to="." method="_on_button_1_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_2" to="." method="_on_button_2_pressed"]

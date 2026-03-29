@@ -46,6 +46,9 @@ shape = SubResource("BoxShape3D_tl7i5")
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1541967525]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.7449794, 0, 6.4329767)
 
+[node name="DriveWaypoint" type="Marker3D" parent="." unique_id=1401060637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.027084, 0.25, 6.35499)
+
 [node name="RoadManager" type="Node3D" parent="." unique_id=1522731037]
 script = ExtResource("2_lc2to")
 metadata/_custom_type_script = "uid://bgmxg26pbs61k"

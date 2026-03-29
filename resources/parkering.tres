@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="QuestionData" format=3 uid="uid://2s0lctosnvlf"]
+
+[ext_resource type="Script" uid="uid://cc00klym0vj0m" path="res://resources/question_data.gd" id="1_gto86"]
+
+[resource]
+script = ExtResource("1_gto86")
+question = "Vemhar parkerat fel?"
+options = PackedStringArray("Bil 1", "Bil 2", "Bil 3")
+correct_index = 2
+scene_path = "uid://bhcfk3bjh0s3k"
+answer_outcomes = null
+metadata/_custom_type_script = "uid://cc00klym0vj0m"

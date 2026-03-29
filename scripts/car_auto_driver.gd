@@ -45,6 +45,10 @@ signal auto_drive_completed
 @export_range(0.1, 3.0, 0.1) var lane_direction_sample_distance: float = 0.8
 @export_range(0.0, 10.0, 0.1) var lane_offset_reacquire_distance: float = 2.0
 
+@export_group("Road Manager")
+## Optional explicit RoadManager path. Leave empty for automatic discovery.
+@export var road_manager_override_path: NodePath = NodePath("")
+
 var total_distance_traveled: float = 0.0
 var steering_command: float = 0.0
 var engine_force_command: float = 0.0
@@ -60,23 +64,96 @@ var _next_lane_override: RoadLane = null
 var _outcome_lane_entered: bool = false
 var _stop_target: Vector3 = Vector3.ZERO
 var _use_stop_target: bool = false
+var _closest_stop_target_distance: float = INF
+var _has_entered_stop_zone: bool = false
 
 const MAX_ASSIGN_RETRIES: int = 120
 const NEAREST_LANE_SEARCH_DISTANCE: float = 250.0
 const FAR_REMAINING_DISTANCE: float = 1000.0
+const STOP_TARGET_OVERSHOOT_HYSTERESIS: float = 0.75
+
+
+## Returns [code]true[/code] when this drive session may proceed without a lane lock.
+## Pure waypoint mode is allowed to steer directly toward [member _stop_target],
+## but outcome-lane mode must keep lane guidance active.
+func _can_drive_without_lane() -> bool:
+	return _use_stop_target and not is_instance_valid(_next_lane_override)
 
 
 func _refresh_road_manager_path() -> void:
-	var main_scene: Node = get_tree().current_scene
-	if not is_instance_valid(main_scene) or not is_instance_valid(lane_agent):
+	if not is_instance_valid(lane_agent):
 		return
 
-	var road_manager: Node = main_scene.get_node_or_null("RoadManager")
-	if not is_instance_valid(road_manager):
-		road_manager = main_scene.get_node_or_null("DefaultEnvironment/RoadManager")
-
+	var road_manager: Node = _find_best_road_manager()
 	if is_instance_valid(road_manager):
 		lane_agent.road_manager_path = lane_agent.get_path_to(road_manager)
+
+
+func _find_best_road_manager() -> Node:
+	var main_scene: Node = get_tree().current_scene
+	if not is_instance_valid(main_scene):
+		return null
+
+	# 1) Manual override, if configured.
+	if not road_manager_override_path.is_empty():
+		var override_from_scene: Node = main_scene.get_node_or_null(road_manager_override_path)
+		if _is_valid_road_manager(override_from_scene):
+			return override_from_scene
+		var override_from_self: Node = get_node_or_null(road_manager_override_path)
+		if _is_valid_road_manager(override_from_self):
+			return override_from_self
+
+	# 2) Backward-compatible known locations.
+	var candidates: Array[Node] = []
+	_try_add_candidate(candidates, main_scene.get_node_or_null("RoadManager"))
+	_try_add_candidate(candidates, main_scene.get_node_or_null("DefaultEnvironment/RoadManager"))
+	_try_add_candidate(candidates, main_scene.get_node_or_null("QuestionSceneRunner/QuestionSceneRoot/RoadManager"))
+
+	# 3) Fallback: scan scene for any node named "RoadManager".
+	for node in main_scene.find_children("RoadManager", "", true, false):
+		_try_add_candidate(candidates, node)
+
+	if candidates.is_empty():
+		return null
+
+	var best_candidate: Node = null
+	var best_score: float = INF
+	for candidate in candidates:
+		var candidate_score: float = _road_manager_score(candidate)
+		if candidate_score < best_score:
+			best_score = candidate_score
+			best_candidate = candidate
+
+	return best_candidate
+
+
+func _try_add_candidate(p_candidates: Array[Node], p_candidate: Node) -> void:
+	if not _is_valid_road_manager(p_candidate):
+		return
+	if p_candidate in p_candidates:
+		return
+	p_candidates.append(p_candidate)
+
+
+func _is_valid_road_manager(p_node: Node) -> bool:
+	return is_instance_valid(p_node) and p_node.has_method("get_containers")
+
+
+func _road_manager_score(p_candidate: Node) -> float:
+	var score: float = 0.0
+
+	# Prefer visible managers (question scene RoadManager over hidden default env).
+	if p_candidate is Node3D:
+		var manager_3d: Node3D = p_candidate as Node3D
+		if not manager_3d.is_visible_in_tree():
+			score += 1000000.0
+
+	# Prefer nearest manager to the active car.
+	if p_candidate is Node3D and is_instance_valid(car):
+		var manager_position: Vector3 = (p_candidate as Node3D).global_position
+		score += car.global_position.distance_squared_to(manager_position)
+
+	return score
 
 
 ## Try to assign the car to the nearest lane.
@@ -327,12 +404,13 @@ func _physics_process(delta: float) -> void:
 
 	if not _is_ready_for_drive:
 		_is_ready_for_drive = _try_assign_lane()
-		if not _is_ready_for_drive:
+		if not _is_ready_for_drive and not _can_drive_without_lane():
 			_begin_stop()
 
 	if not is_instance_valid(lane_agent.current_lane) and not _try_assign_lane():
-		push_warning("Car lost lane and couldn't find a new one")
-		_begin_stop()
+		if not _can_drive_without_lane():
+			push_warning("Car lost lane and couldn't find a new one")
+			_begin_stop()
 
 	var speed_mps: float = car.linear_velocity.length()
 	var forward_speed_mps: float = max(car.linear_velocity.dot(_get_car_forward_flat()), 0.0)
@@ -340,24 +418,32 @@ func _physics_process(delta: float) -> void:
 
 	var remaining_distance: float
 	if _use_stop_target:
-		if not _outcome_lane_entered:
-			remaining_distance = FAR_REMAINING_DISTANCE
-		else:
-			var distance_to_target: float = car.global_position.distance_to(_stop_target)
-			remaining_distance = distance_to_target
-			if distance_to_target <= stop_complete_speed:
-				_begin_stop()
+		var distance_to_target: float = car.global_position.distance_to(_stop_target)
+		remaining_distance = distance_to_target
+		_closest_stop_target_distance = min(_closest_stop_target_distance, distance_to_target)
+		if distance_to_target <= braking_begin_distance:
+			_has_entered_stop_zone = true
+
+		if distance_to_target <= stop_complete_speed:
+			_begin_stop()
+		elif _has_entered_stop_zone and distance_to_target > _closest_stop_target_distance + STOP_TARGET_OVERSHOOT_HYSTERESIS:
+			# We have passed the closest approach to the target and are moving away.
+			# Commit to stop instead of accelerating again.
+			_begin_stop()
 	else:
 		remaining_distance = max(total_distance_target - total_distance_traveled, 0.0)
 		if remaining_distance <= 0.0:
 			_begin_stop()
 
 	var steering_target: float = 0.0
-	if not _is_stopping and is_instance_valid(lane_agent.current_lane):
-		_update_lane_progress(forward_speed_mps * delta)
-		var effective_lookahead: float = lookahead_distance + (speed_mps * speed_lookahead_gain)
-		var look_ahead_pos: Vector3 = _sample_target_point(effective_lookahead)
-		steering_target = _compute_steering_target(look_ahead_pos, speed_mps)
+	if not _is_stopping:
+		if is_instance_valid(lane_agent.current_lane):
+			_update_lane_progress(forward_speed_mps * delta)
+			var effective_lookahead: float = lookahead_distance + (speed_mps * speed_lookahead_gain)
+			var look_ahead_pos: Vector3 = _sample_target_point(effective_lookahead)
+			steering_target = _compute_steering_target(look_ahead_pos, speed_mps)
+		elif _use_stop_target:
+			steering_target = _compute_steering_target(_stop_target, speed_mps)
 
 	var target_speed_mps: float = _compute_target_speed(remaining_distance)
 	var speed_error: float = target_speed_mps - speed_mps
@@ -421,38 +507,87 @@ func _compute_target_speed(p_remaining_distance: float) -> float:
 
 func _begin_stop() -> void:
 	_is_stopping = true
+	steering_command = 0.0
 
-func start_auto_drive() -> void:
-	_refresh_road_manager_path()
 
-	if not _is_ready_for_drive:
-		_is_ready_for_drive = _try_assign_lane()
-		if not _is_ready_for_drive:
-			push_warning("Auto-drive blocked: no lane found yet")
-			return
-	elif is_instance_valid(lane_agent.current_lane):
-		_set_tracked_lane(lane_agent.current_lane)
-
+func _begin_drive_session() -> void:
 	_is_stopping = false
 	_startup_elapsed = 0.0
 	total_distance_traveled = 0.0
 	steering_command = 0.0
 	engine_force_command = 0.0
 	brake_command = 0.0
+	_closest_stop_target_distance = INF
+	_has_entered_stop_zone = false
 	auto_drive_enabled = true
+
+func start_auto_drive() -> void:
+	_refresh_road_manager_path()
+	var has_current_lane: bool = is_instance_valid(lane_agent.current_lane)
+
+	if not _is_ready_for_drive or not has_current_lane:
+		_is_ready_for_drive = _try_assign_lane()
+		has_current_lane = is_instance_valid(lane_agent.current_lane)
+		if not _is_ready_for_drive or not has_current_lane:
+			if _can_drive_without_lane():
+				_begin_drive_session()
+				return
+			push_warning("Auto-drive blocked: no lane found yet")
+			return
+
+	if has_current_lane:
+		_set_tracked_lane(lane_agent.current_lane)
+
+	# If we are already on the selected outcome lane, consume the override now.
+	if _use_stop_target and is_instance_valid(_next_lane_override):
+		if is_instance_valid(lane_agent.current_lane) and lane_agent.current_lane == _next_lane_override:
+			_outcome_lane_entered = true
+			_next_lane_override = null
+
+	_begin_drive_session()
+
+
+## Starts lane-following auto-drive immediately on [param p_lane] instead of waiting
+## for a lane transition to consume an override.
+func start_auto_drive_on_lane(p_lane: RoadLane, p_stop_target: Vector3) -> void:
+	_refresh_road_manager_path()
+
+	if not is_instance_valid(lane_agent):
+		push_warning("Auto-drive blocked: RoadLaneAgent missing")
+		return
+	if not is_instance_valid(p_lane):
+		push_warning("Auto-drive blocked: target lane is invalid")
+		return
+
+	lane_agent.assign_lane(p_lane)
+	_set_tracked_lane(p_lane)
+	_is_ready_for_drive = true
+	if lock_lane_family:
+		_preferred_lane_family = _lane_family_of(p_lane)
+
+	_next_lane_override = null
+	_outcome_lane_entered = true
+	_stop_target = p_stop_target
+	_use_stop_target = true
+
+	_begin_drive_session()
 
 func stop_auto_drive() -> void:
 	_is_stopping = false
+	_is_ready_for_drive = false
 	auto_drive_enabled = false
 	steering_command = 0.0
 	engine_force_command = 0.0
 	brake_command = 0.0
+	_preferred_lane_family = ""
 	_tracked_lane = null
 	_tracked_lane_offset = 0.0
 	_next_lane_override = null
 	_outcome_lane_entered = false
 	_stop_target = Vector3.ZERO
 	_use_stop_target = false
+	_closest_stop_target_distance = INF
+	_has_entered_stop_zone = false
 
 
 ## Starts lane-following auto-drive, overriding the next lane transition to [param p_lane].
@@ -464,6 +599,16 @@ func start_auto_drive_with_lane(p_lane: RoadLane, p_stop_target: Vector3) -> voi
 	_use_stop_target = true
 	print("[AutoDriver] start_auto_drive_with_lane — override='%s', stop_target=%s" % [
 		str(p_lane.name) if is_instance_valid(p_lane) else "null", p_stop_target])
+	start_auto_drive()
+
+
+## Starts auto-drive toward a world-space waypoint stop target.
+## If no lane is available, falls back to steering directly toward the target.
+func start_auto_drive_to_waypoint(p_stop_target: Vector3) -> void:
+	_stop_target = p_stop_target
+	_use_stop_target = true
+	_next_lane_override = null
+	_outcome_lane_entered = false
 	start_auto_drive()
 
 

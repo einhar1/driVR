@@ -8,12 +8,12 @@
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="5_h34yr"]
 [ext_resource type="Script" uid="uid://crjvm13jmp87i" path="res://scenes/scenarios/test_scenario3.gd" id="6_sc3gd"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6cbni"]
 albedo_texture = ExtResource("1_sfs3c")
 uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_h34yr"]
-material = SubResource("StandardMaterial3D_x6krw")
+material = SubResource("StandardMaterial3D_6cbni")
 size = Vector2(100, 100)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4bjd8"]
@@ -34,7 +34,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_4bjd8")
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1832728889]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.991737, 0, 38.703568)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.379196, 0, 38.703568)
 
 [node name="RoadManager" type="Node3D" parent="." unique_id=679089299]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.147211, 0, -7.811783)
@@ -144,10 +144,10 @@ next_mag = 24.518066
 next_pt_init = NodePath("../RP_004")
 
 [node name="WaypointLeft" type="Marker3D" parent="." unique_id=1480387453]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.317957, 0.25, -10.615031)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.977237, 0.25, -9.932858)
 
 [node name="WaypointRight" type="Marker3D" parent="." unique_id=2058791082]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.21784, 0.25, -5.5964527)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.883358, 0.25, -5.854003)
 
 [node name="WaypointStraight" type="Marker3D" parent="." unique_id=1215478374]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.960932, 0.25000477, -42.44703)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.158623, 0.25000477, -32.084328)
