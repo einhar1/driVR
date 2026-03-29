@@ -2,18 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsjnpvh4i0kcx"
-path.s3tc="res://.godot/imported/colormap.png-11b8893c55dcedb3520964f0b6b4636c.s3tc.ctex"
-path.etc2="res://.godot/imported/colormap.png-11b8893c55dcedb3520964f0b6b4636c.etc2.ctex"
+uid="uid://cqer1ffs48a06"
+path.s3tc="res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.s3tc.ctex"
+path.etc2="res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "fad648125c28e671edbbb1896cba1531"
+}
 
 [deps]
 
-source_file="res://assets/environment/city/GLB format/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-11b8893c55dcedb3520964f0b6b4636c.s3tc.ctex", "res://.godot/imported/colormap.png-11b8893c55dcedb3520964f0b6b4636c.etc2.ctex"]
+source_file="res://assets/objects/stop_sign_1.png"
+dest_files=["res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.s3tc.ctex", "res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.etc2.ctex"]
 
 [params]
 
