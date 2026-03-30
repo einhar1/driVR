@@ -51,6 +51,8 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if not p_question:
 		return
 
+	_last_selected_index = -1
+
 	var display_question: String = _normalize_swedish_text(p_question.question)
 	
 	# Update label with question text
@@ -85,10 +87,26 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_index: int) -> void:
 	_last_selected_index = p_selected_index
 	if p_is_correct:
+		var current_question: QuestionData = question_manager.get_current_question()
+		if current_question and not current_question.should_auto_drive_after_answer():
+			Callable(self , "_advance_without_car_movement").call_deferred()
+			return
 		_start_car_movement()
 	else:
 		# Show feedback (optional: change button color or play sound).
-		print("Incorrect answer! Correct answer was index: %d" % p_correct_index)
+		if p_correct_index >= 0:
+			print("Incorrect answer! Correct answer was index: %d" % p_correct_index)
+		else:
+			print("Incorrect answer!")
+
+
+## Advances to the next question without moving the car.
+func _advance_without_car_movement() -> void:
+	await get_tree().create_timer(1.5).timeout
+	if question_manager:
+		if bool(question_manager.get("debug_run_single_question")):
+			print("test_panel_controller: Debug single-question mode is enabled, so the same question will reload")
+		question_manager.next_question()
 
 func _start_car_movement() -> void:
 	if not is_instance_valid(car):
