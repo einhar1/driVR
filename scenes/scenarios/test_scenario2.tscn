@@ -1,13 +1,12 @@
 [gd_scene format=3 uid="uid://yvmx0rvhddyv"]
 
-[ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_0pk8i"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_0pk8i"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_x6krw"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_4x055"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="4_x6krw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
-albedo_texture = ExtResource("1_0pk8i")
+albedo_color = Color(0.46666667, 0.46666667, 0.46666667, 1)
 uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4x055"]
