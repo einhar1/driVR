@@ -57,9 +57,17 @@ func validate_answer(p_selected_index: int) -> bool:
 		is_correct = true
 	else:
 		is_correct = (p_selected_index == current_question.correct_index)
-	emit_signal("answer_validated", is_correct, p_selected_index, current_question.correct_index)
-	
-	return is_correct
+	return validate_custom_answer(is_correct, p_selected_index, current_question.correct_index)
+
+
+## Emits a custom validation result for scenarios that do not map cleanly to a single option index.
+func validate_custom_answer(
+	p_is_correct: bool,
+	p_selected_index: int = -1,
+	p_correct_index: int = -1,
+) -> bool:
+	emit_signal("answer_validated", p_is_correct, p_selected_index, p_correct_index)
+	return p_is_correct
 
 ## Move to the next question
 func next_question() -> void:

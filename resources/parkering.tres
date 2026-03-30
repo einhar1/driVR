@@ -4,9 +4,9 @@
 
 [resource]
 script = ExtResource("1_gto86")
-question = "Vemhar parkerat fel?"
-options = PackedStringArray("Bil 1", "Bil 2", "Bil 3")
-correct_index = 2
+question = "Vilka har parkerat olagligt? Peka på alla bilar som står fel."
+options = null
 scene_path = "uid://bhcfk3bjh0s3k"
 answer_outcomes = null
+post_answer_action = 1
 metadata/_custom_type_script = "uid://cc00klym0vj0m"

@@ -1,7 +1,12 @@
 [gd_scene format=3 uid="uid://bhcfk3bjh0s3k"]
 
 [ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_3go5b"]
+[ext_resource type="Script" uid="uid://bkcs6n8i7q30a" path="res://scripts/scenarios/point_select_scenario.gd" id="1_pwhbx"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_vc3tq"]
+[ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_5a5wi"]
+[ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_pwhbx"]
+[ext_resource type="PackedScene" uid="uid://nsvttjhht1sj" path="res://scenes/components/Doge_npc.tscn" id="5_5obwr"]
+[ext_resource type="Script" uid="uid://1q1682ce700f" path="res://scripts/scenarios/point_select_target.gd" id="7_5obwr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
 albedo_texture = ExtResource("1_3go5b")
@@ -14,7 +19,12 @@ size = Vector2(100, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_f5hs6"]
 size = Vector3(100, 1, 100)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_77bi5"]
+size = Vector3(1.9175415, 1.7988281, 4.7373657)
+
 [node name="Parkering" type="Node3D" unique_id=1335064262]
+script = ExtResource("1_pwhbx")
+correct_selection_ids = PackedStringArray("car_2")
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=516828348]
 metadata/_edit_lock_ = true
@@ -30,9 +40,72 @@ shape = SubResource("BoxShape3D_f5hs6")
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=435798600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.345837, 0, 6.520788)
 
-[node name="DriveWaypoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.345837, 0.25, -20.0)
-
 [node name="RoadManager" type="Node3D" parent="." unique_id=1142058169]
 script = ExtResource("2_vc3tq")
 metadata/_custom_type_script = "uid://bgmxg26pbs61k"
+
+[node name="Road_001" type="Node3D" parent="RoadManager" unique_id=280243218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.883324, 1.9073486e-06, -0.61597824)
+script = ExtResource("3_5a5wi")
+use_lowpoly_preview = true
+edge_containers = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("")])
+edge_rp_target_dirs = Array[int]([-1, -1])
+edge_rp_locals = Array[NodePath]([NodePath("RP_001"), NodePath("RP_002")])
+edge_rp_local_dirs = Array[int]([0, 1])
+
+[node name="RP_001" type="Node3D" parent="RoadManager/Road_001" unique_id=869502227]
+transform = Transform3D(-0.007860385, 0, -0.9999691, 0, 1, 0, 0.9999691, 0, -0.007860385, 0, 0.25, 0)
+script = ExtResource("4_pwhbx")
+traffic_dir = Array[int]([2, 1])
+lanes = Array[int]([5, 5])
+next_mag = 49.625122
+prior_pt_init = NodePath("../RP_002")
+
+[node name="RP_002" type="Node3D" parent="RoadManager/Road_001" unique_id=97207158]
+transform = Transform3D(-0.007860385, 0, -0.9999691, 0, 1, 0, 0.9999691, 0, -0.007860385, 99.24718, 0.25, 0.78014755)
+script = ExtResource("4_pwhbx")
+traffic_dir = Array[int]([2, 1])
+lanes = Array[int]([5, 5])
+prior_mag = 49.625122
+next_mag = 49.625122
+next_pt_init = NodePath("../RP_001")
+
+[node name="car" parent="." unique_id=1280737979 instance=ExtResource("5_5obwr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 20.31721, 0.28472692, -5.2904077)
+
+[node name="SelectableTarget" type="StaticBody3D" parent="car" unique_id=848288754]
+collision_layer = 1048576
+collision_mask = 0
+script = ExtResource("7_5obwr")
+selection_id = "car_1"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="car/SelectableTarget" unique_id=1447987063]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)
+shape = SubResource("BoxShape3D_77bi5")
+
+[node name="car2" parent="." unique_id=91586136 instance=ExtResource("5_5obwr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.8783245, 0.28472495, -5.333053)
+
+[node name="SelectableTarget" type="StaticBody3D" parent="car2" unique_id=661616508]
+collision_layer = 1048576
+collision_mask = 0
+script = ExtResource("7_5obwr")
+selection_id = "car_2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="car2/SelectableTarget" unique_id=1105609613]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)
+shape = SubResource("BoxShape3D_77bi5")
+
+[node name="car3" parent="." unique_id=2040113374 instance=ExtResource("5_5obwr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.868271, 0.28472686, -5.481951)
+
+[node name="SelectableTarget" type="StaticBody3D" parent="car3" unique_id=1770216936]
+collision_layer = 1048576
+collision_mask = 0
+script = ExtResource("7_5obwr")
+selection_id = "car_3"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="car3/SelectableTarget" unique_id=1740631630]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)
+shape = SubResource("BoxShape3D_77bi5")

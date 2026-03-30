@@ -13,8 +13,8 @@ extends Node
 ## - [code]Escape[/code] → release cursor
 
 @export var mouse_sensitivity: float = 0.002
-## Maximum raycast distance for panel interaction.
-@export var interact_distance: float = 5.0
+## Maximum raycast distance for scenario interaction from the driver's seat.
+@export var interact_distance: float = 25.0
 
 var _camera: Camera3D
 var _active: bool = false
@@ -57,7 +57,7 @@ func _enable_desktop_mode() -> void:
 
 	_add_crosshair()
 
-	print("Desktop debug mode — click window to capture mouse, ESC to release, look at panel + click to answer")
+	print("Desktop debug mode — click window to capture mouse, ESC to release, look at the target + click to answer")
 
 
 func _unhandled_input(p_event: InputEvent) -> void:

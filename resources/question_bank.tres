@@ -6,8 +6,9 @@
 [ext_resource type="Resource" uid="uid://cvxqmh3afje4s" path="res://resources/q2.tres" id="3_w4row"]
 [ext_resource type="Resource" uid="uid://bu022nqxah5mi" path="res://resources/q3.tres" id="4_w4row"]
 [ext_resource type="Resource" uid="uid://dapy14wq1s6sl" path="res://resources/korsning.tres" id="5_3nx3r"]
+[ext_resource type="Resource" uid="uid://2s0lctosnvlf" path="res://resources/parkering.tres" id="6_3wxgl"]
 
 [resource]
 script = ExtResource("2_g86g8")
-questions = Array[ExtResource("1_6ijxp")]([ExtResource("2_hv8n1"), ExtResource("3_w4row"), ExtResource("4_w4row"), ExtResource("5_3nx3r")])
+questions = Array[ExtResource("1_6ijxp")]([ExtResource("2_hv8n1"), ExtResource("3_w4row"), ExtResource("4_w4row"), ExtResource("5_3nx3r"), ExtResource("6_3wxgl")])
 metadata/_custom_type_script = "uid://bkos42ouel41h"
