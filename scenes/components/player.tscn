@@ -26,4 +26,4 @@ tracker = &"right_hand"
 
 [node name="FunctionPointer" parent="XRController3D_right" unique_id=39867883 instance=ExtResource("9_n7ghd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.05, -0.1)
-laser_length = 20
+distance = 20.0

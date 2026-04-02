@@ -8,6 +8,8 @@ class_name QuestionSceneRunner
 @export_group("Persistent Content")
 @export var question_manager_path: NodePath = ^"../QuestionManager"
 @export var persistent_car_path: NodePath = ^"../car"
+## Quiz panel is positioned from the car's authored offset, but remains in world space.
+@export var quiz_panel_path: NodePath = ^"../Viewport2Din3D"
 
 @export_group("Default Environment")
 ## Node that contains the main-scene environment (Floor, RoadManager, etc.).
@@ -21,12 +23,17 @@ var _question_manager: Node = null
 var _persistent_car: Node3D = null
 var _default_environment: Node3D = null
 var _active_scene_root: Node3D = null
+var _quiz_panel: Node3D = null
+var _quiz_panel_offset_from_car: Transform3D = Transform3D.IDENTITY
 
 
 func _ready() -> void:
 	_question_manager = get_node_or_null(question_manager_path)
 	_persistent_car = get_node_or_null(persistent_car_path) as Node3D
 	_default_environment = get_node_or_null(default_environment_path) as Node3D
+	_quiz_panel = get_node_or_null(quiz_panel_path) as Node3D
+	if not is_instance_valid(_quiz_panel) and not quiz_panel_path.is_empty():
+		push_warning("QuestionSceneRunner: Quiz panel not found at '%s'" % String(quiz_panel_path))
 
 	if not is_instance_valid(_question_manager):
 		push_error("QuestionSceneRunner: QuestionManager not found")
@@ -35,6 +42,8 @@ func _ready() -> void:
 	if not is_instance_valid(_persistent_car):
 		push_error("QuestionSceneRunner: persistent car not found")
 		return
+
+	_cache_quiz_panel_offset_from_car()
 
 	if _default_environment == null and not default_environment_path.is_empty():
 		push_warning("QuestionSceneRunner: DefaultEnvironment node not found at '%s'" % String(default_environment_path))
@@ -62,7 +71,10 @@ func _apply_question_scene(p_question: QuestionData) -> void:
 	_clear_active_scene()
 
 	if p_question == null or p_question.scene_path.is_empty():
-		# No scene mapped — show the default environment again.
+		# No scene mapped — show the default environment and ensure car is visible.
+		_persistent_car.visible = true
+		_set_car_frozen(false)
+		_move_quiz_panel(p_question, _persistent_car.global_transform)
 		_set_default_environment_visible(true)
 		return
 
@@ -87,7 +99,12 @@ func _apply_question_scene(p_question: QuestionData) -> void:
 	_active_scene_root.name = loaded_scene_root_name
 	add_child(_active_scene_root)
 
-	_move_car_to_spawn(p_question)
+	# Move the car to the scenario's SpawnPoint and place the quiz panel at the
+	# same authored offset it has in front of the car, but keep it detached so it
+	# stays still even if the car later moves.
+	_persistent_car.visible = p_question.player_in_car
+	_set_car_frozen(not p_question.player_in_car)
+	await _move_car_to_spawn(p_question)
 
 
 ## Frees the previously active question scene.
@@ -129,11 +146,13 @@ func _move_car_to_spawn(p_question: QuestionData) -> void:
 	var target_transform: Transform3D = spawn_node.global_transform
 	_stop_auto_driver()
 	_apply_car_spawn_transform(target_transform)
+	_move_quiz_panel(p_question, target_transform)
 
 	# Re-apply after one physics tick to avoid VehicleBody state snapping back.
 	await get_tree().physics_frame
 	if is_instance_valid(_persistent_car):
 		_apply_car_spawn_transform(target_transform)
+		_move_quiz_panel(p_question, target_transform)
 
 
 func _stop_auto_driver() -> void:
@@ -151,3 +170,57 @@ func _apply_car_spawn_transform(p_target_transform: Transform3D) -> void:
 		rigid_body.linear_velocity = Vector3.ZERO
 		rigid_body.angular_velocity = Vector3.ZERO
 	_persistent_car.reset_physics_interpolation()
+
+
+## Freezes or unfreezes the car's physics body.
+## While frozen the VehicleBody3D behaves like a static body — no suspension,
+## gravity, or drift — giving a stable player view for out-of-car scenarios.
+func _set_car_frozen(p_frozen: bool) -> void:
+	var rigid_body: RigidBody3D = _persistent_car as RigidBody3D
+	if is_instance_valid(rigid_body):
+		rigid_body.freeze = p_frozen
+
+
+## Caches the panel transform relative to the car using the authored scene state.
+## This keeps the panel placement consistent even though it now lives in world space.
+func _cache_quiz_panel_offset_from_car() -> void:
+	if not is_instance_valid(_quiz_panel) or not is_instance_valid(_persistent_car):
+		return
+	_quiz_panel_offset_from_car = _persistent_car.global_transform.affine_inverse() * _quiz_panel.global_transform
+
+
+## Places the quiz panel using the same offset/rotation it has relative to the car
+## in the authored scene, while keeping the panel independent from future car motion.
+func _move_quiz_panel_to_car_transform(p_car_transform: Transform3D) -> void:
+	if not is_instance_valid(_quiz_panel):
+		return
+	_quiz_panel.global_transform = p_car_transform * _quiz_panel_offset_from_car
+	_quiz_panel.reset_physics_interpolation()
+
+
+## Places the quiz panel either at a scenario-specific anchor or at its default
+## authored offset relative to the car spawn transform.
+func _move_quiz_panel(p_question: QuestionData, p_car_transform: Transform3D) -> void:
+	var panel_spawn_node: Node3D = _find_panel_spawn_node(p_question)
+	if is_instance_valid(panel_spawn_node):
+		_quiz_panel.global_transform = panel_spawn_node.global_transform
+		_quiz_panel.reset_physics_interpolation()
+		return
+
+	_move_quiz_panel_to_car_transform(p_car_transform)
+
+
+## Resolves an optional scenario-specific panel anchor.
+func _find_panel_spawn_node(p_question: QuestionData) -> Node3D:
+	if not is_instance_valid(_active_scene_root) or p_question == null:
+		return null
+
+	var panel_spawn_path: NodePath = p_question.panel_spawn_point_path
+	if panel_spawn_path.is_empty():
+		return _active_scene_root.find_child("PanelSpawnPoint", true, false) as Node3D
+
+	var panel_spawn_node: Node3D = _active_scene_root.get_node_or_null(panel_spawn_path) as Node3D
+	if is_instance_valid(panel_spawn_node):
+		return panel_spawn_node
+
+	return _active_scene_root.find_child("PanelSpawnPoint", true, false) as Node3D

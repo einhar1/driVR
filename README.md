@@ -46,6 +46,15 @@ Project-specific export details:
 
 If export fails, the usual culprits are missing Android templates, incorrect SDK/JDK paths, or signing not being configured.
 
+### Local developer overrides (`dev.local.cfg`)
+
+For machine-specific values that should not be committed, use `dev.local.cfg`.
+
+- Copy `dev.local.cfg.example` to `dev.local.cfg` (gitignored).
+- `scripts/question_manager.gd` reads:
+  - `[debug] run_single_question`
+  - `[debug] question_index`
+
 ## Deploy over USB (recommended first run)
 
 Use USB for the first install and for the least fiddly workflow.

@@ -21,12 +21,20 @@ enum PostAnswerAction {
 ## Optional node path inside the question scene used as the car spawn anchor.
 @export var spawn_point_path: NodePath = NodePath("SpawnPoint")
 
+## Optional node path inside the question scene used as the quiz panel anchor.
+## When missing, the panel uses its default authored offset relative to the car.
+@export var panel_spawn_point_path: NodePath = NodePath("PanelSpawnPoint")
+
 ## Optional per-option outcome tags (e.g. "left", "right", "straight").
 ## When non-empty, every answer is treated as valid and the tag drives post-answer behaviour.
 @export var answer_outcomes: PackedStringArray = PackedStringArray()
 
 ## Controls what happens after a correct answer is registered.
 @export_enum("Auto Drive", "Advance Immediately") var post_answer_action: int = PostAnswerAction.AUTO_DRIVE
+
+## When false, the player is detached from the car and placed at a PlayerSpawnPoint in the question scene.
+## The persistent car is hidden for the duration of the question.
+@export var player_in_car: bool = true
 
 
 ## Returns [code]true[/code] when the question uses outcome-based answers instead of a single correct index.

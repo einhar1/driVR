@@ -7,6 +7,8 @@ extends Node
 
 ## Emitted when the car reaches its distance target and comes to a full stop.
 signal auto_drive_completed
+## Emitted when a new auto-drive session begins.
+signal auto_drive_started
 
 ## Auto-drive settings
 @export var auto_drive_speed: float = 15.0
@@ -520,6 +522,7 @@ func _begin_drive_session() -> void:
 	_closest_stop_target_distance = INF
 	_has_entered_stop_zone = false
 	auto_drive_enabled = true
+	auto_drive_started.emit()
 
 func start_auto_drive() -> void:
 	_refresh_road_manager_path()
