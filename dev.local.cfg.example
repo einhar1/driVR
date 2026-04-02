@@ -1,0 +1,5 @@
+# Copy to dev.local.cfg (gitignored) and customize per machine.
+
+[debug]
+run_single_question=false
+question_index=0

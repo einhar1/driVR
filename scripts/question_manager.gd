@@ -1,5 +1,7 @@
 extends Node
 
+const _LOCAL_DEV_CONFIG_PATH: String = "res://dev.local.cfg"
+
 ## Reference to the question bank resource
 @export var question_bank: QuestionBank
 
@@ -22,6 +24,8 @@ signal answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_ind
 signal question_change_requested(p_question: QuestionData, p_index: int)
 
 func _ready() -> void:
+	_apply_local_debug_overrides()
+
 	if not question_bank:
 		push_error("QuestionManager: No question_bank assigned")
 		return
@@ -34,6 +38,32 @@ func _ready() -> void:
 	
 	# Emit the first question
 	_emit_current_question()
+
+
+## Applies optional debug overrides from an untracked local config file.
+func _apply_local_debug_overrides() -> void:
+	if not FileAccess.file_exists(_LOCAL_DEV_CONFIG_PATH):
+		return
+
+	var config: ConfigFile = ConfigFile.new()
+	var load_result: Error = config.load(_LOCAL_DEV_CONFIG_PATH)
+	if load_result != OK:
+		push_warning(
+			"QuestionManager: Failed to load %s (error %d)." % [
+				_LOCAL_DEV_CONFIG_PATH,
+				load_result
+			]
+		)
+		return
+
+	debug_run_single_question = bool(
+		config.get_value("debug", "run_single_question", debug_run_single_question)
+	)
+
+	var local_question_index: int = int(
+		config.get_value("debug", "question_index", debug_question_index)
+	)
+	debug_question_index = maxi(0, local_question_index)
 
 ## Get the currently displayed question
 func get_current_question() -> QuestionData:

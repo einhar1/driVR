@@ -94,8 +94,6 @@ viewport_padding_px = 8
 [node name="QuestionManager" type="Node" parent="." unique_id=945438787]
 script = ExtResource("11_ycdy4")
 question_bank = ExtResource("12_w48qg")
-debug_run_single_question = true
-debug_question_index = 4
 
 [node name="QuestionSceneRunner" type="Node3D" parent="." unique_id=549882979]
 script = ExtResource("14_w48qg")
