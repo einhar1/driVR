@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_5a5wi"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_pwhbx"]
 [ext_resource type="PackedScene" uid="uid://nsvttjhht1sj" path="res://scenes/components/Doge_npc.tscn" id="5_5obwr"]
+[ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="5_77bi5"]
 [ext_resource type="Script" uid="uid://1q1682ce700f" path="res://scripts/scenarios/point_select_target.gd" id="7_5obwr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
@@ -40,6 +41,9 @@ shape = SubResource("BoxShape3D_f5hs6")
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=435798600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.345837, 0, 6.520788)
 
+[node name="PanelSpawnPoint" type="Node3D" parent="." unique_id=187214503]
+transform = Transform3D(0.9924698, 0.014078999, 0.12168135, -1.1675397e-08, 0.99337274, -0.1149373, -0.12249315, 0.11407162, 0.98589295, 16.529558, 2.214454, 5.040695)
+
 [node name="RoadManager" type="Node3D" parent="." unique_id=1142058169]
 script = ExtResource("2_vc3tq")
 metadata/_custom_type_script = "uid://bgmxg26pbs61k"
@@ -47,6 +51,7 @@ metadata/_custom_type_script = "uid://bgmxg26pbs61k"
 [node name="Road_001" type="Node3D" parent="RoadManager" unique_id=280243218]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.883324, 1.9073486e-06, -0.61597824)
 script = ExtResource("3_5a5wi")
+material_resource = ExtResource("5_77bi5")
 use_lowpoly_preview = true
 edge_containers = Array[NodePath]([NodePath(""), NodePath("")])
 edge_rp_targets = Array[NodePath]([NodePath(""), NodePath("")])

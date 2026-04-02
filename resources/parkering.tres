@@ -9,4 +9,5 @@ options = null
 scene_path = "uid://bhcfk3bjh0s3k"
 answer_outcomes = null
 post_answer_action = 1
+player_in_car = false
 metadata/_custom_type_script = "uid://cc00klym0vj0m"
