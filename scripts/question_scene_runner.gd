@@ -21,6 +21,7 @@ var _question_manager: Node = null
 var _persistent_car: Node3D = null
 var _default_environment: Node3D = null
 var _active_scene_root: Node3D = null
+var _active_scene_controller: Object = null
 
 
 func _ready() -> void:
@@ -87,12 +88,28 @@ func _apply_question_scene(p_question: QuestionData) -> void:
 	_active_scene_root.name = loaded_scene_root_name
 	add_child(_active_scene_root)
 
+	# Find a scenario controller node (either a child named ScenarioController or
+	# the root itself if it implements the lifecycle methods).
+	_active_scene_controller = _active_scene_root.find_node("ScenarioController", true, false)
+	if _active_scene_controller == null and _active_scene_root.has_method("activate_scenario"):
+		_active_scene_controller = _active_scene_root
+
+	# Call the controller's activate hook if present.
+	if _active_scene_controller != null and _active_scene_controller.has_method("activate_scenario"):
+		# Defer activation to allow the scene to finish entering the tree.
+		Callable(_active_scene_controller, "activate_scenario").call_deferred()
+
 	_move_car_to_spawn(p_question)
 
 
 ## Frees the previously active question scene.
 func _clear_active_scene() -> void:
 	if is_instance_valid(_active_scene_root):
+		# Call deactivate on the controller if available before freeing the scene.
+		if _active_scene_controller != null and _active_scene_controller.has_method("deactivate_scenario"):
+			# Call synchronously so any cleanup runs before the scene is freed.
+			_active_scene_controller.call("deactivate_scenario")
+		_active_scene_controller = null
 		_active_scene_root.queue_free()
 		_active_scene_root = null
 

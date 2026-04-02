@@ -1,4 +1,7 @@
+
 [gd_scene format=3 uid="uid://new_scenario_template"]
+
+[ext_resource type="Script" uid="uid://script_new_scenario" path="res://scripts/scenarios/new_scenario_template.gd" id="1"]
 
 [node name="NewScenarioTemplate" type="Node3D" unique_id=1]
 
@@ -7,3 +10,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Notes" type="Marker3D" parent="." unique_id=3]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="ScenarioController" type="Node" parent="." unique_id=4]
+script = ExtResource("1")
+

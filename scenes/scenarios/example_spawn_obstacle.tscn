@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://example_spawn_obstacle"]
+
+[ext_resource type="Script" uid="uid://script_new_scenario" path="res://scripts/scenarios/new_scenario_template.gd" id="1"]
+
+[node name="ExampleSpawnObstacle" type="Node3D" unique_id=1]
+
+[node name="SpawnPoint" type="Node3D" parent="." unique_id=2]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="ScenarioController" type="Node" parent="." unique_id=3]
+script = ExtResource("1")
+
+[node name="Obstacle" type="StaticBody3D" parent="." unique_id=4]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle" unique_id=5]
+mesh = SubResource("CubeMesh_1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle" unique_id=6]
+shape = SubResource("BoxShape3D_2")
+
+[sub_resource type="CubeMesh" id="CubeMesh_1"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
+size = Vector3(1, 1, 1)
