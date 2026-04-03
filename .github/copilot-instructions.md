@@ -35,11 +35,33 @@ The `XROrigin3D` is a child of `car/DriversSeatAnchor`, not a root-level node. P
 
 ## Conventions
 
-- Do not edit `addons/` unless you are intentionally patching a third-party plugin
+### Manager System Initialization
+
+`QuestionManager` uses a signal-based initialization pattern for safe cross-viewport access:
+
+- `QuestionManager` registers itself to group `"question_manager"` during `_ready()`
+- All controllers (UI, scene runners, etc.) resolve it via `get_tree().get_first_node_in_group("question_manager")`
+- Controllers wait for `manager_initialized` signal if `question_bank` is not yet loaded
+- See `.github/instructions/gdscript.instructions.md` for full pattern example
+
+This pattern is required because debug single-question mode may have the quiz already active during most nodes' `_ready()`.
+
+### Scenario Setup
+
+- New question scenarios belong in `scenes/scenarios/` and extend `QuestionDriveScenario` for auto-drive support
+- Each scenario must provide a root-level `SpawnPoint` node for car placement
+- For detailed scenario creation steps and checklists, see `.github/instructions/scenario-setup.instructions.md`
+
+### OpenXR and Viewport-2D-in-3D
+
 - Add new OpenXR bindings in `openxr_action_map.tres`, not in the Godot project input map
-- New scenario scenes belong in `scenes/scenarios/` and should expose a root-level `SpawnPoint` for car placement
 - UI scripts running inside `Viewport2Din3D` should resolve gameplay nodes through `get_tree().current_scene`, not `get_tree().root.get_child(0)`
 - New VR interactions should build on XR Tools base classes instead of bypassing the addon architecture
+
+### External Dependencies
+
+- Do not edit `addons/` unless you are intentionally patching a third-party plugin
+- Follow `.github/instructions/` sub-files for specific file type conventions (gdscript, tscn, scenario-setup)
 
 ## Agent-Critical Pitfalls
 

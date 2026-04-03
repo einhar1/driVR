@@ -40,12 +40,31 @@ Create a scene in `scenes/scenarios/`, for example:
 - Root node must be `Node3D`
 - Add a root-level `SpawnPoint` (`Node3D` or `Marker3D`)
 
-If `SpawnPoint` is missing (and no custom spawn path is valid), the car keeps its old position.
+### Recommended: extend QuestionDriveScenario
+
+For auto-drive support, attach a GDScript to the root node that extends `QuestionDriveScenario`:
+
+```gdscript
+extends "res://scripts/scenarios/question_drive_scenario.gd"
+
+func supports_default_drive_lane() -> bool:
+	return true
+
+func get_default_drive_lane() -> RoadLane:
+	# Return a RoadLane for the car to follow
+	return _my_lane
+
+func get_default_stop_target() -> Vector3:
+	# Return a world-space position where the car should stop
+	return Vector3(0, 0, 10)
+```
+
+If `QuestionDriveScenario` methods are missing, the quiz skips auto-drive and advances to the next question immediately.
 
 ### Optional but useful
 
-- Root-level `DriveWaypoint` (simple post-answer target)
-- Root-level `PanelSpawnPoint` (custom panel placement)
+- Root-level `DriveWaypoint` (Marker3D) – used by `get_default_stop_target()` as the stop position
+- Root-level `PanelSpawnPoint` (Node3D or Marker3D) – custom anchor for the in-world quiz panel
 
 > `PanelSpawnPoint` is new in the flow: if present (or configured via `panel_spawn_point_path`), the in-world panel is placed there. Otherwise it uses the default offset from the car.
 
@@ -60,12 +79,12 @@ Use:
 - `correct_index`
 - empty `answer_outcomes`
 
-For movement after correct answer, provide one of:
+For movement after correct answer, scene script should extend `QuestionDriveScenario` and provide one of:
 
-- `DriveWaypoint`, or
-- scene root method `get_default_stop_target()`
+- `DriveWaypoint` (Marker3D at root level), or
+- `get_default_stop_target()` method
 
-Optional lane-based method:
+Optional lane-based method for auto-drive:
 
 - `get_default_drive_lane()`
 
@@ -76,10 +95,11 @@ Use:
 - filled `answer_outcomes`
 - (here every selected option is treated as valid)
 
-Scene root script must provide:
+Scene root script must extend `QuestionDriveScenario` and provide:
 
-- `get_lane_for_outcome(p_outcome: String)`
-- `get_stop_target_for_outcome(p_outcome: String)`
+- `supports_outcome_drive()` – return `true`
+- `get_lane_for_outcome(p_outcome: String)` – returns a `RoadLane`
+- `get_stop_target_for_outcome(p_outcome: String)` – returns world-space `Vector3`
 
 ---
 
@@ -139,18 +159,25 @@ When done, set `debug_run_single_question` back to `false`.
 
 - [ ] Scene root is `Node3D`
 - [ ] Root `SpawnPoint` exists
+- [ ] Root script extends `QuestionDriveScenario`
+- [ ] `supports_default_drive_lane()` returns `true` (or use `DriveWaypoint`)
+- [ ] `get_default_drive_lane()` returns a valid `RoadLane`
+- [ ] `get_default_stop_target()` returns a valid `Vector3`
 - [ ] `scene_path` is correct
 - [ ] `correct_index` matches `options`
 - [ ] `answer_outcomes` is empty
-- [ ] Post-answer target exists (`DriveWaypoint` or `get_default_stop_target()`)
 
 ### Outcome-based checklist
 
 - [ ] Scene root is `Node3D`
+- [ ] Root script extends `QuestionDriveScenario`
+- [ ] `supports_outcome_drive()` returns `true`
+- [ ] `get_lane_for_outcome()` returns a valid `RoadLane` for each outcome
+- [ ] `get_stop_target_for_outcome()` returns valid `Vector3` for each outcome
 - [ ] Root `SpawnPoint` exists
 - [ ] `answer_outcomes.size() == options.size()`
 - [ ] Outcome strings match scene script logic
-- [ ] Scene has both outcome methods
+- [ ] `scene_path` is correct
 
 ### Optional new-feature checklist
 
@@ -179,12 +206,53 @@ When done, set `debug_run_single_question` back to `false`.
 ## Fast recipe (copy workflow)
 
 1. Create `scenes/scenarios/my_scene.tscn` (root `Node3D`)
-2. Add root `SpawnPoint`
-3. Add root `DriveWaypoint` (or script methods)
-4. Create `resources/my_question.tres` (`QuestionData`)
-5. Set `question`, `options`, `correct_index` (or `answer_outcomes`)
-6. Set `scene_path`
-7. Add to `resources/question_bank.tres`
-8. Test with single-question debug mode
+2. Add script to root that extends `QuestionDriveScenario`
+3. Implement `get_default_drive_lane()` and `get_default_stop_target()` (or attach `DriveWaypoint`)
+4. Add root `SpawnPoint`
+5. Add root `PanelSpawnPoint` if custom panel placement is needed
+6. Create `resources/my_question.tres` (`QuestionData`)
+7. Set `question`, `options`, `correct_index` (or `answer_outcomes` for outcome-based)
+8. Set `scene_path`
+9. Add to `resources/question_bank.tres`
+10. Test with single-question debug mode
 
 Done. No drama, only driving theory.
+
+---
+
+## Advanced: custom controllers and initialization pattern
+
+If you're extending the quiz flow with custom controllers or UI that interact with `QuestionManager`, follow this pattern:
+
+### Manager discovery (group-based)
+
+`QuestionManager` registers itself to group `"question_manager"` during `_ready()`.
+
+Resolve it from any node (including cross-viewport):
+
+```gdscript
+var manager: QuestionManager = get_tree().get_first_node_in_group("question_manager")
+if manager == null:
+	push_error("QuestionManager not found")
+	return
+```
+
+### Async initialization (signal-based)
+
+`QuestionManager` emits `manager_initialized` when fully ready (question bank loaded, startup index resolved).
+
+Wait for readiness before subscribing to quiz signals:
+
+```gdscript
+var manager: QuestionManager = get_tree().get_first_node_in_group("question_manager")
+
+# Check if already initialized
+if manager.question_bank != null:
+	_connect_to_quiz_signals(manager)
+else:
+	# Wait for initialization
+	await manager.manager_initialized
+	_connect_to_quiz_signals(manager)
+```
+
+**Why this matters**: In debug single-question mode, the quiz is already active when your node's `_ready()` fires. The signal pattern ensures you connect at the right time regardless.

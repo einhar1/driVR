@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://pujr8klel7ym"]
+
+[ext_resource type="Script" uid="uid://cp82lkq7lkgei" path="res://scripts/start_end_screen_controller.gd" id="1_cdd2k"]
+[ext_resource type="LabelSettings" uid="uid://c0du77jxitrk4" path="res://scenes/components/settings/start_end_label_settings.tres" id="2_uqxie"]
+
+[node name="StartEndScreens" type="CanvasLayer" unique_id=9180014]
+script = ExtResource("1_cdd2k")
+
+[node name="StartScreen" type="Panel" parent="." unique_id=1348294939]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="StartScreen" unique_id=1425724202]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 59.0
+offset_right = 1154.0
+offset_bottom = 147.0
+text = "driVR"
+label_settings = ExtResource("2_uqxie")
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="StartScreen" unique_id=1901947923]
+layout_mode = 0
+offset_left = 451.0
+offset_top = 256.0
+offset_right = 676.0
+offset_bottom = 384.0
+theme_override_font_sizes/font_size = 64
+text = "Starta"
+
+[node name="EndScreen" type="Panel" parent="." unique_id=721307903]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = -1.0
+offset_right = 3.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="EndScreen" unique_id=170621641]
+layout_mode = 0
+offset_top = 54.0
+offset_right = 1152.0
+offset_bottom = 142.0
+text = "Tack för att du spelade!"
+label_settings = ExtResource("2_uqxie")
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="EndScreen" unique_id=517845442]
+layout_mode = 0
+offset_left = 287.0
+offset_top = 248.0
+offset_right = 840.0
+offset_bottom = 379.0
+theme_override_font_sizes/font_size = 64
+text = "Starta ny omgång"
+
+[connection signal="pressed" from="StartScreen/Button" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="EndScreen/Button" to="." method="_on_restart_button_pressed"]

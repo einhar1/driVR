@@ -1,4 +1,4 @@
-extends Node3D
+extends "res://scripts/scenarios/question_drive_scenario.gd"
 
 ## Provides a default straight-through route for the `korsning` question scene.
 ## The prefab 4-way intersection ships with turn lanes, so this script creates
@@ -12,6 +12,10 @@ var _straight_lane: RoadLane = null
 
 func _ready() -> void:
 	_create_straight_lane()
+
+
+func supports_default_drive_lane() -> bool:
+	return true
 
 
 ## Returns the default lane the player car should follow after answering.

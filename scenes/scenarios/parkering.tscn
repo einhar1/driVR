@@ -26,6 +26,7 @@ size = Vector3(1.9175415, 1.7988281, 4.7373657)
 [node name="Parkering" type="Node3D" unique_id=1335064262]
 script = ExtResource("1_pwhbx")
 correct_selection_ids = PackedStringArray("car_2")
+allow_retry_after_incorrect = null
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=516828348]
 metadata/_edit_lock_ = true
@@ -84,6 +85,7 @@ collision_layer = 1048576
 collision_mask = 0
 script = ExtResource("7_5obwr")
 selection_id = "car_1"
+scenario_root_path = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="car/SelectableTarget" unique_id=1447987063]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)
@@ -97,6 +99,7 @@ collision_layer = 1048576
 collision_mask = 0
 script = ExtResource("7_5obwr")
 selection_id = "car_2"
+scenario_root_path = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="car2/SelectableTarget" unique_id=1105609613]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)
@@ -110,6 +113,7 @@ collision_layer = 1048576
 collision_mask = 0
 script = ExtResource("7_5obwr")
 selection_id = "car_3"
+scenario_root_path = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="car3/SelectableTarget" unique_id=1740631630]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)

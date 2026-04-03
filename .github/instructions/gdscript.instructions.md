@@ -60,11 +60,94 @@ func apply_impulse(p_direction: Vector3) -> void:
 
 Use `@tool` and `@icon()` for scripts that need editor visibility.
 
-## XRTools Integration
+## Godot Addon and Base Class Integration
 
-- Extend `XRToolsMovementProvider`, `XRToolsFunctionPickup`, etc. for new VR interactions
+### XRTools Base Classes
+
+Extend `XRToolsMovementProvider`, `XRToolsFunctionPickup`, etc. for new VR interactions:
+
 - Register via `is_xr_class(name: String) -> bool`
 - Respect physics layer assignments (see copilot-instructions.md)
+
+### QuestionDriveScenario Base Class
+
+For question scenario scripts, extend `QuestionDriveScenario` (defined in `scripts/scenarios/question_drive_scenario.gd`):
+
+```gdscript
+extends "res://scripts/scenarios/question_drive_scenario.gd"
+
+## Provide auto-drive lane and stop target for this scenario.
+
+func supports_default_drive_lane() -> bool:
+	return true
+
+func get_default_drive_lane() -> RoadLane:
+	# Return a RoadLane that the car should follow
+	return _my_road_lane
+
+func get_default_stop_target() -> Vector3:
+	# Return a world-space position where the car should stop
+	return _my_waypoint.global_position
+```
+
+For outcome-based questions (multiple routes), implement outcome methods instead:
+
+```gdscript
+func supports_outcome_drive() -> bool:
+	return true
+
+func get_lane_for_outcome(p_outcome: String) -> RoadLane:
+	# Return a RoadLane based on the outcome tag (e.g., "left", "right")
+	match p_outcome:
+		"left": return _left_lane
+		"right": return _right_lane
+		_: return null
+
+func get_stop_target_for_outcome(p_outcome: String) -> Vector3:
+	# Return a stop position for this outcome
+	match p_outcome:
+		"left": return _left_stop.global_position
+		"right": return _right_stop.global_position
+		_: return Vector3.ZERO
+```
+
+If these methods are unavailable or return `null`, the quiz flow skips auto-drive and advances to the next question.
+
+### Manager Initialize Pattern
+
+Controllers that interact with `QuestionManager` (including cross-viewport) must follow this pattern for safe initialization:
+
+```gdscript
+extends CanvasLayer
+
+var _question_manager: QuestionManager = null
+
+func _ready() -> void:
+	call_deferred("_initialize_dependencies")
+
+func _initialize_dependencies() -> void:
+	# Resolve QuestionManager via group (works cross-viewport)
+	_question_manager = get_tree().get_first_node_in_group("question_manager")
+
+	if _question_manager == null:
+		push_error("QuestionManager not found")
+		return
+
+	# Check if already initialized
+	if _question_manager.question_bank != null:
+		_on_manager_ready()
+	else:
+		# Wait for manager_initialized signal
+		await _question_manager.manager_initialized
+		_on_manager_ready()
+
+func _on_manager_ready() -> void:
+	# Safe to subscribe to quiz signals here
+	_question_manager.quiz_started.connect(_on_quiz_started)
+	_question_manager.quiz_completed.connect(_on_quiz_completed)
+```
+
+**Why this matters:** In debug single-question mode, the quiz is already active during most nodes' `_ready()`. Deferred initialization and signal waiting ensure you connect at the correct time regardless.
 
 ## Don'ts
 

@@ -112,7 +112,41 @@ addons/
   godot-meta-toolkit/  → Meta platform support
   road-generator/      → Procedural road/highway generation utilities
 assets/textures/       → Reference 1m×1m textures for sizing
+resources/             → QuestionData resources and question bank
+scenes/
+  main.tscn            → Entry scene
+  components/          → Player rig, test panels, UI components
+  scenarios/           → Question-specific 3D scenes
 ```
+
+## Quiz Architecture
+
+The quiz system decouples question management, scene loading, and UI rendering:
+
+- **QuestionManager** (`scripts/question_manager.gd`) – owns question state, emits signals, inits via `dev.local.cfg`
+- **QuestionSceneRunner** (`scripts/question_scene_runner.gd`) – loads per-question scenes, repositions persistent car, manages environment visibility
+- **test_panel_controller.gd** – renders quiz UI, handles answer input, reacts to quiz signals
+- **StartEndScreenController** – shows start/end screens in a dedicated viewport
+- **QuestionDriveScenario** – typed contract for scenario scripts providing auto-drive behavior
+
+### Manager initialization pattern
+
+All quiz controllers resolve `QuestionManager` via group `"question_manager"` and wait for `manager_initialized` signal:
+
+```gdscript
+var manager: QuestionManager = get_tree().get_first_node_in_group("question_manager")
+if manager.question_bank != null:
+    # Already initialized
+    _setup()
+else:
+    # Wait for initialization
+    await manager.manager_initialized
+    _setup()
+```
+
+This pattern ensures correct timing in debug single-question mode where the quiz is already active during `_ready()`.
+
+---
 
 ## GDScript Conventions
 

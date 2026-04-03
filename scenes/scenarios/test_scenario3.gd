@@ -1,4 +1,4 @@
-extends Node3D
+extends "res://scripts/scenarios/question_drive_scenario.gd"
 
 ## Provides outcome → lane mapping for the intersection quiz question.
 ## Creates a straight-through RoadLane at runtime since the 4way_1x1 intersection
@@ -11,6 +11,10 @@ var _straight_lane: RoadLane
 
 func _ready() -> void:
 	_create_straight_lane()
+
+
+func supports_outcome_drive() -> bool:
+	return true
 
 
 ## Returns the intersection [RoadLane] that matches [param p_outcome].

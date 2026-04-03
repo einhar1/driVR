@@ -1,4 +1,5 @@
 extends Node
+class_name CarAutoDriver
 
 ## Reference to the car (parent of this script)
 @export var car: VehicleBody3D
