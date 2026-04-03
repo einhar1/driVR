@@ -1,12 +1,16 @@
 [gd_scene format=3 uid="uid://d2esvnd00rxvu"]
 
 [ext_resource type="Script" uid="uid://dn4yuohil3nto" path="res://scenes/test_panel_controller.gd" id="1_uti8e"]
+[ext_resource type="AudioStream" uid="uid://dk8r1qsxrc6vq" path="res://assets/audio/181860__timgormly__training-program-correct1.wav" id="2_vnswy"]
+[ext_resource type="AudioStream" uid="uid://c6s01g485gggk" path="res://assets/audio/181858__timgormly__training-program-incorrect1.wav" id="3_7fqns"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rov3b"]
 font_size = 26
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1325332154]
 script = ExtResource("1_uti8e")
+enable_button_flash_feedback = true
+show_correct_button_on_incorrect = false
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1570591131]
 offset_right = 300.0
@@ -43,6 +47,12 @@ offset_bottom = 90.0
 text = "Fråga"
 label_settings = SubResource("LabelSettings_rov3b")
 autowrap_mode = 3
+
+[node name="CorrectSfx" type="AudioStreamPlayer" parent="." unique_id=973865097]
+stream = ExtResource("2_vnswy")
+
+[node name="IncorrectSfx" type="AudioStreamPlayer" parent="." unique_id=1785521509]
+stream = ExtResource("3_7fqns")
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_1" to="." method="_on_button_1_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button_2" to="." method="_on_button_2_pressed"]
