@@ -1,8 +1,6 @@
 extends CanvasLayer
 
 const DEFAULT_BUTTON_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
-const OUTCOME_DRIVE_MAX_RETRIES: int = 20
-const DEFAULT_SCENE_DRIVE_MAX_RETRIES: int = 20
 
 @onready var button_1: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_1") as Button
 @onready var button_2: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_2") as Button
@@ -21,6 +19,11 @@ const DEFAULT_SCENE_DRIVE_MAX_RETRIES: int = 20
 @export var auto_size_viewport_to_content: bool = true
 @export_range(0, 128, 1) var viewport_padding_px: int = 8
 
+@export_group("Dependencies")
+@export var question_manager_path: NodePath = ^"QuestionManager"
+@export var car_path: NodePath = ^"car"
+@export var question_scene_runner_path: NodePath = ^"QuestionSceneRunner"
+
 @export_group("Answer Feedback")
 @export_range(0.1, 3.0, 0.05) var feedback_hold_seconds: float = 0.9
 @export_range(0.05, 1.0, 0.05) var feedback_flash_seconds: float = 0.2
@@ -28,27 +31,29 @@ const DEFAULT_SCENE_DRIVE_MAX_RETRIES: int = 20
 @export var incorrect_panel_color: Color = Color(0.82, 0.32, 0.32, 0.92)
 @export var correct_button_color: Color = Color(0.42, 0.84, 0.48, 1.0)
 @export var incorrect_button_color: Color = Color(0.92, 0.38, 0.38, 1.0)
+@export var enable_button_flash_feedback: bool = false
 @export var show_correct_button_on_incorrect: bool = true
 
-var question_manager: Node
-var car: Node
+var question_manager: QuestionManager = null
+var car: Node3D = null
 var _last_selected_index: int = -1
 var _feedback_locked: bool = false
 var _feedback_tween: Tween = null
 var _base_panel_color: Color = Color(1.0, 1.0, 1.0, 1.0)
+var _drive_coordinator: QuestionDriveCoordinator = QuestionDriveCoordinator.new()
+var _question_scene_runner: Node = null
 
 
 func _ready() -> void:
 	if is_instance_valid(background_rect):
 		_base_panel_color = background_rect.color
 
-	# Find the QuestionManager in the active scene tree.
-	question_manager = get_tree().current_scene.find_child("QuestionManager", true, false)
+	var current_scene: Node = get_tree().current_scene
+	question_manager = current_scene.get_node_or_null(question_manager_path) as QuestionManager
+	car = current_scene.get_node_or_null(car_path) as Node3D
+	_question_scene_runner = current_scene.get_node_or_null(question_scene_runner_path)
 
-	# Find the persistent car.
-	car = get_tree().current_scene.get_node_or_null("car")
-
-	if question_manager:
+	if is_instance_valid(question_manager):
 		# Connect to question changes.
 		if not question_manager.question_changed.is_connected(_on_question_changed):
 			question_manager.question_changed.connect(_on_question_changed)
@@ -56,9 +61,7 @@ func _ready() -> void:
 			question_manager.answer_validated.connect(_on_answer_validated)
 
 		# Display the first question.
-		var current_question_index: int = 0
-		if question_manager.has_method("get_current_question_index"):
-			current_question_index = question_manager.get_current_question_index()
+		var current_question_index: int = question_manager.get_current_question_index()
 		_on_question_changed(question_manager.get_current_question(), current_question_index)
 	else:
 		push_error("QuestionManager not found in scene")
@@ -138,8 +141,8 @@ func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_i
 ## Advances to the next question without moving the car.
 func _advance_without_car_movement() -> void:
 	await get_tree().create_timer(1.5).timeout
-	if question_manager:
-		if bool(question_manager.get("debug_run_single_question")):
+	if is_instance_valid(question_manager):
+		if question_manager.debug_run_single_question:
 			print("test_panel_controller: Debug single-question mode is enabled, so the same question will reload")
 		question_manager.next_question()
 		return
@@ -155,7 +158,7 @@ func _start_car_movement() -> void:
 		_set_answer_buttons_disabled(false)
 		return
 
-	var auto_driver: Node = car.get_node_or_null("AutoDriver")
+	var auto_driver: CarAutoDriver = car.get_node_or_null("AutoDriver") as CarAutoDriver
 	if not is_instance_valid(auto_driver):
 		push_error("Could not find auto-driver")
 		_feedback_locked = false
@@ -163,15 +166,12 @@ func _start_car_movement() -> void:
 		return
 
 	# Advance to the next question only when the car has fully stopped.
-	if not auto_driver.is_connected("auto_drive_completed", _on_movement_complete):
-		auto_driver.connect("auto_drive_completed", _on_movement_complete, CONNECT_ONE_SHOT)
+	if not auto_driver.auto_drive_completed.is_connected(_on_movement_complete):
+		auto_driver.auto_drive_completed.connect(_on_movement_complete, CONNECT_ONE_SHOT)
 
 	var current_question: QuestionData = question_manager.get_current_question()
-	if current_question and current_question.has_outcomes():
-		Callable(self , "_start_outcome_drive_with_retry").bind(current_question, auto_driver).call_deferred()
-		return
 	if current_question:
-		Callable(self , "_start_default_scene_drive_with_retry").bind(current_question, auto_driver).call_deferred()
+		Callable(self , "_start_question_drive_with_retry").bind(current_question, auto_driver).call_deferred()
 		return
 
 	push_error("test_panel_controller: No active question found. Cannot resolve scenario waypoint.")
@@ -179,162 +179,47 @@ func _start_car_movement() -> void:
 	_set_answer_buttons_disabled(false)
 
 
-## Retries outcome-drive startup for a few frames so scene-root methods are ready.
-func _start_outcome_drive_with_retry(
+## Starts question-specific auto-drive and retries while scenario APIs initialize.
+func _start_question_drive_with_retry(
 	p_question: QuestionData,
-	p_auto_driver: Node,
+	p_auto_driver: CarAutoDriver,
 ) -> void:
-	for _attempt: int in range(OUTCOME_DRIVE_MAX_RETRIES):
-		if _try_start_outcome_drive(p_question, p_auto_driver):
-			return
-		await get_tree().process_frame
-
-	push_error(
-		"test_panel_controller: Outcome drive setup failed after %d retries. Aborting movement instead of falling back to distance mode." % OUTCOME_DRIVE_MAX_RETRIES
+	var did_start_drive: bool = await _drive_coordinator.start_drive_with_retry(
+		p_question,
+		p_auto_driver,
+		_last_selected_index,
+		_question_scene_runner
 	)
+	if did_start_drive:
+		return
+
+	if not _drive_coordinator.last_error_message.is_empty():
+		push_error(_drive_coordinator.last_error_message)
+	else:
+		push_error("test_panel_controller: Failed to start question auto-drive")
+
 	_feedback_locked = false
 	_set_answer_buttons_disabled(false)
-
-
-## Retries default scene-drive startup for a few frames so scene-root methods are ready.
-func _start_default_scene_drive_with_retry(
-	p_question: QuestionData,
-	p_auto_driver: Node,
-) -> void:
-	for _attempt: int in range(DEFAULT_SCENE_DRIVE_MAX_RETRIES):
-		if _try_start_default_scene_drive(p_question, p_auto_driver):
-			return
-		await get_tree().process_frame
-
-	push_error(
-		"test_panel_controller: Default scene drive setup failed after %d retries. Scenario needs a waypoint target." % DEFAULT_SCENE_DRIVE_MAX_RETRIES
-	)
-	_feedback_locked = false
-	_set_answer_buttons_disabled(false)
-
-
-## Attempts to start an outcome-based lane-following drive.
-## Returns [code]true[/code] if an outcome drive was started.
-func _try_start_outcome_drive(
-	p_question: QuestionData,
-	p_auto_driver: Node,
-) -> bool:
-	if not p_question or not p_question.has_outcomes():
-		return false
-	if _last_selected_index < 0 or _last_selected_index >= p_question.answer_outcomes.size():
-		return false
-
-	var outcome: String = p_question.answer_outcomes[_last_selected_index]
-	var question_scene: Node = _find_active_outcome_scene()
-	if not is_instance_valid(question_scene):
-		return false
-	if not question_scene.has_method("get_lane_for_outcome"):
-		return false
-	if not question_scene.has_method("get_stop_target_for_outcome"):
-		return false
-
-	var lane: RoadLane = question_scene.call("get_lane_for_outcome", outcome) as RoadLane
-	var stop_target: Vector3 = question_scene.call("get_stop_target_for_outcome", outcome)
-	if not is_instance_valid(lane):
-		return false
-
-	p_auto_driver.call("start_auto_drive_with_lane", lane, stop_target)
-	return true
-
-
-## Attempts to start a scene-defined default lane-following drive.
-## Returns [code]true[/code] if a default scene drive was started.
-func _try_start_default_scene_drive(
-	p_question: QuestionData,
-	p_auto_driver: Node,
-) -> bool:
-	if not p_question or p_question.has_outcomes():
-		return false
-
-	var question_scene: Node = _find_active_default_drive_scene()
-	if not is_instance_valid(question_scene):
-		return false
-
-	var stop_target_variant: Variant = _get_default_scene_stop_target(question_scene)
-	if not (stop_target_variant is Vector3):
-		return false
-	var stop_target: Vector3 = stop_target_variant
-
-	if question_scene.has_method("get_default_drive_lane"):
-		var lane: RoadLane = question_scene.call("get_default_drive_lane") as RoadLane
-		if is_instance_valid(lane):
-			p_auto_driver.call("start_auto_drive_on_lane", lane, stop_target)
-			return true
-
-	p_auto_driver.call("start_auto_drive_to_waypoint", stop_target)
-	return true
-
-
-## Resolves the default scenario stop target from script API or a [code]DriveWaypoint[/code] marker.
-func _get_default_scene_stop_target(p_question_scene: Node) -> Variant:
-	if p_question_scene.has_method("get_default_stop_target"):
-		return p_question_scene.call("get_default_stop_target")
-
-	var waypoint: Node3D = p_question_scene.get_node_or_null("DriveWaypoint") as Node3D
-	if is_instance_valid(waypoint):
-		return waypoint.global_position
-
-	return null
-
-
-## Finds the currently active question scene that exposes outcome-driving methods.
-func _find_active_outcome_scene() -> Node:
-	var scene_runner: Node = get_tree().current_scene.find_child(
-		"QuestionSceneRunner", true, false)
-	if is_instance_valid(scene_runner):
-		var question_scene: Node = scene_runner.get_node_or_null("QuestionSceneRoot")
-		if is_instance_valid(question_scene):
-			if question_scene.has_method("get_lane_for_outcome") and question_scene.has_method("get_stop_target_for_outcome"):
-				return question_scene
-
-	# Fallback: locate any node in the current scene that looks like an outcome scene script.
-	for node: Node in get_tree().current_scene.find_children("*", "", true, false):
-		if node.has_method("get_lane_for_outcome") and node.has_method("get_stop_target_for_outcome"):
-			return node
-
-	return null
-
-
-## Finds the currently active question scene that exposes default-drive methods.
-func _find_active_default_drive_scene() -> Node:
-	var scene_runner: Node = get_tree().current_scene.find_child(
-		"QuestionSceneRunner", true, false)
-	if is_instance_valid(scene_runner):
-		var question_scene: Node = scene_runner.get_node_or_null("QuestionSceneRoot")
-		if is_instance_valid(question_scene):
-			if question_scene.has_method("get_default_stop_target") or question_scene.has_node("DriveWaypoint"):
-				return question_scene
-
-	for node: Node in get_tree().current_scene.find_children("*", "", true, false):
-		if node.has_method("get_default_stop_target") or node.has_node("DriveWaypoint"):
-			return node
-
-	return null
 
 
 func _on_movement_complete() -> void:
 	await get_tree().create_timer(1.5).timeout
-	if question_manager:
+	if is_instance_valid(question_manager):
 		question_manager.next_question()
 
 
 func _on_button_1_pressed() -> void:
-	if question_manager and not _feedback_locked:
+	if is_instance_valid(question_manager) and not _feedback_locked:
 		question_manager.validate_answer(0)
 
 
 func _on_button_2_pressed() -> void:
-	if question_manager and not _feedback_locked:
+	if is_instance_valid(question_manager) and not _feedback_locked:
 		question_manager.validate_answer(1)
 
 
 func _on_button_3_pressed() -> void:
-	if question_manager and not _feedback_locked:
+	if is_instance_valid(question_manager) and not _feedback_locked:
 		question_manager.validate_answer(2)
 
 
@@ -349,16 +234,16 @@ func _play_answer_feedback(
 	if p_is_correct:
 		if is_instance_valid(background_rect):
 			tween.tween_property(background_rect, "color", correct_panel_color, feedback_flash_seconds)
-		if is_instance_valid(selected_button):
+		if enable_button_flash_feedback and is_instance_valid(selected_button):
 			tween.tween_property(selected_button, "modulate", correct_button_color, feedback_flash_seconds)
 		_play_feedback_sound(correct_sfx_player)
 		return
 
 	if is_instance_valid(background_rect):
 		tween.tween_property(background_rect, "color", incorrect_panel_color, feedback_flash_seconds)
-	if is_instance_valid(selected_button):
+	if enable_button_flash_feedback and is_instance_valid(selected_button):
 		tween.tween_property(selected_button, "modulate", incorrect_button_color, feedback_flash_seconds)
-	if show_correct_button_on_incorrect and p_correct_index >= 0 and p_correct_index != p_selected_index:
+	if enable_button_flash_feedback and show_correct_button_on_incorrect and p_correct_index >= 0 and p_correct_index != p_selected_index:
 		var correct_button: Button = _get_button_for_index(p_correct_index)
 		if is_instance_valid(correct_button):
 			tween.tween_property(correct_button, "modulate", correct_button_color, feedback_flash_seconds)

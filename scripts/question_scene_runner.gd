@@ -19,7 +19,7 @@ class_name QuestionSceneRunner
 @export_group("Loaded Scene")
 @export var loaded_scene_root_name: String = "QuestionSceneRoot"
 
-var _question_manager: Node = null
+var _question_manager: QuestionManager = null
 var _persistent_car: Node3D = null
 var _default_environment: Node3D = null
 var _active_scene_root: Node3D = null
@@ -28,7 +28,7 @@ var _quiz_panel_offset_from_car: Transform3D = Transform3D.IDENTITY
 
 
 func _ready() -> void:
-	_question_manager = get_node_or_null(question_manager_path)
+	_question_manager = get_node_or_null(question_manager_path) as QuestionManager
 	_persistent_car = get_node_or_null(persistent_car_path) as Node3D
 	_default_environment = get_node_or_null(default_environment_path) as Node3D
 	_quiz_panel = get_node_or_null(quiz_panel_path) as Node3D
@@ -110,6 +110,7 @@ func _apply_question_scene(p_question: QuestionData) -> void:
 ## Frees the previously active question scene.
 func _clear_active_scene() -> void:
 	if is_instance_valid(_active_scene_root):
+		remove_child(_active_scene_root)
 		_active_scene_root.queue_free()
 		_active_scene_root = null
 
@@ -132,7 +133,7 @@ func _move_car_to_spawn(p_question: QuestionData) -> void:
 	var spawn_node: Node3D = _active_scene_root.get_node_or_null(spawn_path) as Node3D
 	if spawn_node == null:
 		# Fallback for scenes where SpawnPoint exists but the question resource path is unset.
-		spawn_node = _active_scene_root.find_child("SpawnPoint", true, false) as Node3D
+		spawn_node = _find_named_node3d_recursive(_active_scene_root, "SpawnPoint")
 
 	if spawn_node == null:
 		push_warning(
@@ -156,9 +157,9 @@ func _move_car_to_spawn(p_question: QuestionData) -> void:
 
 
 func _stop_auto_driver() -> void:
-	var auto_driver: Node = _persistent_car.get_node_or_null("AutoDriver")
-	if is_instance_valid(auto_driver) and auto_driver.has_method("stop_auto_drive"):
-		auto_driver.call("stop_auto_drive")
+	var auto_driver: CarAutoDriver = _persistent_car.get_node_or_null("AutoDriver") as CarAutoDriver
+	if is_instance_valid(auto_driver):
+		auto_driver.stop_auto_drive()
 
 
 func _apply_car_spawn_transform(p_target_transform: Transform3D) -> void:
@@ -217,10 +218,28 @@ func _find_panel_spawn_node(p_question: QuestionData) -> Node3D:
 
 	var panel_spawn_path: NodePath = p_question.panel_spawn_point_path
 	if panel_spawn_path.is_empty():
-		return _active_scene_root.find_child("PanelSpawnPoint", true, false) as Node3D
+		return _find_named_node3d_recursive(_active_scene_root, "PanelSpawnPoint")
 
 	var panel_spawn_node: Node3D = _active_scene_root.get_node_or_null(panel_spawn_path) as Node3D
 	if is_instance_valid(panel_spawn_node):
 		return panel_spawn_node
 
-	return _active_scene_root.find_child("PanelSpawnPoint", true, false) as Node3D
+	return _find_named_node3d_recursive(_active_scene_root, "PanelSpawnPoint")
+
+
+## Recursively finds the first [Node3D] with an exact node name match.
+func _find_named_node3d_recursive(p_root: Node, p_node_name: String) -> Node3D:
+	if not is_instance_valid(p_root):
+		return null
+
+	var stack: Array[Node] = [p_root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node.name == p_node_name and node is Node3D:
+			return node as Node3D
+
+		for child_variant: Variant in node.get_children():
+			if child_variant is Node:
+				stack.append(child_variant as Node)
+
+	return null

@@ -1,4 +1,5 @@
 extends Node
+class_name QuestionManager
 
 const _LOCAL_DEV_CONFIG_PATH: String = "res://dev.local.cfg"
 

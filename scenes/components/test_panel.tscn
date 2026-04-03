@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d2esvnd00rxvu"]
 
-[ext_resource type="Script" path="res://scripts/test_panel_controller.gd" id="1_uti8e"]
+[ext_resource type="Script" uid="uid://cph0faw4chod" path="res://scripts/test_panel_controller.gd" id="1_uti8e"]
 [ext_resource type="AudioStream" uid="uid://dk8r1qsxrc6vq" path="res://assets/audio/181860__timgormly__training-program-correct1.wav" id="2_vnswy"]
 [ext_resource type="AudioStream" uid="uid://c6s01g485gggk" path="res://assets/audio/181858__timgormly__training-program-incorrect1.wav" id="3_7fqns"]
 
@@ -9,7 +9,6 @@ font_size = 26
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1325332154]
 script = ExtResource("1_uti8e")
-enable_button_flash_feedback = true
 show_correct_button_on_incorrect = false
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1570591131]

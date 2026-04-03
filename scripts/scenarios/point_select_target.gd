@@ -13,7 +13,7 @@ signal pointer_event(p_event: XRToolsPointerEvent)
 ## Prevents the same target from being accepted multiple times.
 @export var lock_after_successful_selection: bool = true
 
-var _scenario_root: Node = null
+var _scenario_root: PointSelectScenario = null
 var _selection_locked: bool = false
 
 
@@ -38,25 +38,26 @@ func _on_pointer_event(p_event: XRToolsPointerEvent) -> void:
 	if not is_instance_valid(_scenario_root):
 		push_error("PointSelectTarget: Scenario root not found for %s" % name)
 		return
-	if not _scenario_root.has_method("submit_selection"):
-		push_error("PointSelectTarget: Scenario root is missing submit_selection")
-		return
 
-	var was_accepted_variant: Variant = _scenario_root.call("submit_selection", selection_id)
+	var was_accepted: bool = _scenario_root.submit_selection(selection_id)
 	print("PointSelectTarget: Pressed '%s'" % selection_id)
-	if lock_after_successful_selection and was_accepted_variant is bool and was_accepted_variant:
+	if lock_after_successful_selection and was_accepted:
 		_selection_locked = true
 
 
 ## Resolves the nearest ancestor (or explicit node path) that owns point-select validation.
-func _resolve_scenario_root() -> Node:
+func _resolve_scenario_root() -> PointSelectScenario:
 	if not scenario_root_path.is_empty():
-		return get_node_or_null(scenario_root_path)
+		return get_node_or_null(scenario_root_path) as PointSelectScenario
 
 	var current_node: Node = get_parent()
 	while is_instance_valid(current_node):
-		if current_node.has_method("submit_selection"):
-			return current_node
+		if current_node is PointSelectScenario:
+			return current_node as PointSelectScenario
 		current_node = current_node.get_parent()
 
-	return get_tree().current_scene.find_child("QuestionSceneRoot", true, false)
+	var scene_runner: Node = get_tree().current_scene.get_node_or_null("QuestionSceneRunner")
+	if not is_instance_valid(scene_runner):
+		return null
+
+	return scene_runner.get_node_or_null("QuestionSceneRoot") as PointSelectScenario
