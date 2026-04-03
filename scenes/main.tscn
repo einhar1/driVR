@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ci52bv1m15cbs" path="res://cars/Doge.tscn" id="3_dg77c"]
 [ext_resource type="PackedScene" uid="uid://cdo57tv0lu1m0" path="res://scenes/components/player.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="7_5vw27"]
+[ext_resource type="PackedScene" uid="uid://pujr8klel7ym" path="res://scenes/components/StartEndScreens.tscn" id="7_gqmmt"]
 [ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://scenes/components/test_panel.tscn" id="8_kek77"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
@@ -80,17 +81,15 @@ steering_response_speed = 1.9
 max_steering_command = 0.3
 high_speed_reference = 22.0
 
-[node name="Viewport2Din3D" parent="." unique_id=495527837 instance=ExtResource("7_5vw27")]
+[node name="QuizPanel" parent="." unique_id=495527837 instance=ExtResource("7_5vw27")]
 transform = Transform3D(0.32090142, -0.109871686, -0.94071877, 0.00076565176, 0.993278, -0.11574942, 0.9471127, 0.03642384, 0.31882882, 14.61925, 1.8052609, 6.022187)
 screen_size = Vector2(1.5, 1)
 scene = ExtResource("8_kek77")
 transparent = 1
-scene_properties_keys = PackedStringArray("test_panel_controller.gd", "Question Label", "max_question_font_size", "min_question_font_size", "length_for_min_size", "Viewport Auto Size", "auto_size_viewport_to_content", "viewport_padding_px", "Answer Feedback", "feedback_hold_seconds", "feedback_flash_seconds", "correct_panel_color", "incorrect_panel_color", "correct_button_color", "incorrect_button_color", "enable_button_flash_feedback", "show_correct_button_on_incorrect")
+scene_properties_keys = PackedStringArray("test_panel_controller.gd", "Question Label", "max_question_font_size", "min_question_font_size", "length_for_min_size", "Answer Feedback", "feedback_hold_seconds", "feedback_flash_seconds", "correct_panel_color", "incorrect_panel_color", "correct_button_color", "incorrect_button_color", "enable_button_flash_feedback", "show_correct_button_on_incorrect", "Quiz Flow", "post_feedback_advance_delay_seconds", "post_drive_advance_delay_seconds")
 max_question_font_size = 26
 min_question_font_size = 14
 length_for_min_size = 120
-auto_size_viewport_to_content = true
-viewport_padding_px = 8
 feedback_hold_seconds = 0.9
 feedback_flash_seconds = 0.2
 correct_panel_color = Color(0.36, 0.78, 0.46, 0.92)
@@ -98,10 +97,20 @@ incorrect_panel_color = Color(0.82, 0.32, 0.32, 0.92)
 correct_button_color = Color(0.42, 0.84, 0.48, 1)
 incorrect_button_color = Color(0.92, 0.38, 0.38, 1)
 enable_button_flash_feedback = false
-show_correct_button_on_incorrect = true
+show_correct_button_on_incorrect = false
+post_feedback_advance_delay_seconds = 2.0
+post_drive_advance_delay_seconds = 2.0
 
-[node name="QuizPanelSlideController" type="Node" parent="Viewport2Din3D" unique_id=1327728888]
+[node name="QuizPanelSlideController" type="Node" parent="QuizPanel" unique_id=1327728888]
 script = ExtResource("15_qpanel")
+
+[node name="StartEndPanel" parent="." unique_id=2078626577 instance=ExtResource("7_5vw27")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 15.648203, 1.6655986, 7.306121)
+screen_size = Vector2(3, 2.1)
+scene = ExtResource("7_gqmmt")
+viewport_size = Vector2(1200, 800)
+transparent = 1
+scene_properties_keys = PackedStringArray("start_end_screen_controller.gd")
 
 [node name="QuestionManager" type="Node" parent="." unique_id=945438787]
 script = ExtResource("11_ycdy4")
@@ -109,7 +118,7 @@ question_bank = ExtResource("12_w48qg")
 
 [node name="QuestionSceneRunner" type="Node3D" parent="." unique_id=549882979]
 script = ExtResource("14_w48qg")
-loaded_scene_root_name = null
+quiz_panel_path = NodePath("../QuizPanel")
 
 [node name="DefaultEnvironment" type="Node3D" parent="." unique_id=2005697244]
 

@@ -1,6 +1,9 @@
 extends CanvasLayer
 
 const DEFAULT_BUTTON_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
+const _GROUP_NAME_QUESTION_MANAGER: String = "question_manager"
+const _GROUP_NAME_SCENE_RUNNER: String = "question_scene_runner"
+const _DEPENDENCY_LOOKUP_MAX_FRAMES: int = 120
 
 @onready var button_1: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_1") as Button
 @onready var button_2: Button = get_node_or_null("MarginContainer/VBoxContainer/Button_2") as Button
@@ -14,15 +17,6 @@ const DEFAULT_BUTTON_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
 @export_range(14, 48, 1) var max_question_font_size: int = 26
 @export_range(10, 32, 1) var min_question_font_size: int = 14
 @export_range(20, 180, 1) var length_for_min_size: int = 120
-
-@export_group("Viewport Auto Size")
-@export var auto_size_viewport_to_content: bool = true
-@export_range(0, 128, 1) var viewport_padding_px: int = 8
-
-@export_group("Dependencies")
-@export var question_manager_path: NodePath = ^"QuestionManager"
-@export var car_path: NodePath = ^"car"
-@export var question_scene_runner_path: NodePath = ^"QuestionSceneRunner"
 
 @export_group("Answer Feedback")
 @export_range(0.1, 3.0, 0.05) var feedback_hold_seconds: float = 0.9
@@ -46,17 +40,49 @@ var _base_panel_color: Color = Color(1.0, 1.0, 1.0, 1.0)
 var _drive_coordinator: QuestionDriveCoordinator = QuestionDriveCoordinator.new()
 var _question_scene_runner: Node = null
 var _flow_version: int = 0
+var _panel_in_3d: Node3D = null
 
 
 func _ready() -> void:
 	if is_instance_valid(background_rect):
 		_base_panel_color = background_rect.color
 
-	var current_scene: Node = get_tree().current_scene
-	question_manager = current_scene.get_node_or_null(question_manager_path) as QuestionManager
-	_question_scene_runner = current_scene.get_node_or_null(question_scene_runner_path)
+	# Walk up SubViewport → Viewport2Din3D to control whole-panel visibility.
+	var sub_viewport: Node = get_parent()
+	if sub_viewport is SubViewport:
+		var parent: Node = sub_viewport.get_parent()
+		if parent is Node3D:
+			_panel_in_3d = parent as Node3D
+
+	_set_panel_in_3d_visible(false)
 	if not _drive_coordinator.drive_completed.is_connected(_on_drive_completed):
 		_drive_coordinator.drive_completed.connect(_on_drive_completed)
+	call_deferred("_initialize_dependencies")
+
+
+func _initialize_dependencies() -> void:
+	# Wait for QuestionManager to be fully initialized and broadcasting manager_initialized signal.
+	var manager: QuestionManager = get_tree().get_first_node_in_group(_GROUP_NAME_QUESTION_MANAGER) as QuestionManager
+	if is_instance_valid(manager):
+		# Check if already initialized (signal may have already fired).
+		if manager.question_bank != null:
+			question_manager = manager
+		else:
+			# Wait for initialization if not yet ready.
+			await manager.manager_initialized
+			question_manager = manager
+	else:
+		push_error("QuestionManager not found in scene; retrying...")
+		await get_tree().process_frame
+		manager = get_tree().get_first_node_in_group(_GROUP_NAME_QUESTION_MANAGER) as QuestionManager
+		if is_instance_valid(manager):
+			if manager.question_bank != null:
+				question_manager = manager
+			else:
+				await manager.manager_initialized
+				question_manager = manager
+
+	_question_scene_runner = await _resolve_scene_runner_with_retry()
 
 	if is_instance_valid(question_manager):
 		# Connect to question changes.
@@ -64,15 +90,65 @@ func _ready() -> void:
 			question_manager.question_changed.connect(_on_question_changed)
 		if not question_manager.answer_validated.is_connected(_on_answer_validated):
 			question_manager.answer_validated.connect(_on_answer_validated)
+		if not question_manager.quiz_started.is_connected(_on_quiz_started_panel):
+			question_manager.quiz_started.connect(_on_quiz_started_panel)
+		if not question_manager.quiz_completed.is_connected(_on_quiz_completed_panel):
+			question_manager.quiz_completed.connect(_on_quiz_completed_panel)
 
-		# Display the first question.
-		var current_question_index: int = question_manager.get_current_question_index()
-		_on_question_changed(question_manager.get_current_question(), current_question_index)
+		# In debug single-question mode the quiz is already active — populate UI immediately.
+		if question_manager.is_quiz_active():
+			call_deferred(
+				"_on_question_changed",
+				question_manager.get_current_question(),
+				question_manager.get_current_question_index()
+			)
 	else:
 		push_error("QuestionManager not found in scene")
 
-	if auto_size_viewport_to_content:
-		call_deferred("_sync_viewport_to_content")
+	# Hide the 3D panel until the quiz is active.
+	_set_panel_in_3d_visible(question_manager != null and question_manager.is_quiz_active())
+
+
+func _resolve_scene_runner_with_retry() -> Node:
+	for _attempt: int in range(_DEPENDENCY_LOOKUP_MAX_FRAMES):
+		var runner: Node = get_tree().get_first_node_in_group(_GROUP_NAME_SCENE_RUNNER)
+		if is_instance_valid(runner):
+			return runner
+		await get_tree().process_frame
+
+	var gameplay_root: Node = _get_gameplay_root()
+	if is_instance_valid(gameplay_root):
+		return gameplay_root.get_node_or_null("QuestionSceneRunner")
+
+	return null
+
+
+## Resolves the gameplay root node that owns car/question systems.
+func _get_gameplay_root() -> Node:
+	if is_instance_valid(_question_scene_runner):
+		return _question_scene_runner.get_parent()
+
+	if is_instance_valid(question_manager):
+		return question_manager.get_parent()
+
+	var manager: QuestionManager = get_tree().get_first_node_in_group(_GROUP_NAME_QUESTION_MANAGER) as QuestionManager
+	if is_instance_valid(manager):
+		return manager.get_parent()
+
+	return null
+
+
+func _on_quiz_started_panel() -> void:
+	_set_panel_in_3d_visible(true)
+
+
+func _on_quiz_completed_panel() -> void:
+	_set_panel_in_3d_visible(false)
+
+
+func _set_panel_in_3d_visible(p_visible: bool) -> void:
+	if is_instance_valid(_panel_in_3d):
+		_panel_in_3d.visible = p_visible
 
 
 func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
@@ -112,9 +188,6 @@ func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if options_count >= 3:
 		button_3.text = p_question.options[2]
 		button_3.visible = true
-
-	if auto_size_viewport_to_content:
-		call_deferred("_sync_viewport_to_content")
 
 
 func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_index: int) -> void:
@@ -170,13 +243,19 @@ func _start_question_drive_with_retry(
 	p_question: QuestionData,
 	p_flow_version: int,
 ) -> void:
-	var current_scene: Node = get_tree().current_scene
+	var gameplay_root: Node = _get_gameplay_root()
+	if not is_instance_valid(gameplay_root):
+		push_error("test_panel_controller: Gameplay root not found")
+		_feedback_locked = false
+		_set_answer_buttons_disabled(false)
+		return
+
 	var did_start_drive: bool = await _drive_coordinator.start_drive_with_retry(
 		p_question,
 		_last_selected_index,
 		_question_scene_runner,
-		current_scene,
-		car_path
+		gameplay_root,
+		NodePath("car")
 	)
 	if not _is_flow_active(p_flow_version):
 		return
@@ -354,68 +433,3 @@ func _normalize_swedish_text(p_text: String) -> String:
 	normalized = normalized.replace("\u0308U", "Ü")
 
 	return normalized
-
-
-## Resizes the parent Viewport2Din3D to fit visible 2D content bounds.
-func _sync_viewport_to_content() -> void:
-	var content_rect: Rect2 = _get_visible_content_rect()
-	if content_rect.size.x <= 0.0 or content_rect.size.y <= 0.0:
-		return
-
-	var padded_size: Vector2 = Vector2(
-		ceil(content_rect.size.x) + float(viewport_padding_px),
-		ceil(content_rect.size.y) + float(viewport_padding_px)
-	)
-
-	var sub_viewport_node: Node = get_parent()
-	if not (sub_viewport_node is SubViewport):
-		return
-
-	var viewport_2d_in_3d: Node = sub_viewport_node.get_parent()
-	if not is_instance_valid(viewport_2d_in_3d):
-		return
-
-	var current_viewport_size: Variant = viewport_2d_in_3d.get("viewport_size")
-	var current_screen_size: Variant = viewport_2d_in_3d.get("screen_size")
-	if not (current_viewport_size is Vector2) or not (current_screen_size is Vector2):
-		return
-
-	var current_viewport_size_v2: Vector2 = current_viewport_size
-	var current_screen_size_v2: Vector2 = current_screen_size
-	var pixels_per_meter: float = current_viewport_size_v2.x / maxf(current_screen_size_v2.x, 0.001)
-	var new_screen_size: Vector2 = padded_size / maxf(pixels_per_meter, 0.001)
-
-	viewport_2d_in_3d.set("viewport_size", padded_size)
-	viewport_2d_in_3d.set("screen_size", new_screen_size)
-
-
-## Calculates a bounding rect for visible direct child controls.
-func _get_visible_content_rect() -> Rect2:
-	var has_any_control: bool = false
-	var min_pos: Vector2 = Vector2.ZERO
-	var max_pos: Vector2 = Vector2.ZERO
-
-	for child: Node in get_children():
-		if not (child is Control):
-			continue
-
-		var control: Control = child as Control
-		if not control.visible:
-			continue
-
-		var rect: Rect2 = Rect2(control.position, control.size)
-		if not has_any_control:
-			min_pos = rect.position
-			max_pos = rect.position + rect.size
-			has_any_control = true
-		else:
-			min_pos = Vector2(minf(min_pos.x, rect.position.x), minf(min_pos.y, rect.position.y))
-			max_pos = Vector2(
-				maxf(max_pos.x, rect.position.x + rect.size.x),
-				maxf(max_pos.y, rect.position.y + rect.size.y)
-			)
-
-	if not has_any_control:
-		return Rect2(Vector2.ZERO, Vector2.ZERO)
-
-	return Rect2(min_pos, max_pos - min_pos)

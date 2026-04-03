@@ -45,6 +45,15 @@ func _resolve_auto_driver(p_scene_root: Node, p_car_path: NodePath) -> CarAutoDr
 
 	var car: Node3D = p_scene_root.get_node_or_null(p_car_path) as Node3D
 	if not is_instance_valid(car):
+		# Fallback: tolerate stale viewport-proxy NodePaths like "../car".
+		var fallback_path: String = String(p_car_path).trim_prefix("../")
+		if not fallback_path.is_empty():
+			car = p_scene_root.get_node_or_null(NodePath(fallback_path)) as Node3D
+
+	if not is_instance_valid(car):
+		car = p_scene_root.get_node_or_null("car") as Node3D
+
+	if not is_instance_valid(car):
 		last_error_message = "QuestionDriveCoordinator: Car not found"
 		return null
 
@@ -178,4 +187,9 @@ func _get_default_scene_stop_target(
 func _find_active_question_scene(p_scene_runner: Node) -> Node:
 	if not is_instance_valid(p_scene_runner):
 		return null
+	# Prefer the direct accessor on QuestionSceneRunner; fall back to name lookup.
+	if p_scene_runner.has_method("get_active_scene_root"):
+		var root: Node3D = p_scene_runner.get_active_scene_root()
+		if is_instance_valid(root):
+			return root
 	return p_scene_runner.get_node_or_null("QuestionSceneRoot")

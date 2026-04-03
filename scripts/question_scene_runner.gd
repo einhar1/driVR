@@ -19,15 +19,19 @@ class_name QuestionSceneRunner
 @export_group("Loaded Scene")
 @export var loaded_scene_root_name: String = "QuestionSceneRoot"
 
+const _GROUP_NAME_SCENE_RUNNER: String = "question_scene_runner"
+
 var _question_manager: QuestionManager = null
 var _persistent_car: Node3D = null
 var _default_environment: Node3D = null
 var _active_scene_root: Node3D = null
 var _quiz_panel: Node3D = null
 var _quiz_panel_offset_from_car: Transform3D = Transform3D.IDENTITY
+var _initial_car_transform: Transform3D = Transform3D.IDENTITY
 
 
 func _ready() -> void:
+	add_to_group(_GROUP_NAME_SCENE_RUNNER)
 	_question_manager = get_node_or_null(question_manager_path) as QuestionManager
 	_persistent_car = get_node_or_null(persistent_car_path) as Node3D
 	_default_environment = get_node_or_null(default_environment_path) as Node3D
@@ -44,24 +48,44 @@ func _ready() -> void:
 		return
 
 	_cache_quiz_panel_offset_from_car()
+	_initial_car_transform = _persistent_car.global_transform
 
 	if _default_environment == null and not default_environment_path.is_empty():
 		push_warning("QuestionSceneRunner: DefaultEnvironment node not found at '%s'" % String(default_environment_path))
 
 	if not _question_manager.question_change_requested.is_connected(_on_question_change_requested):
 		_question_manager.question_change_requested.connect(_on_question_change_requested)
+	if not _question_manager.quiz_completed.is_connected(_on_quiz_completed_scene):
+		_question_manager.quiz_completed.connect(_on_quiz_completed_scene)
 
-	# QuestionManager._ready() fires question_change_requested before this node is ready to
-	# connect (siblings run _ready() in scene-tree order, QuestionManager before this node).
-	# Catch up by applying the current question immediately.
-	Callable(self , "_apply_question_scene").bind(
-			_question_manager.get_current_question()).call_deferred()
+	# Only catch up if quiz is already active (e.g. debug single-question mode).
+	if _question_manager.is_quiz_active():
+		Callable(self , "_apply_question_scene").bind(
+				_question_manager.get_current_question()).call_deferred()
 
 
 ## Loads the scene mapped to the requested question and places the persistent car at its spawn point.
 ## Deferred to avoid modifying the physics world during a physics step (Jolt crash).
 func _on_question_change_requested(p_question: QuestionData, _p_index: int) -> void:
 	Callable(self , "_apply_question_scene").bind(p_question).call_deferred()
+
+
+func _on_quiz_completed_scene() -> void:
+	Callable(self , "_return_to_default_environment").call_deferred()
+
+
+## Clears any active scenario scene and returns the player to the default environment.
+func _return_to_default_environment() -> void:
+	_clear_active_scene()
+	_set_default_environment_visible(true)
+	if is_instance_valid(_persistent_car):
+		_stop_auto_driver()
+		_apply_car_spawn_transform(_initial_car_transform)
+		_persistent_car.visible = true
+		_set_car_frozen(false)
+		await get_tree().physics_frame
+		if is_instance_valid(_persistent_car):
+			_apply_car_spawn_transform(_initial_car_transform)
 
 
 func _apply_question_scene(p_question: QuestionData) -> void:
@@ -113,6 +137,11 @@ func _clear_active_scene() -> void:
 		remove_child(_active_scene_root)
 		_active_scene_root.queue_free()
 		_active_scene_root = null
+
+
+## Returns the currently loaded question scene root, or null when no question scene is active.
+func get_active_scene_root() -> Node3D:
+	return _active_scene_root
 
 
 ## Shows or hides the default environment node.
