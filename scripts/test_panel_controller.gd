@@ -34,14 +34,18 @@ const DEFAULT_BUTTON_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
 @export var enable_button_flash_feedback: bool = false
 @export var show_correct_button_on_incorrect: bool = true
 
+@export_group("Quiz Flow")
+@export_range(0.0, 3.0, 0.05) var post_feedback_advance_delay_seconds: float = 0.0
+@export_range(0.0, 3.0, 0.05) var post_drive_advance_delay_seconds: float = 0.0
+
 var question_manager: QuestionManager = null
-var car: Node3D = null
 var _last_selected_index: int = -1
 var _feedback_locked: bool = false
 var _feedback_tween: Tween = null
 var _base_panel_color: Color = Color(1.0, 1.0, 1.0, 1.0)
 var _drive_coordinator: QuestionDriveCoordinator = QuestionDriveCoordinator.new()
 var _question_scene_runner: Node = null
+var _flow_version: int = 0
 
 
 func _ready() -> void:
@@ -50,8 +54,9 @@ func _ready() -> void:
 
 	var current_scene: Node = get_tree().current_scene
 	question_manager = current_scene.get_node_or_null(question_manager_path) as QuestionManager
-	car = current_scene.get_node_or_null(car_path) as Node3D
 	_question_scene_runner = current_scene.get_node_or_null(question_scene_runner_path)
+	if not _drive_coordinator.drive_completed.is_connected(_on_drive_completed):
+		_drive_coordinator.drive_completed.connect(_on_drive_completed)
 
 	if is_instance_valid(question_manager):
 		# Connect to question changes.
@@ -73,6 +78,7 @@ func _ready() -> void:
 func _on_question_changed(p_question: QuestionData, _p_index: int) -> void:
 	if not p_question:
 		return
+	_flow_version += 1
 
 	_feedback_locked = false
 	_last_selected_index = -1
@@ -115,19 +121,23 @@ func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_i
 	if _feedback_locked:
 		return
 
+	_flow_version += 1
+	var flow_version: int = _flow_version
 	_feedback_locked = true
 	_last_selected_index = p_selected_index
 	_set_answer_buttons_disabled(true)
 	_play_answer_feedback(p_is_correct, p_selected_index, p_correct_index)
 	await get_tree().create_timer(feedback_hold_seconds).timeout
+	if not _is_flow_active(flow_version):
+		return
 	_reset_feedback_visuals()
 
 	if p_is_correct:
 		var current_question: QuestionData = question_manager.get_current_question()
 		if current_question and not current_question.should_auto_drive_after_answer():
-			Callable(self , "_advance_without_car_movement").call_deferred()
+			Callable(self , "_advance_without_car_movement").bind(flow_version).call_deferred()
 			return
-		_start_car_movement()
+		Callable(self , "_start_question_drive_with_retry").bind(current_question, flow_version).call_deferred()
 		return
 
 	_feedback_locked = false
@@ -139,8 +149,12 @@ func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_i
 
 
 ## Advances to the next question without moving the car.
-func _advance_without_car_movement() -> void:
-	await get_tree().create_timer(1.5).timeout
+func _advance_without_car_movement(p_flow_version: int) -> void:
+	if post_feedback_advance_delay_seconds > 0.0:
+		await get_tree().create_timer(post_feedback_advance_delay_seconds).timeout
+	if not _is_flow_active(p_flow_version):
+		return
+
 	if is_instance_valid(question_manager):
 		if question_manager.debug_run_single_question:
 			print("test_panel_controller: Debug single-question mode is enabled, so the same question will reload")
@@ -151,45 +165,21 @@ func _advance_without_car_movement() -> void:
 	_set_answer_buttons_disabled(false)
 
 
-func _start_car_movement() -> void:
-	if not is_instance_valid(car):
-		push_error("Car not found")
-		_feedback_locked = false
-		_set_answer_buttons_disabled(false)
-		return
-
-	var auto_driver: CarAutoDriver = car.get_node_or_null("AutoDriver") as CarAutoDriver
-	if not is_instance_valid(auto_driver):
-		push_error("Could not find auto-driver")
-		_feedback_locked = false
-		_set_answer_buttons_disabled(false)
-		return
-
-	# Advance to the next question only when the car has fully stopped.
-	if not auto_driver.auto_drive_completed.is_connected(_on_movement_complete):
-		auto_driver.auto_drive_completed.connect(_on_movement_complete, CONNECT_ONE_SHOT)
-
-	var current_question: QuestionData = question_manager.get_current_question()
-	if current_question:
-		Callable(self , "_start_question_drive_with_retry").bind(current_question, auto_driver).call_deferred()
-		return
-
-	push_error("test_panel_controller: No active question found. Cannot resolve scenario waypoint.")
-	_feedback_locked = false
-	_set_answer_buttons_disabled(false)
-
-
 ## Starts question-specific auto-drive and retries while scenario APIs initialize.
 func _start_question_drive_with_retry(
 	p_question: QuestionData,
-	p_auto_driver: CarAutoDriver,
+	p_flow_version: int,
 ) -> void:
+	var current_scene: Node = get_tree().current_scene
 	var did_start_drive: bool = await _drive_coordinator.start_drive_with_retry(
 		p_question,
-		p_auto_driver,
 		_last_selected_index,
-		_question_scene_runner
+		_question_scene_runner,
+		current_scene,
+		car_path
 	)
+	if not _is_flow_active(p_flow_version):
+		return
 	if did_start_drive:
 		return
 
@@ -202,10 +192,26 @@ func _start_question_drive_with_retry(
 	_set_answer_buttons_disabled(false)
 
 
-func _on_movement_complete() -> void:
-	await get_tree().create_timer(1.5).timeout
+func _on_drive_completed() -> void:
+	Callable(self , "_advance_after_drive_completion").bind(_flow_version).call_deferred()
+
+
+func _advance_after_drive_completion(p_flow_version: int) -> void:
+	if post_drive_advance_delay_seconds > 0.0:
+		await get_tree().create_timer(post_drive_advance_delay_seconds).timeout
+	if not _is_flow_active(p_flow_version):
+		return
+
 	if is_instance_valid(question_manager):
 		question_manager.next_question()
+		return
+
+	_feedback_locked = false
+	_set_answer_buttons_disabled(false)
+
+
+func _is_flow_active(p_flow_version: int) -> bool:
+	return p_flow_version == _flow_version
 
 
 func _on_button_1_pressed() -> void:
