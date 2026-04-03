@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b6tgv6ucbgv3r"
-path.s3tc="res://.godot/imported/hands_normal.png-291c7217751274bfe1199e3de899450f.s3tc.ctex"
-path.etc2="res://.godot/imported/hands_normal.png-291c7217751274bfe1199e3de899450f.etc2.ctex"
+path.s3tc="res://.godot/imported/hands_normal.png-e49825be5178b86027bcafe5eb0c0dd5.s3tc.ctex"
+path.etc2="res://.godot/imported/hands_normal.png-e49825be5178b86027bcafe5eb0c0dd5.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/godot-xr-tools/hands/textures/hands_normal.png"
-dest_files=["res://.godot/imported/hands_normal.png-291c7217751274bfe1199e3de899450f.s3tc.ctex", "res://.godot/imported/hands_normal.png-291c7217751274bfe1199e3de899450f.etc2.ctex"]
+source_file="res://addons/godot-xr-tools 2/hands/textures/hands_normal.png"
+dest_files=["res://.godot/imported/hands_normal.png-e49825be5178b86027bcafe5eb0c0dd5.s3tc.ctex", "res://.godot/imported/hands_normal.png-e49825be5178b86027bcafe5eb0c0dd5.etc2.ctex"]
 
 [params]
 

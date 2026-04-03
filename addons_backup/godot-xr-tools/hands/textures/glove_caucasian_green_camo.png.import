@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dgkfppran5j1f"
-path.s3tc="res://.godot/imported/glove_caucasian_green_camo.png-009f6b98bc0f9d73ac78a6b6900a0d00.s3tc.ctex"
-path.etc2="res://.godot/imported/glove_caucasian_green_camo.png-009f6b98bc0f9d73ac78a6b6900a0d00.etc2.ctex"
+path.s3tc="res://.godot/imported/glove_caucasian_green_camo.png-4cb588182f1a246ea0d1a8d728f8fe03.s3tc.ctex"
+path.etc2="res://.godot/imported/glove_caucasian_green_camo.png-4cb588182f1a246ea0d1a8d728f8fe03.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/godot-xr-tools/hands/textures/glove_caucasian_green_camo.png"
-dest_files=["res://.godot/imported/glove_caucasian_green_camo.png-009f6b98bc0f9d73ac78a6b6900a0d00.s3tc.ctex", "res://.godot/imported/glove_caucasian_green_camo.png-009f6b98bc0f9d73ac78a6b6900a0d00.etc2.ctex"]
+source_file="res://addons/godot-xr-tools 2/hands/textures/glove_caucasian_green_camo.png"
+dest_files=["res://.godot/imported/glove_caucasian_green_camo.png-4cb588182f1a246ea0d1a8d728f8fe03.s3tc.ctex", "res://.godot/imported/glove_caucasian_green_camo.png-4cb588182f1a246ea0d1a8d728f8fe03.etc2.ctex"]
 
 [params]
 

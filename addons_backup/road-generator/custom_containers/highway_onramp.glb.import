@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://0lixivpeyg5"
-path="res://.godot/imported/highway_onramp.glb-11a8eeb925dbe42b5cb5663ea602df56.scn"
+path="res://.godot/imported/highway_onramp.glb-458224cbb9149daf3f266c1725ce930f.scn"
 
 [deps]
 
-source_file="res://addons/road-generator/custom_containers/highway_onramp.glb"
-dest_files=["res://.godot/imported/highway_onramp.glb-11a8eeb925dbe42b5cb5663ea602df56.scn"]
+source_file="res://addons/road-generator 2/custom_containers/highway_onramp.glb"
+dest_files=["res://.godot/imported/highway_onramp.glb-458224cbb9149daf3f266c1725ce930f.scn"]
 
 [params]
 

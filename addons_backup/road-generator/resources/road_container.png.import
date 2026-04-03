@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnoa21p4e1ipv"
-path="res://.godot/imported/road_container.png-1147df388ac22fe25cdfd46afa33f42b.ctex"
+path="res://.godot/imported/road_container.png-cac17641003881272c1d76f20b5f3024.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/road-generator/resources/road_container.png"
-dest_files=["res://.godot/imported/road_container.png-1147df388ac22fe25cdfd46afa33f42b.ctex"]
+source_file="res://addons/road-generator 2/resources/road_container.png"
+dest_files=["res://.godot/imported/road_container.png-cac17641003881272c1d76f20b5f3024.ctex"]
 
 [params]
 

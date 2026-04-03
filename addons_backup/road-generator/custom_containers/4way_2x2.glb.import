@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dxrcxg7fpyfg"
-path="res://.godot/imported/4way_2x2.glb-0f612c97dc4023d679a63c84f89e9085.scn"
+path="res://.godot/imported/4way_2x2.glb-d5bb49d281bdef7a6ae513fb9dfbe72a.scn"
 
 [deps]
 
-source_file="res://addons/road-generator/custom_containers/4way_2x2.glb"
-dest_files=["res://.godot/imported/4way_2x2.glb-0f612c97dc4023d679a63c84f89e9085.scn"]
+source_file="res://addons_backup/road-generator/custom_containers/4way_2x2.glb"
+dest_files=["res://.godot/imported/4way_2x2.glb-d5bb49d281bdef7a6ae513fb9dfbe72a.scn"]
 
 [params]
 

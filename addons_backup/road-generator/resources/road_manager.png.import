@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cqktiqrjlduur"
-path="res://.godot/imported/road_manager.png-53eed839b5dd2c61d2d0acfe2f3c28b6.ctex"
+path="res://.godot/imported/road_manager.png-0b60c01a33ddd98a8f951c8887cd7dd1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/road-generator/resources/road_manager.png"
-dest_files=["res://.godot/imported/road_manager.png-53eed839b5dd2c61d2d0acfe2f3c28b6.ctex"]
+source_file="res://addons_backup/road-generator/resources/road_manager.png"
+dest_files=["res://.godot/imported/road_manager.png-0b60c01a33ddd98a8f951c8887cd7dd1.ctex"]
 
 [params]
 

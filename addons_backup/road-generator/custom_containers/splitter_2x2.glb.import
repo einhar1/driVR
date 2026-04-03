@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cyjpoeddap1se"
-path="res://.godot/imported/splitter_2x2.glb-e0dd4ae1d6f87d20904092bd6e6e8dd2.scn"
+path="res://.godot/imported/splitter_2x2.glb-2fc189cdbdac8373bf55e9519b40b24f.scn"
 
 [deps]
 
-source_file="res://addons/road-generator/custom_containers/splitter_2x2.glb"
-dest_files=["res://.godot/imported/splitter_2x2.glb-e0dd4ae1d6f87d20904092bd6e6e8dd2.scn"]
+source_file="res://addons/road-generator 2/custom_containers/splitter_2x2.glb"
+dest_files=["res://.godot/imported/splitter_2x2.glb-2fc189cdbdac8373bf55e9519b40b24f.scn"]
 
 [params]
 

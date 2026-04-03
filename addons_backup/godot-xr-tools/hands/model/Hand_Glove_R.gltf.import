@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://w7th3d2hl7b5"
-path="res://.godot/imported/Hand_Glove_R.gltf-0e99922c663867da8d37af9597ab1ce8.scn"
+path="res://.godot/imported/Hand_Glove_R.gltf-e9769a2ceb5f0a9e23c5341a82ba6a46.scn"
 
 [deps]
 
-source_file="res://addons/godot-xr-tools/hands/model/Hand_Glove_R.gltf"
-dest_files=["res://.godot/imported/Hand_Glove_R.gltf-0e99922c663867da8d37af9597ab1ce8.scn"]
+source_file="res://addons/godot-xr-tools 2/hands/model/Hand_Glove_R.gltf"
+dest_files=["res://.godot/imported/Hand_Glove_R.gltf-e9769a2ceb5f0a9e23c5341a82ba6a46.scn"]
 
 [params]
 
