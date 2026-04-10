@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqer1ffs48a06"
-path.s3tc="res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.s3tc.ctex"
-path.etc2="res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.etc2.ctex"
+uid="uid://d315xulah4n5u"
+path.s3tc="res://.godot/imported/modular_russian_road_signs_pack_urban_47.png-b6dab9f058b3059f40cc14196ebaff03.s3tc.ctex"
+path.etc2="res://.godot/imported/modular_russian_road_signs_pack_urban_47.png-b6dab9f058b3059f40cc14196ebaff03.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "fad648125c28e671edbbb1896cba1531"
+"md5": "72f813a15e5210323dfce2bdfdf66555"
 }
 
 [deps]
 
-source_file="res://assets/objects/stop_sign_1.png"
-dest_files=["res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.s3tc.ctex", "res://.godot/imported/stop_sign_1.png-693c19c2b405fca2a3e1de1c2b6bf3b6.etc2.ctex"]
+source_file="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban_47.png"
+dest_files=["res://.godot/imported/modular_russian_road_signs_pack_urban_47.png-b6dab9f058b3059f40cc14196ebaff03.s3tc.ctex", "res://.godot/imported/modular_russian_road_signs_pack_urban_47.png-b6dab9f058b3059f40cc14196ebaff03.etc2.ctex"]
 
 [params]
 

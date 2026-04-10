@@ -26,7 +26,8 @@ enum PostAnswerAction {
 @export var panel_spawn_point_path: NodePath = NodePath("PanelSpawnPoint")
 
 ## Optional per-option outcome tags (e.g. "left", "right", "straight").
-## When non-empty, every answer is treated as valid and the tag drives post-answer behaviour.
+## When non-empty, the tag for the selected answer drives post-answer behaviour (e.g. which road branch the car takes).
+## A correct answer is still required; [member correct_index] determines which option is right.
 @export var answer_outcomes: PackedStringArray = PackedStringArray()
 
 ## Controls what happens after a correct answer is registered.

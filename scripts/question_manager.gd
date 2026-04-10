@@ -101,12 +101,8 @@ func validate_answer(p_selected_index: int) -> bool:
 	var current_question: QuestionData = get_current_question()
 	if not current_question:
 		return false
-	
-	var is_correct: bool
-	if current_question.has_outcomes():
-		is_correct = true
-	else:
-		is_correct = (p_selected_index == current_question.correct_index)
+
+	var is_correct: bool = (p_selected_index == current_question.correct_index)
 	return validate_custom_answer(is_correct, p_selected_index, current_question.correct_index)
 
 
@@ -151,6 +147,12 @@ func next_question() -> void:
 		emit_signal("quiz_completed")
 		return
 
+	_emit_current_question()
+
+
+## Reloads the currently active question by re-emitting its signals.
+## Called when the player answers incorrectly so the question repeats after the drive.
+func reload_current_question() -> void:
 	_emit_current_question()
 
 

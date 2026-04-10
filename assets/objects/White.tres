@@ -1,7 +1,7 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://c2qux8nyfe5uo"]
 
-[ext_resource type="Texture2D" uid="uid://p52ku85ebug" path="res://assets/objects/stop_sign_0.png" id="1_21f6g"]
-[ext_resource type="Texture2D" uid="uid://cqer1ffs48a06" path="res://assets/objects/stop_sign_1.png" id="2_qhumx"]
+[ext_resource type="Texture2D" uid="uid://p52ku85ebug" path="res://assets/objects/stop_sign/stop_sign_0.png" id="1_21f6g"]
+[ext_resource type="Texture2D" uid="uid://cqer1ffs48a06" path="res://assets/objects/stop_sign/stop_sign_1.png" id="2_qhumx"]
 
 [resource]
 resource_name = "White"
