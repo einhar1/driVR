@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://tnjn5vybrrcb"]
+
+[ext_resource type="PackedScene" uid="uid://c6rix51kbxoq8" path="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban.glb" id="1_ok4ku"]
+
+[node name="Sketchfab_Scene" unique_id=930818110 instance=ExtResource("1_ok4ku")]

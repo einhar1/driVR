@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_x6krw"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_4x055"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="4_x6krw"]
-[ext_resource type="PackedScene" uid="uid://ca3tyiutrx00p" path="res://assets/objects/stop_sign.glb" id="6_4x055"]
+[ext_resource type="PackedScene" uid="uid://ca3tyiutrx00p" path="res://assets/objects/stop_sign/stop_sign.glb" id="6_4x055"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
 albedo_color = Color(0.46666667, 0.46666667, 0.46666667, 1)

@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_2xnt6")
-question = "Hur vill du köra?"
+question = "Hur får du köra?"
 options = PackedStringArray("Vänster", "Höger", "Rakt")
 scene_path = "uid://csx7mj6vihbqs"
 answer_outcomes = PackedStringArray("left", "right", "straight")

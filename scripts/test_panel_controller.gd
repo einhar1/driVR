@@ -41,6 +41,7 @@ var _drive_coordinator: QuestionDriveCoordinator = QuestionDriveCoordinator.new(
 var _question_scene_runner: Node = null
 var _flow_version: int = 0
 var _panel_in_3d: Node3D = null
+var _last_answer_was_correct: bool = false
 
 
 func _ready() -> void:
@@ -196,6 +197,7 @@ func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_i
 
 	_flow_version += 1
 	var flow_version: int = _flow_version
+	_last_answer_was_correct = p_is_correct
 	_feedback_locked = true
 	_last_selected_index = p_selected_index
 	_set_answer_buttons_disabled(true)
@@ -205,20 +207,22 @@ func _on_answer_validated(p_is_correct: bool, p_selected_index: int, p_correct_i
 		return
 	_reset_feedback_visuals()
 
-	if p_is_correct:
-		var current_question: QuestionData = question_manager.get_current_question()
-		if current_question and not current_question.should_auto_drive_after_answer():
+	var current_question: QuestionData = question_manager.get_current_question()
+	if current_question and not current_question.should_auto_drive_after_answer():
+		if p_is_correct:
 			Callable(self , "_advance_without_car_movement").bind(flow_version).call_deferred()
-			return
-		Callable(self , "_start_question_drive_with_retry").bind(current_question, flow_version).call_deferred()
+		else:
+			_feedback_locked = false
+			_set_answer_buttons_disabled(false)
 		return
 
-	_feedback_locked = false
-	_set_answer_buttons_disabled(false)
-	if p_correct_index >= 0:
-		print("Incorrect answer! Correct answer was index: %d" % p_correct_index)
-	else:
-		print("Incorrect answer!")
+	# For non-outcome questions, wrong answers re-enable buttons immediately (no driving).
+	if not p_is_correct and (current_question == null or not current_question.has_outcomes()):
+		_feedback_locked = false
+		_set_answer_buttons_disabled(false)
+		return
+
+	Callable(self , "_start_question_drive_with_retry").bind(current_question, flow_version).call_deferred()
 
 
 ## Advances to the next question without moving the car.
@@ -282,7 +286,10 @@ func _advance_after_drive_completion(p_flow_version: int) -> void:
 		return
 
 	if is_instance_valid(question_manager):
-		question_manager.next_question()
+		if _last_answer_was_correct:
+			question_manager.next_question()
+		else:
+			question_manager.reload_current_question()
 		return
 
 	_feedback_locked = false

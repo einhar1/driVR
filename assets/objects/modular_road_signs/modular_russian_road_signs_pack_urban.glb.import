@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://ca3tyiutrx00p"
-path="res://.godot/imported/stop_sign.glb-6ba1d1101c541e8c9385470d79e83b59.scn"
+uid="uid://c6rix51kbxoq8"
+path="res://.godot/imported/modular_russian_road_signs_pack_urban.glb-c93a4ec823039b19939f79d5917cc006.scn"
 
 [deps]
 
-source_file="res://assets/objects/stop_sign.glb"
-dest_files=["res://.godot/imported/stop_sign.glb-6ba1d1101c541e8c9385470d79e83b59.scn"]
+source_file="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban.glb"
+dest_files=["res://.godot/imported/modular_russian_road_signs_pack_urban.glb-c93a4ec823039b19939f79d5917cc006.scn"]
 
 [params]
 
@@ -34,9 +34,9 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
-materials/extract=1
+materials/extract=0
 materials/extract_format=0
-materials/extract_path="res://assets/objects/"
+materials/extract_path=""
 _subresources={}
 gltf/naming_version=2
 gltf/embedded_image_handling=1
