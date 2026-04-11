@@ -129,25 +129,6 @@ The quiz system decouples question management, scene loading, and UI rendering:
 - **StartEndScreenController** – shows start/end screens in a dedicated viewport
 - **QuestionDriveScenario** – typed contract for scenario scripts providing auto-drive behavior
 
-### Manager initialization pattern
-
-All quiz controllers resolve `QuestionManager` via group `"question_manager"` and wait for `manager_initialized` signal:
-
-```gdscript
-var manager: QuestionManager = get_tree().get_first_node_in_group("question_manager")
-if manager.question_bank != null:
-    # Already initialized
-    _setup()
-else:
-    # Wait for initialization
-    await manager.manager_initialized
-    _setup()
-```
-
-This pattern ensures correct timing in debug single-question mode where the quiz is already active during `_ready()`.
-
----
-
 ## GDScript Conventions
 
 - Type hints on all variables and function returns
