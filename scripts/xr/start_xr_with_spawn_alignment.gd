@@ -17,6 +17,11 @@ extends XRToolsStartXR
 @export var xr_origin_path: NodePath = ^"car/DriversSeatAnchor/XROrigin3D"
 @export var xr_camera_path: NodePath = ^"car/DriversSeatAnchor/XROrigin3D/XRCamera3D"
 
+@export_group("Heading Alignment")
+@export var align_heading_on_xr_started: bool = true
+@export var seat_anchor_path: NodePath = ^"car/DriversSeatAnchor"
+@export_range(-180.0, 180.0, 1.0) var heading_offset_degrees: float = 0.0
+
 var _camera_baseline_local_position: Vector3 = Vector3.ZERO
 var _has_applied_spawn_alignment: bool = false
 var _desktop_debug_added: bool = false
@@ -58,6 +63,8 @@ func _on_xr_started() -> void:
 		return
 	if align_once_per_run and _has_applied_spawn_alignment:
 		return
+	await _align_origin_for_spawn()
+	_align_heading_for_spawn()
 	await _align_origin_for_spawn()
 	_has_applied_spawn_alignment = true
 
@@ -101,3 +108,38 @@ func _get_camera_local_offset(p_xr_camera: XRCamera3D) -> Vector3:
 	if not align_vertical:
 		local_offset.y = 0.0
 	return local_offset
+
+
+## Aligns headset yaw to the seat anchor forward vector.
+func _align_heading_for_spawn() -> void:
+	if not align_heading_on_xr_started:
+		return
+
+	var xr_origin: XROrigin3D = get_node_or_null(xr_origin_path) as XROrigin3D
+	var xr_camera: XRCamera3D = get_node_or_null(xr_camera_path) as XRCamera3D
+	var seat_anchor: Node3D = get_node_or_null(seat_anchor_path) as Node3D
+	if xr_origin == null or xr_camera == null or seat_anchor == null:
+		return
+
+	var target_forward: Vector3 = - seat_anchor.global_transform.basis.z
+	target_forward.y = 0.0
+	if absf(heading_offset_degrees) > 0.001:
+		target_forward = target_forward.rotated(Vector3.UP, deg_to_rad(heading_offset_degrees))
+	if target_forward.length_squared() <= 0.000001:
+		return
+	target_forward = target_forward.normalized()
+
+	var current_forward: Vector3 = - xr_camera.global_transform.basis.z
+	current_forward.y = 0.0
+	if current_forward.length_squared() <= 0.000001:
+		return
+	current_forward = current_forward.normalized()
+
+	var signed_yaw: float = atan2(
+		current_forward.cross(target_forward).y,
+		current_forward.dot(target_forward)
+	)
+	if absf(signed_yaw) < 0.0001:
+		return
+
+	xr_origin.global_rotate(Vector3.UP, signed_yaw)

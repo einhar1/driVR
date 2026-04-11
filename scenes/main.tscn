@@ -53,6 +53,9 @@ script = ExtResource("11_w48qg")
 [node name="Main" type="Node3D" unique_id=354370114]
 script = ExtResource("1_lquwl")
 align_vertical = false
+align_heading_on_xr_started = null
+seat_anchor_path = null
+heading_offset_degrees = null
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1208453450]
 environment = SubResource("Environment_jbj1t")
@@ -63,6 +66,10 @@ shadow_enabled = true
 
 [node name="car" parent="." unique_id=1236407626 instance=ExtResource("3_dg77c")]
 transform = Transform3D(0.006614715, 0, -0.9999781, 0, 1, 0, 0.9999781, 0, 0.006614715, 12.634, 0, 7.57)
+idle_speed_threshold_kmph = 1.0
+max_speed_kmph_for_audio = 60.0
+running_volume_db_min = -6.0
+running_volume_db_max = 6.0
 metadata/_edit_group_ = true
 
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
@@ -105,7 +112,7 @@ post_drive_advance_delay_seconds = 2.0
 script = ExtResource("15_qpanel")
 
 [node name="StartEndPanel" parent="." unique_id=2078626577 instance=ExtResource("7_5vw27")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 15.648203, 1.6655986, 7.306121)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 15.648203, 1.2783682, 7.306121)
 screen_size = Vector2(3, 2.1)
 scene = ExtResource("7_gqmmt")
 viewport_size = Vector2(1200, 800)
