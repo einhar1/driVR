@@ -70,4 +70,4 @@ next_mag = 49.87214
 next_pt_init = NodePath("../RP_001")
 
 [node name="Sketchfab_Scene" parent="." unique_id=1256540249 instance=ExtResource("6_4x055")]
-transform = Transform3D(-2.7866224e-07, 0, 6.375049, 0, 6.375049, 0, -6.375049, 0, -2.7866224e-07, 3.3723602, 0.07220249, 24.079515)
+transform = Transform3D(-1.9228223e-07, 0, 4.398905, 0, 4.398905, 0, -4.398905, 0, -1.9228223e-07, 3.3723602, 0.07220249, 23.024834)

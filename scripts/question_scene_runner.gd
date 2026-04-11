@@ -81,7 +81,8 @@ func _return_to_default_environment() -> void:
 	if is_instance_valid(_persistent_car):
 		_stop_auto_driver()
 		_apply_car_spawn_transform(_initial_car_transform)
-		_persistent_car.visible = true
+		_set_player_in_car_state(true)
+		_set_persistent_car_render_mode(true)
 		_set_car_frozen(false)
 		await get_tree().physics_frame
 		if is_instance_valid(_persistent_car):
@@ -96,7 +97,8 @@ func _apply_question_scene(p_question: QuestionData) -> void:
 
 	if p_question == null or p_question.scene_path.is_empty():
 		# No scene mapped — show the default environment and ensure car is visible.
-		_persistent_car.visible = true
+		_set_player_in_car_state(true)
+		_set_persistent_car_render_mode(true)
 		_set_car_frozen(false)
 		_move_quiz_panel(p_question, _persistent_car.global_transform)
 		_set_default_environment_visible(true)
@@ -126,7 +128,8 @@ func _apply_question_scene(p_question: QuestionData) -> void:
 	# Move the car to the scenario's SpawnPoint and place the quiz panel at the
 	# same authored offset it has in front of the car, but keep it detached so it
 	# stays still even if the car later moves.
-	_persistent_car.visible = p_question.player_in_car
+	_set_player_in_car_state(p_question.player_in_car)
+	_set_persistent_car_render_mode(p_question.player_in_car)
 	_set_car_frozen(not p_question.player_in_car)
 	await _move_car_to_spawn(p_question)
 
@@ -191,6 +194,15 @@ func _stop_auto_driver() -> void:
 		auto_driver.stop_auto_drive()
 
 
+## Updates persistent car systems that depend on whether the player is seated inside the car.
+func _set_player_in_car_state(p_player_in_car: bool) -> void:
+	if not is_instance_valid(_persistent_car):
+		return
+
+	if _persistent_car.has_method("set_engine_audio_enabled"):
+		_persistent_car.call("set_engine_audio_enabled", p_player_in_car)
+
+
 func _apply_car_spawn_transform(p_target_transform: Transform3D) -> void:
 	_persistent_car.global_transform = p_target_transform
 
@@ -209,6 +221,40 @@ func _set_car_frozen(p_frozen: bool) -> void:
 	var rigid_body: RigidBody3D = _persistent_car as RigidBody3D
 	if is_instance_valid(rigid_body):
 		rigid_body.freeze = p_frozen
+
+
+## Keeps XR rig active while toggling only visible car body parts.
+func _set_persistent_car_render_mode(p_player_in_car: bool) -> void:
+	if not is_instance_valid(_persistent_car):
+		return
+
+	# Never hide the root car node, because XR hands/pointer live under DriversSeatAnchor.
+	_persistent_car.visible = true
+	_set_car_visuals_visible(p_player_in_car)
+
+
+## Shows/hides visual instances under the car, excluding the DriversSeatAnchor XR subtree.
+func _set_car_visuals_visible(p_visible: bool) -> void:
+	if not is_instance_valid(_persistent_car):
+		return
+
+	var xr_anchor: Node = _persistent_car.get_node_or_null("DriversSeatAnchor")
+	var stack: Array[Node] = []
+	for child_variant: Variant in _persistent_car.get_children():
+		if child_variant is Node:
+			stack.append(child_variant as Node)
+
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node == xr_anchor:
+			continue
+
+		if node is VisualInstance3D:
+			(node as VisualInstance3D).visible = p_visible
+
+		for child_variant: Variant in node.get_children():
+			if child_variant is Node:
+				stack.append(child_variant as Node)
 
 
 ## Caches the panel transform relative to the car using the authored scene state.

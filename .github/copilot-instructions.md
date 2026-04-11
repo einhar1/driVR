@@ -63,6 +63,12 @@ This pattern is required because debug single-question mode may have the quiz al
 - Do not edit `addons/` unless you are intentionally patching a third-party plugin
 - Follow `.github/instructions/` sub-files for specific file type conventions (gdscript, tscn, scenario-setup)
 
+### Reliability and Fallback Policy
+
+- Prefer getting the primary integration path working (scene wiring, NodePath assignments, resource references) before introducing fallback logic.
+- Avoid "suspenders and waist belt" fixes by default; only add fallbacks when there is a clear runtime requirement and the primary path cannot be made reliable.
+- If a fallback is added, document why the primary path is insufficient and keep the fallback minimal and explicit.
+
 ## Agent-Critical Pitfalls
 
 - Physics/world changes around question swaps must be deferred; modifying physics objects synchronously during a physics step can crash Jolt. Follow the deferred loading pattern already used in `scripts/question_scene_runner.gd`.
