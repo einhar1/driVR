@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://d2esvnd00rxvu" path="res://scenes/components/test_panel.tscn" id="8_kek77"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="9_kek77"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="10_efxa6"]
-[ext_resource type="PackedScene" uid="uid://cy1no6ib41wak" path="res://assets/environment/city/GLB format/building-type-a.glb" id="10_jbj1t"]
 [ext_resource type="Script" uid="uid://di1s5v2qjtpjk" path="res://addons/road-generator/nodes/road_intersection.gd" id="10_ycdy4"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="11_dg77c"]
 [ext_resource type="Script" uid="uid://dobpxeffv3jad" path="res://addons/road-generator/procgen/intersection_ngon.gd" id="11_w48qg"]
@@ -18,8 +17,6 @@
 [ext_resource type="Resource" uid="uid://cunmwpynlecwm" path="res://resources/question_bank.tres" id="12_w48qg"]
 [ext_resource type="Script" uid="uid://d2dqv1s8mj3hn" path="res://scripts/question_scene_runner.gd" id="14_w48qg"]
 [ext_resource type="Script" uid="uid://diwrhx4ockoiw" path="res://scripts/quiz_panel_slide_controller.gd" id="15_qpanel"]
-[ext_resource type="PackedScene" uid="uid://caexn0wf3lce6" path="res://assets/environment/rural/GLTF format/plant_bushDetailed.glb" id="18_gqmmt"]
-[ext_resource type="PackedScene" uid="uid://bqw5q0akvvfy8" path="res://assets/environment/rural/GLTF format/flower_redA.glb" id="19_yc10j"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jkv2x"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -53,9 +50,6 @@ script = ExtResource("11_w48qg")
 [node name="Main" type="Node3D" unique_id=354370114]
 script = ExtResource("1_lquwl")
 align_vertical = false
-align_heading_on_xr_started = null
-seat_anchor_path = null
-heading_offset_degrees = null
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1208453450]
 environment = SubResource("Environment_jbj1t")
@@ -75,10 +69,10 @@ metadata/_edit_group_ = true
 [node name="XROrigin3D" parent="car/DriversSeatAnchor" parent_id_path=PackedInt32Array(1236407626, 553812832) index="0" unique_id=564256576 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, 0)
 
-[node name="RoadLaneAgent" parent="car" index="10" unique_id=841133961]
+[node name="RoadLaneAgent" parent="car" index="12" unique_id=841133961]
 road_manager_path = NodePath("../../DefaultEnvironment/RoadManager")
 
-[node name="AutoDriver" parent="car" index="11" unique_id=872334889]
+[node name="AutoDriver" parent="car" index="13" unique_id=872334889]
 auto_drive_speed = 5.0
 total_distance_target = 20.0
 lookahead_distance = 8.0
@@ -269,14 +263,5 @@ script = ExtResource("11_dg77c")
 traffic_dir = Array[int]([1, 1])
 lanes = Array[int]([0, 2])
 prior_pt_init = NodePath("../Intersection")
-
-[node name="plant_bushDetailed2" parent="DefaultEnvironment" unique_id=2128476617 instance=ExtResource("18_gqmmt")]
-transform = Transform3D(2.182097, 0, -2.0587502, 0, 3, 0, 2.0587502, 0, 2.182097, 2.1471343, 0.075899825, 11.962023)
-
-[node name="flower_redA2" parent="DefaultEnvironment" unique_id=1400290657 instance=ExtResource("19_yc10j")]
-transform = Transform3D(2.985022, 0.16648397, 0.24884945, -0.16988027, 2.9949925, 0.03406936, -0.2465434, -0.0479908, 2.9894671, -10.755159, 0.37634018, 13.266554)
-
-[node name="building-type-a2" parent="DefaultEnvironment" unique_id=1668593349 instance=ExtResource("10_jbj1t")]
-transform = Transform3D(7.967638, -0.3559296, 0.6245481, 0.35484114, 7.9920783, 0.027814439, -0.62516713, 0, 7.9755354, -5.1841235, -0.0752643, 9.164035)
 
 [editable path="car"]

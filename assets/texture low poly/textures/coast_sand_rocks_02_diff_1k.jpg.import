@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://de3rwnuyo80wt"
-path.s3tc="res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.s3tc.ctex"
-path.etc2="res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.etc2.ctex"
+uid="uid://cpgxc8k5pdadd"
+path.s3tc="res://.godot/imported/coast_sand_rocks_02_diff_1k.jpg-7b36a283891fc0d7badb3d4fd59dd53d.s3tc.ctex"
+path.etc2="res://.godot/imported/coast_sand_rocks_02_diff_1k.jpg-7b36a283891fc0d7badb3d4fd59dd53d.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/textures/large_square_pattern_01.webp"
-dest_files=["res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.s3tc.ctex", "res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.etc2.ctex"]
+source_file="res://assets/texture low poly/textures/coast_sand_rocks_02_diff_1k.jpg"
+dest_files=["res://.godot/imported/coast_sand_rocks_02_diff_1k.jpg-7b36a283891fc0d7badb3d4fd59dd53d.s3tc.ctex", "res://.godot/imported/coast_sand_rocks_02_diff_1k.jpg-7b36a283891fc0d7badb3d4fd59dd53d.etc2.ctex"]
 
 [params]
 

@@ -1,14 +1,23 @@
 [gd_scene format=3 uid="uid://yvmx0rvhddyv"]
 
+[ext_resource type="Texture2D" uid="uid://cpgxc8k5pdadd" path="res://assets/texture low poly/textures/coast_sand_rocks_02_diff_1k.jpg" id="1_j7qjp"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_0pk8i"]
+[ext_resource type="PackedScene" uid="uid://ckgoplx851osg" path="res://assets/environment/tree low poly/anthurium_botany_01_1k.gltf" id="2_7fyw1"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_x6krw"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_4x055"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="4_x6krw"]
 [ext_resource type="PackedScene" uid="uid://ca3tyiutrx00p" path="res://assets/objects/stop_sign/stop_sign.glb" id="6_4x055"]
+[ext_resource type="PackedScene" uid="uid://kxa3igvkh8et" path="res://assets/environment/tree low poly/fern_02_1k.gltf" id="6_8mxtg"]
+[ext_resource type="ArrayMesh" uid="uid://8t1var55rr6l" path="res://assets/environment/realistic house/Bambo_House.obj" id="8_ohy86"]
+[ext_resource type="PackedScene" uid="uid://b1v4j6r2c00li" path="res://assets/environment/tree low poly/painted_wooden_chair_02_1k.gltf" id="9_mwm13"]
+[ext_resource type="PackedScene" uid="uid://bh8k2ididhne3" path="res://assets/environment/rural/GLTF format/fence_simpleCenter.glb" id="11_mwm13"]
+[ext_resource type="PackedScene" uid="uid://bwux04ail5vfm" path="res://assets/environment/rural/GLTF format/fence_corner.glb" id="12_c3osh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
 albedo_color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+albedo_texture = ExtResource("1_j7qjp")
 uv1_triplanar = true
+uv2_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4x055"]
 material = SubResource("StandardMaterial3D_x6krw")
@@ -69,5 +78,144 @@ prior_mag = 49.87214
 next_mag = 49.87214
 next_pt_init = NodePath("../RP_001")
 
+[node name="fern_02_1k" parent="RoadManager/Road_001" unique_id=636077939 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.863792, 0.03051028, 9.146839)
+
+[node name="fern_02_1k4" parent="RoadManager/Road_001" unique_id=292623557 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1, -41.293995, 0.03051028, -9.674241)
+
+[node name="fern_02_1k5" parent="RoadManager/Road_001" unique_id=382810368 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1, -69.50892, 0.03051028, -9.674241)
+
+[node name="fern_02_1k6" parent="RoadManager/Road_001" unique_id=883903812 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1, -69.09126, 0.03051028, -11.529612)
+
+[node name="fern_02_1k7" parent="RoadManager/Road_001" unique_id=1734108761 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1, -72.632996, 0.03051028, 8.010655)
+
+[node name="fern_02_1k8" parent="RoadManager/Road_001" unique_id=2123009070 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1.5, 0, 0, 0, 1, 0, 0, 0, 1, -75.24509, 0.03051028, 7.759431)
+
+[node name="fern_02_1k3" parent="RoadManager/Road_001" unique_id=1784689088 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.863792, 0.03051028, 10.867935)
+
+[node name="fern_02_1k2" parent="RoadManager/Road_001" unique_id=204804059 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.844864, 0.03051028, 9.146839)
+
+[node name="fern_02_1k9" parent="RoadManager/Road_001" unique_id=1337640035 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.042921, 0.03051028, 9.146839)
+
+[node name="fern_02_1k13" parent="RoadManager/Road_001" unique_id=574175508 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.042921, 0.03051028, -10.740941)
+
+[node name="fern_02_1k14" parent="RoadManager/Road_001" unique_id=371456173 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.373903, 0.03051028, -10.740941)
+
+[node name="fern_02_1k15" parent="RoadManager/Road_001" unique_id=1275668219 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.250353, 0.03051028, -9.589219)
+
+[node name="fern_02_1k10" parent="RoadManager/Road_001" unique_id=710766101 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.918556, 0.03051028, 9.146839)
+
+[node name="fern_02_1k11" parent="RoadManager/Road_001" unique_id=1072955041 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.18834, 0.03051028, 11.443594)
+
+[node name="fern_02_1k12" parent="RoadManager/Road_001" unique_id=663681430 instance=ExtResource("6_8mxtg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.997877, 0.03051028, 11.443594)
+
 [node name="Sketchfab_Scene" parent="." unique_id=1256540249 instance=ExtResource("6_4x055")]
 transform = Transform3D(-1.9228223e-07, 0, 4.398905, 0, 4.398905, 0, -4.398905, 0, -1.9228223e-07, 3.3723602, 0.07220249, 23.024834)
+
+[node name="BamboHouse" type="MeshInstance3D" parent="." unique_id=1464410715]
+transform = Transform3D(0.3496053, 0, 0.029078454, 0, 0.64000005, 0, -0.02035492, 0, 0.9994361, -16.787834, 0.099563316, 4.7203426)
+mesh = ExtResource("8_ohy86")
+
+[node name="BamboHouse3" type="MeshInstance3D" parent="." unique_id=257360818]
+transform = Transform3D(0.6994276, 0, 0.02830162, 0, 0.512, 0, -0.02830162, 0, 0.6994276, -25.107471, 0.1349633, 36.198963)
+mesh = ExtResource("8_ohy86")
+
+[node name="BamboHouse6" type="MeshInstance3D" parent="." unique_id=217807691]
+transform = Transform3D(0.6994276, 0, 0.02830162, 0, 0.512, 0, -0.02830162, 0, 0.6994276, 32.06667, 0.1349633, 34.25467)
+mesh = ExtResource("8_ohy86")
+
+[node name="BamboHouse7" type="MeshInstance3D" parent="." unique_id=1937748008]
+transform = Transform3D(0.6994276, 0, 0.02830162, 0, 0.512, 0, -0.02830162, 0, 0.6994276, 17.479036, 0.1349633, 3.7891862)
+mesh = ExtResource("8_ohy86")
+
+[node name="BamboHouse4" type="MeshInstance3D" parent="." unique_id=1203735054]
+transform = Transform3D(-0.015935346, 0, 0.3500731, 0, 0.512, 0, -0.6997484, 0, -0.0023158938, -1.0994654, 0.1349633, 38.49294)
+mesh = ExtResource("8_ohy86")
+
+[node name="BamboHouse5" type="MeshInstance3D" parent="." unique_id=684193002]
+transform = Transform3D(0.021672761, 0, -0.4993229, 0, 0.64000005, 0, 0.69952357, 0, 0.032846, -1.8011742, 0.099563316, -5.5928802)
+mesh = ExtResource("8_ohy86")
+
+[node name="BamboHouse2" type="MeshInstance3D" parent="." unique_id=71697395]
+transform = Transform3D(-0.49988988, 0.0030778188, -0.020631488, 0.0019303744, 0.79999393, -0.0006134056, 0.010314486, -0.00055433565, -0.999787, 20.531271, 0.055312954, 30.6745)
+mesh = ExtResource("8_ohy86")
+
+[node name="painted_wooden_chair_02_1k" parent="." unique_id=592951158 instance=ExtResource("9_mwm13")]
+transform = Transform3D(-0.9985234, 0, 0.05432282, 0, 1, 0, -0.05432282, 0, -0.9985234, -1.5438879, 3.3275537e-08, 26.89371)
+
+[node name="painted_wooden_chair_02_1k2" parent="." unique_id=106712713 instance=ExtResource("9_mwm13")]
+transform = Transform3D(0.9994514, 0, -0.033120297, 0, 1, 0, 0.033120297, 0, 0.9994514, 5.6908374, 3.3275537e-08, 5.48589)
+
+[node name="painted_wooden_chair_02_1k3" parent="." unique_id=154630656 instance=ExtResource("9_mwm13")]
+transform = Transform3D(0.9994514, 0, -0.033120297, 0, 1, 0, 0.033120297, 0, 0.9994514, 15.702204, 3.3275537e-08, 6.498513)
+
+[node name="painted_wooden_chair_02_1k4" parent="." unique_id=1461831689 instance=ExtResource("9_mwm13")]
+transform = Transform3D(0.9994514, 0, -0.033120297, 0, 1, 0, 0.033120297, 0, 0.9994514, 26.593353, 3.3275537e-08, 6.3329926)
+
+[node name="anthurium_botany_01_1k" parent="." unique_id=2115758787 instance=ExtResource("2_7fyw1")]
+transform = Transform3D(0.9999983, -0.0010256617, -0.00041954772, 0.0017095114, 0.5999991, 6.415661e-05, 0.00069906237, -6.487371e-05, 0.5999999, 2.625399, 0.024013074, 25.355375)
+
+[node name="anthurium_botany_01_1k4" parent="." unique_id=277627968 instance=ExtResource("2_7fyw1")]
+transform = Transform3D(0.9999983, -0.0017094354, -0.00069924805, 0.0017095113, 0.9999985, 0.000106915664, 0.00069906237, -0.00010812286, 0.99999976, -5.035916, 0.008950688, 7.1718464)
+
+[node name="anthurium_botany_01_1k5" parent="." unique_id=1891596664 instance=ExtResource("2_7fyw1")]
+transform = Transform3D(0.9999983, -0.0017094354, -0.00069924805, 0.0017095113, 0.9999985, 0.000106915664, 0.00069906237, -0.00010812286, 0.99999976, -7.7833323, 0.004206504, 6.731142)
+
+[node name="anthurium_botany_01_1k2" parent="." unique_id=479255014 instance=ExtResource("2_7fyw1")]
+transform = Transform3D(0.49999914, -0.0017094362, -0.0006992462, 0.0008547557, 0.9999985, 0.00010692767, 0.00034953118, -0.00010812285, 0.99999976, -9.91956, 0.002606378, 25.708199)
+
+[node name="anthurium_botany_01_1k3" parent="." unique_id=517917353 instance=ExtResource("2_7fyw1")]
+transform = Transform3D(0.599999, -0.0017094362, -0.0006992462, 0.0010257069, 0.9999985, 0.00010692767, 0.00041943745, -0.00010812285, 0.99999976, -9.918528, 0.0024484298, 24.230885)
+
+[node name="fence_simpleCenter2" parent="." unique_id=1836425565 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, -4.706299, 0.3, 23.11795)
+
+[node name="fence_simpleCenter5" parent="." unique_id=514193587 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, 1.9392302, 0.3, 8.632594)
+
+[node name="fence_simpleCenter9" parent="." unique_id=76232009 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, 19.806667, 0.3, 8.632594)
+
+[node name="fence_simpleCenter6" parent="." unique_id=743671107 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, -13.373236, 0.3, 8.632594)
+
+[node name="fence_simpleCenter4" parent="." unique_id=1610348416 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, 16.091211, 0.3, 23.11795)
+
+[node name="fence_simpleCenter10" parent="." unique_id=1945503840 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, 37.804688, 0.3, 23.11795)
+
+[node name="fence_simpleCenter3" parent="." unique_id=1139026682 instance=ExtResource("11_mwm13")]
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, -17.57346, 0.3, 23.11795)
+
+[node name="fence_corner2" parent="." unique_id=1552099264 instance=ExtResource("12_c3osh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.027454, 0.3435927, 23.029112)
+
+[node name="fence_corner3" parent="." unique_id=1444631834 instance=ExtResource("12_c3osh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2026129, 0.30732244, 23.097055)
+
+[node name="fence_corner5" parent="." unique_id=2048178562 instance=ExtResource("12_c3osh")]
+transform = Transform3D(1, 0, 0, 0, -0.99899966, -0.044717804, 0, 0.044717804, -0.99899966, 5.4111605, 0.5363941, 7.705703)
+
+[node name="fence_corner7" parent="." unique_id=1909699543 instance=ExtResource("12_c3osh")]
+transform = Transform3D(1, 0, 0, 0, -0.99899966, -0.044717804, 0, 0.044717804, -0.99899966, 23.28838, 0.52748764, 7.7061014)
+
+[node name="fence_corner6" parent="." unique_id=1433207385 instance=ExtResource("12_c3osh")]
+transform = Transform3D(1, 0, 0, 0, -0.99899966, -0.044717804, 0, 0.044717804, -0.99899966, -9.927485, 0.514171, 7.7066975)
+
+[node name="fence_corner4" parent="." unique_id=571352329 instance=ExtResource("12_c3osh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.545986, 0.30732244, 23.097055)
