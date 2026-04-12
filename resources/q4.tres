@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="QuestionData" format=3 uid="uid://c2voipt3pmdf5"]
+
+[ext_resource type="Script" uid="uid://cc00klym0vj0m" path="res://resources/question_data.gd" id="1_qdata"]
+
+[resource]
+script = ExtResource("1_qdata")
+question = "Vilken skylt betyder att stanna?"
+options = null
+scene_path = "uid://b63527rb54s2l"
+answer_outcomes = null
+post_answer_action = 1
+player_in_car = false
+metadata/_custom_type_script = "uid://cc00klym0vj0m"
