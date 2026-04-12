@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://de3rwnuyo80wt"
-path.s3tc="res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.s3tc.ctex"
-path.etc2="res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.etc2.ctex"
+uid="uid://c24d3jckmypkx"
+path.s3tc="res://.godot/imported/anthurium_botany_01_diff_1k.jpg-91d5cc9ecbe7d805a55d02a003820c15.s3tc.ctex"
+path.etc2="res://.godot/imported/anthurium_botany_01_diff_1k.jpg-91d5cc9ecbe7d805a55d02a003820c15.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/textures/large_square_pattern_01.webp"
-dest_files=["res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.s3tc.ctex", "res://.godot/imported/large_square_pattern_01.webp-d48ab8df1729c9ed79546e9bc1fddb5b.etc2.ctex"]
+source_file="res://assets/environment/tree low poly/textures/anthurium_botany_01_diff_1k.jpg"
+dest_files=["res://.godot/imported/anthurium_botany_01_diff_1k.jpg-91d5cc9ecbe7d805a55d02a003820c15.s3tc.ctex", "res://.godot/imported/anthurium_botany_01_diff_1k.jpg-91d5cc9ecbe7d805a55d02a003820c15.etc2.ctex"]
 
 [params]
 

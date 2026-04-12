@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://csx7mj6vihbqs"]
 
-[ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_sfs3c"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_0pfko"]
+[ext_resource type="Texture2D" uid="uid://ca38gxmv3wipr" path="res://assets/textures/mossy_cobblestone.webp" id="2_vs4xd"]
 [ext_resource type="PackedScene" uid="uid://d23s6bfnq6fex" path="res://addons/road-generator/custom_containers/4way_1x1.tscn" id="3_6cbni"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_16v57"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_6cbni"]
@@ -12,9 +12,12 @@
 [ext_resource type="Texture2D" uid="uid://cf0t72fkm4rtu" path="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban_2.png" id="10_cpayk"]
 [ext_resource type="Texture2D" uid="uid://7aci0b3bf6gr" path="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban_3.png" id="11_j00cj"]
 [ext_resource type="Texture2D" uid="uid://cyutg86bg1yie" path="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban_7.png" id="12_vs4xd"]
+[ext_resource type="PackedScene" uid="uid://iyi1tlht1hwk" path="res://assets/environment/rural/GLTF format/fence_planksDouble.glb" id="13_cpayk"]
+[ext_resource type="PackedScene" uid="uid://xrsteifyrmb1" path="res://assets/environment/rural/GLTF format/fence_bendCenter.glb" id="14_j00cj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6cbni"]
-albedo_texture = ExtResource("1_sfs3c")
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+albedo_texture = ExtResource("2_vs4xd")
 uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_h34yr"]
@@ -381,3 +384,48 @@ mesh = SubResource("ArrayMesh_cpayk")
 [node name="NoEntry_MetalBack_0" type="MeshInstance3D" parent="NoEntrySign/NoEntry" unique_id=566665978]
 transform = Transform3D(0.614, 0, 0, 0, 0.614, 0, 0, 0, 0.614, 0, 0, 0)
 mesh = SubResource("ArrayMesh_j00cj")
+
+[node name="fence_planksDouble2" parent="." unique_id=1236588396 instance=ExtResource("13_cpayk")]
+transform = Transform3D(0.16048001, 0, -1.9998856, 0, 3, 0, 14.999142, 0, 0.021397334, 22.16907, 0.14503819, 11.460735)
+
+[node name="fence_planksDouble5" parent="." unique_id=1526298921 instance=ExtResource("13_cpayk")]
+transform = Transform3D(0.20074101, 0, 1.9999447, 0, 3, 0, -26.999252, 0, 0.014869704, 8.411481, 0.14503819, 17.550556)
+
+[node name="fence_planksDouble6" parent="." unique_id=1808600619 instance=ExtResource("13_cpayk")]
+transform = Transform3D(-26.988611, 0, -0.058076754, 0, 3, 0, 0.78403616, 0, -1.9991565, -7.3619657, 0.14503819, 0.58222044)
+
+[node name="fence_planksDouble11" parent="." unique_id=1458865701 instance=ExtResource("13_cpayk")]
+transform = Transform3D(26.998379, 0, 0.021886516, 0, 3, 0, -0.29546797, 0, 1.9998801, -8.401643, 0.14503819, -15.840204)
+
+[node name="fence_planksDouble12" parent="." unique_id=1606757328 instance=ExtResource("13_cpayk")]
+transform = Transform3D(26.998379, 0, 0.021886516, 0, 3, 0, -0.29546797, 0, 1.9998801, -33.65861, 0.14503819, -15.563794)
+
+[node name="fence_planksDouble7" parent="." unique_id=377039599 instance=ExtResource("13_cpayk")]
+transform = Transform3D(-26.988611, 0, -0.058076754, 0, 3, 0, 0.78403616, 0, -1.9991565, -33.23032, 0.14503819, 1.3337123)
+
+[node name="fence_planksDouble4" parent="." unique_id=472000519 instance=ExtResource("13_cpayk")]
+transform = Transform3D(-19.99348, 0, -0.051063057, 0, 3, 0, 0.51063055, 0, -1.999348, 35.001698, 0.16757709, 0.11469105)
+
+[node name="fence_planksDouble8" parent="." unique_id=802581869 instance=ExtResource("13_cpayk")]
+transform = Transform3D(19.97248, 0, 0.10488144, 0, 3, 0, -1.0488144, 0, 1.9972482, 37.228115, 0.16757709, -16.271893)
+
+[node name="fence_planksDouble9" parent="." unique_id=1460503211 instance=ExtResource("13_cpayk")]
+transform = Transform3D(-0.8519858, 0, -1.9988383, 0, 3, 0, 24.98548, 0, -0.068158865, 23.820267, 0.16757709, -30.694134)
+
+[node name="fence_planksDouble10" parent="." unique_id=1960960529 instance=ExtResource("13_cpayk")]
+transform = Transform3D(0.07416916, 0, 1.9999913, 0, 3, 0, -24.999891, 0, 0.005933538, 7.839436, 0.16757709, -32.162712)
+
+[node name="fence_planksDouble3" parent="." unique_id=1900901884 instance=ExtResource("13_cpayk")]
+transform = Transform3D(0.16048001, 0, -1.9998856, 0, 3, 0, 14.999142, 0, 0.021397334, 22.314787, 0.14503819, 26.463367)
+
+[node name="fence_bendCenter2" parent="." unique_id=1359975615 instance=ExtResource("14_j00cj")]
+transform = Transform3D(0.61856097, 0, 1.4677689, 0, 3, 0, -2.9355378, 0, 0.30928048, 24.014845, 0.159751, 2.6169877)
+
+[node name="fence_bendCenter4" parent="." unique_id=1486704020 instance=ExtResource("14_j00cj")]
+transform = Transform3D(-2.9983037, 0, 0.05043903, 0, 3, 0, -0.10087806, 0, -1.4991518, 25.70716, 0.17526716, -17.446854)
+
+[node name="fence_bendCenter5" parent="." unique_id=865683530 instance=ExtResource("14_j00cj")]
+transform = Transform3D(-0.4285601, 0, -1.4846158, 0, 3, 0, 2.9692316, 0, -0.21428005, 5.970899, 0.19831532, -18.272427)
+
+[node name="fence_bendCenter3" parent="." unique_id=935029748 instance=ExtResource("14_j00cj")]
+transform = Transform3D(0.066453576, 0.11757495, -1.4984792, 0.058845762, -2.997168, -0.05813922, -2.9986863, -0.05621043, -0.034348425, 6.850071, 0.90431976, 2.6298091)
