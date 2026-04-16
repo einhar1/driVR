@@ -21,6 +21,9 @@ const _LOCAL_DEV_CONFIG_PATH: String = "res://dev.local.cfg"
 var current_question_index: int = 0
 var _quiz_active: bool = false
 
+## Tracks indices of questions that were answered incorrectly at least once
+var _wrong_question_indices: Array[int] = []
+
 ## Signal emitted when question changes
 signal question_changed(p_question: QuestionData, p_index: int)
 
@@ -103,6 +106,8 @@ func validate_answer(p_selected_index: int) -> bool:
 		return false
 
 	var is_correct: bool = (p_selected_index == current_question.correct_index)
+	if not is_correct and not _wrong_question_indices.has(current_question_index):
+		_wrong_question_indices.append(current_question_index)
 	return validate_custom_answer(is_correct, p_selected_index, current_question.correct_index)
 
 
@@ -112,6 +117,8 @@ func validate_custom_answer(
 	p_selected_index: int = -1,
 	p_correct_index: int = -1,
 ) -> bool:
+	if not p_is_correct and not _wrong_question_indices.has(current_question_index):
+		_wrong_question_indices.append(current_question_index)
 	emit_signal("answer_validated", p_is_correct, p_selected_index, p_correct_index)
 	return p_is_correct
 
@@ -126,6 +133,7 @@ func start_quiz() -> void:
 		push_error("QuestionManager: Cannot start quiz — no questions available")
 		return
 	_quiz_active = true
+	_wrong_question_indices.clear()
 	current_question_index = _get_startup_question_index()
 	emit_signal("quiz_started")
 	_emit_current_question()
@@ -161,6 +169,7 @@ func restart_quiz() -> void:
 	if not question_bank:
 		return
 	_quiz_active = true
+	_wrong_question_indices.clear()
 	current_question_index = _get_startup_question_index()
 	emit_signal("quiz_started")
 	_emit_current_question()
@@ -202,3 +211,15 @@ func _get_startup_question_index() -> int:
 		)
 
 	return clamped_index
+
+
+## Returns the number of questions that were answered incorrectly at least once.
+func get_wrong_answer_count() -> int:
+	return _wrong_question_indices.size()
+
+
+## Returns the total number of questions in the bank.
+func get_total_questions() -> int:
+	if not question_bank:
+		return 0
+	return question_bank.get_question_count()

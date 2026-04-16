@@ -15,6 +15,7 @@ const _DEPENDENCY_LOOKUP_MAX_FRAMES: int = 120
 
 @onready var _start_screen: Control = %StartScreen
 @onready var _end_screen: Control = %EndScreen
+@onready var _score_label: Label = %ScoreLabel
 
 var _question_manager: QuestionManager = null
 
@@ -72,6 +73,10 @@ func _on_quiz_started() -> void:
 
 
 func _on_quiz_completed() -> void:
+	var total_questions: int = _question_manager.get_total_questions()
+	var wrong_answers: int = _question_manager.get_wrong_answer_count()
+	var correct_answers: int = total_questions - wrong_answers
+	_score_label.text = "Du svarade rätt på %d av %d frågor." % [correct_answers, total_questions]
 	_show_end_screen()
 
 
