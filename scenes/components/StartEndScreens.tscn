@@ -8,6 +8,7 @@ script = ExtResource("1_cdd2k")
 
 [node name="StartScreen" type="Panel" parent="." unique_id=1348294939]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -57,20 +58,22 @@ horizontal_alignment = 1
 [node name="ScoreLabel" type="Label" parent="EndScreen" unique_id=123456789]
 unique_name_in_owner = true
 layout_mode = 0
-offset_top = 150.0
-offset_left = 50.0
-offset_right = 1102.0
-offset_bottom = 280.0
-autowrap_mode = 2
+offset_left = 44.0
+offset_top = 188.0
+offset_right = 1118.0
+offset_bottom = 590.0
+theme_override_font_sizes/font_size = 64
+text = "Du svarade rätt på 4 av 6 frågor på första försöket."
 label_settings = ExtResource("2_uqxie")
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Button" type="Button" parent="EndScreen" unique_id=517845442]
 layout_mode = 0
 offset_left = 287.0
-offset_top = 420.0
+offset_top = 468.0
 offset_right = 840.0
-offset_bottom = 551.0
+offset_bottom = 599.0
 theme_override_font_sizes/font_size = 64
 text = "Starta ny omgång"
 
