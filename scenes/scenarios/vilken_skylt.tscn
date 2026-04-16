@@ -255,7 +255,7 @@ correct_selection_ids = PackedStringArray("stopSign")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
 
 [node name="PanelSpawnPoint" type="Node3D" parent="." unique_id=1000000005]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1, 4)
 
 [node name="NoEntrySign" type="Node3D" parent="." unique_id=630112742]
 transform = Transform3D(0.99624634, -0.018864421, -0.084482476, 0.017449753, 0.99969554, -0.017452415, 0.08478598, 0.01591271, 0.9962721, 1.8099957, 0, -3.3762949)
