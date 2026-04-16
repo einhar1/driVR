@@ -117,6 +117,8 @@ func validate_custom_answer(
 	p_selected_index: int = -1,
 	p_correct_index: int = -1,
 ) -> bool:
+	if not p_is_correct and not _wrong_question_indices.has(current_question_index):
+		_wrong_question_indices.append(current_question_index)
 	emit_signal("answer_validated", p_is_correct, p_selected_index, p_correct_index)
 	return p_is_correct
 
