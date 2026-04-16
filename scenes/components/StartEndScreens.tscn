@@ -54,6 +54,15 @@ text = "Tack för att du spelade!"
 label_settings = ExtResource("2_uqxie")
 horizontal_alignment = 1
 
+[node name="ScoreLabel" type="Label" parent="EndScreen" unique_id=123456789]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 150.0
+offset_right = 1152.0
+offset_bottom = 200.0
+label_settings = ExtResource("2_uqxie")
+horizontal_alignment = 1
+
 [node name="Button" type="Button" parent="EndScreen" unique_id=517845442]
 layout_mode = 0
 offset_left = 287.0
