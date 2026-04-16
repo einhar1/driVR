@@ -3,6 +3,15 @@ extends VehicleBody3D
 
 @export var STEER_SPEED: float = 1.5
 @export var STEER_LIMIT: float = 0.6
+@export_group("VR Assisted Steering")
+## Left controller used for manual steering blend while auto-drive is active.
+@export var left_controller_path: NodePath = ^"DriversSeatAnchor/XROrigin3D/XRController3D_left"
+## Maximum manual steering offset in degrees added on top of auto-drive steering.
+@export_range(0.0, 12.0, 0.1) var manual_steer_limit_degrees: float = 3.0
+## Deadzone for left-stick X input to avoid drift.
+@export_range(0.0, 0.9, 0.01) var manual_steer_deadzone: float = 0.2
+## Smoothing speed for manual steering input blending.
+@export_range(0.1, 12.0, 0.1) var manual_steer_response_speed: float = 6.0
 @export_group("Engine Audio")
 ## AudioStreamPlayer3D that plays the one-shot engine start-up sound.
 @export var startup_player_path: NodePath
@@ -26,6 +35,7 @@ extends VehicleBody3D
 @export_range(-80.0, 24.0, 0.1) var running_volume_db_max: float = -4.0
 var steer_target: float = 0.0
 @onready var auto_driver: Node = get_node_or_null("AutoDriver")
+@onready var _left_controller: XRController3D = get_node_or_null(left_controller_path) as XRController3D
 @onready var _speed_label: Label = get_node_or_null("Hud/speed") as Label
 @onready var _startup_player: AudioStreamPlayer3D = get_node_or_null(startup_player_path) as AudioStreamPlayer3D
 @onready var _running_player: AudioStreamPlayer3D = get_node_or_null(running_player_path) as AudioStreamPlayer3D
@@ -33,6 +43,7 @@ var steer_target: float = 0.0
 var _engine_audio_started: bool = false
 var _startup_end_time_msec: int = -1
 var _engine_audio_enabled: bool = true
+var _manual_steer_input: float = 0.0
 
 
 ## Applies only the autonomous driving commands required by the quiz experience.
@@ -50,17 +61,38 @@ func _physics_process(p_delta: float) -> void:
 
 	engine_force = 0.0
 	brake = 0.0
+	_manual_steer_input = move_toward(_manual_steer_input, 0.0, manual_steer_response_speed * p_delta)
 	steering = move_toward(steering, 0.0, STEER_SPEED * p_delta)
 
 
 ## Applies steering, throttle, and braking from the AutoDriver child node.
 func _apply_auto_drive(p_delta: float) -> void:
 	var auto_steer_target: float = clamp(float(auto_driver.steering_command), -STEER_LIMIT, STEER_LIMIT)
-	steering = move_toward(steering, auto_steer_target, STEER_SPEED * p_delta)
+	var manual_steer_offset: float = _compute_manual_steer_offset(p_delta)
+	var blended_steer_target: float = clamp(auto_steer_target + manual_steer_offset, -STEER_LIMIT, STEER_LIMIT)
+	steering = move_toward(steering, blended_steer_target, STEER_SPEED * p_delta)
 	engine_force = float(auto_driver.engine_force_command)
 	brake = clamp(float(auto_driver.brake_command), 0.0, 3.0)
 	$wheal2.wheel_friction_slip = 3
 	$wheal3.wheel_friction_slip = 3
+
+
+## Returns a small steering offset from the left controller primary-stick X axis.
+func _compute_manual_steer_offset(p_delta: float) -> float:
+	if not is_instance_valid(_left_controller):
+		_manual_steer_input = move_toward(_manual_steer_input, 0.0, manual_steer_response_speed * p_delta)
+		return 0.0
+
+	var stick_axis: float = - _left_controller.get_vector2("primary").x
+	var target_input: float = 0.0
+	var axis_magnitude: float = absf(stick_axis)
+	if axis_magnitude > manual_steer_deadzone:
+		var normalized_input: float = (axis_magnitude - manual_steer_deadzone) / max(1.0 - manual_steer_deadzone, 0.0001)
+		target_input = signf(stick_axis) * clamp(normalized_input, 0.0, 1.0)
+
+	_manual_steer_input = move_toward(_manual_steer_input, target_input, manual_steer_response_speed * p_delta)
+	var manual_steer_limit_radians: float = deg_to_rad(manual_steer_limit_degrees)
+	return _manual_steer_input * manual_steer_limit_radians
 
 
 func traction(p_speed: float) -> void:
