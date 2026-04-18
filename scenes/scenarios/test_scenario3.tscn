@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://cyutg86bg1yie" path="res://assets/objects/modular_road_signs/modular_russian_road_signs_pack_urban_7.png" id="12_vs4xd"]
 [ext_resource type="PackedScene" uid="uid://iyi1tlht1hwk" path="res://assets/environment/rural/GLTF format/fence_planksDouble.glb" id="13_cpayk"]
 [ext_resource type="PackedScene" uid="uid://xrsteifyrmb1" path="res://assets/environment/rural/GLTF format/fence_bendCenter.glb" id="14_j00cj"]
+[ext_resource type="PackedScene" uid="uid://be5hdoqtupxmq" path="res://assets/environment/tree low poly/Fall Tree.glb" id="15_bxad3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6cbni"]
 albedo_color = Color(0.4, 0.4, 0.4, 1)
@@ -391,6 +392,9 @@ transform = Transform3D(0.16048001, 0, -1.9998856, 0, 3, 0, 14.999142, 0, 0.0213
 [node name="fence_planksDouble5" parent="." unique_id=1526298921 instance=ExtResource("13_cpayk")]
 transform = Transform3D(0.20074101, 0, 1.9999447, 0, 3, 0, -26.999252, 0, 0.014869704, 8.411481, 0.14503819, 17.550556)
 
+[node name="fence_planksDouble13" parent="." unique_id=1889382133 instance=ExtResource("13_cpayk")]
+transform = Transform3D(0.20074101, 0, 1.9999447, 0, 3, 0, -26.999252, 0, 0.014869704, 8.411481, 0.14503819, 34.220848)
+
 [node name="fence_planksDouble6" parent="." unique_id=1808600619 instance=ExtResource("13_cpayk")]
 transform = Transform3D(-26.988611, 0, -0.058076754, 0, 3, 0, 0.78403616, 0, -1.9991565, -7.3619657, 0.14503819, 0.58222044)
 
@@ -406,6 +410,9 @@ transform = Transform3D(-26.988611, 0, -0.058076754, 0, 3, 0, 0.78403616, 0, -1.
 [node name="fence_planksDouble4" parent="." unique_id=472000519 instance=ExtResource("13_cpayk")]
 transform = Transform3D(-19.99348, 0, -0.051063057, 0, 3, 0, 0.51063055, 0, -1.999348, 35.001698, 0.16757709, 0.11469105)
 
+[node name="fence_planksDouble15" parent="." unique_id=544620096 instance=ExtResource("13_cpayk")]
+transform = Transform3D(-19.99348, 0, -0.051063057, 0, 3, 0, 0.51063055, 0, -1.999348, 35.001698, 0.16757709, 0.11469105)
+
 [node name="fence_planksDouble8" parent="." unique_id=802581869 instance=ExtResource("13_cpayk")]
 transform = Transform3D(19.97248, 0, 0.10488144, 0, 3, 0, -1.0488144, 0, 1.9972482, 37.228115, 0.16757709, -16.271893)
 
@@ -418,6 +425,9 @@ transform = Transform3D(0.07416916, 0, 1.9999913, 0, 3, 0, -24.999891, 0, 0.0059
 [node name="fence_planksDouble3" parent="." unique_id=1900901884 instance=ExtResource("13_cpayk")]
 transform = Transform3D(0.16048001, 0, -1.9998856, 0, 3, 0, 14.999142, 0, 0.021397334, 22.314787, 0.14503819, 26.463367)
 
+[node name="fence_planksDouble14" parent="." unique_id=1700341424 instance=ExtResource("13_cpayk")]
+transform = Transform3D(0.16048001, 0, -1.9998856, 0, 3, 0, 14.999142, 0, 0.021397334, 22.314787, 0.14503819, 40.155502)
+
 [node name="fence_bendCenter2" parent="." unique_id=1359975615 instance=ExtResource("14_j00cj")]
 transform = Transform3D(0.61856097, 0, 1.4677689, 0, 3, 0, -2.9355378, 0, 0.30928048, 24.014845, 0.159751, 2.6169877)
 
@@ -429,3 +439,45 @@ transform = Transform3D(-0.4285601, 0, -1.4846158, 0, 3, 0, 2.9692316, 0, -0.214
 
 [node name="fence_bendCenter3" parent="." unique_id=935029748 instance=ExtResource("14_j00cj")]
 transform = Transform3D(0.066453576, 0.11757495, -1.4984792, 0.058845762, -2.997168, -0.05813922, -2.9986863, -0.05621043, -0.034348425, 6.850071, 0.90431976, 2.6298091)
+
+[node name="Fall Tree" parent="." unique_id=958900952 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.71800387, 0, 0.35280374, 0, 0.8, 0, -0.35280374, 0, 0.71800387, -9.560487, 3.074724, 5.2250404)
+
+[node name="Fall Tree4" parent="." unique_id=1050585976 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.40988612, 0, -0.68701774, 0, 0.8, 0, 0.68701774, 0, 0.40988612, -16.75868, 3.185671, 5.2250404)
+
+[node name="Fall Tree2" parent="." unique_id=259656005 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.7614855, 0, 0.24523418, 0, 0.8, 0, -0.24523418, 0, 0.7614855, 2.0962696, 3.1030374, 4.3000593)
+
+[node name="Fall Tree3" parent="." unique_id=1165734469 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 3.1803389, 3.1030374, 16.74919)
+
+[node name="Fall Tree5" parent="." unique_id=207946240 instance=ExtResource("15_bxad3")]
+transform = Transform3D(-0.029510323, 0, -0.7994556, 0, 0.8, 0, 0.7994556, 0, -0.029510323, 25.878979, 3.1030374, 15.763357)
+
+[node name="Fall Tree6" parent="." unique_id=930585214 instance=ExtResource("15_bxad3")]
+transform = Transform3D(-0.029510323, 0, -0.7994556, 0, 0.8, 0, 0.7994556, 0, -0.029510323, 25.878979, 3.005838, 5.458953)
+
+[node name="Fall Tree8" parent="." unique_id=384062392 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.11603759, 0, -0.79153985, 0, 0.80000013, 0, 0.79153985, 0, 0.11603759, 27.844358, 2.8648405, -19.897427)
+
+[node name="Fall Tree11" parent="." unique_id=1195717830 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.11603759, 0, -0.79153985, 0, 0.80000013, 0, 0.79153985, 0, 0.11603759, 2.1277828, 2.8648405, -19.897427)
+
+[node name="Fall Tree13" parent="." unique_id=138779732 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.7934427, 0, -0.102219485, 0, 0.80000025, 0, 0.102219485, 0, 0.7934427, -11.043205, 2.8648405, -20.488945)
+
+[node name="Fall Tree14" parent="." unique_id=626909867 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.56099635, 0, 0.57033616, 0, 0.8000002, 0, -0.57033616, 0, 0.56099635, -24.352919, 2.8648405, -19.897427)
+
+[node name="Fall Tree12" parent="." unique_id=724143052 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.11603759, 0, -0.79153985, 0, 0.80000013, 0, 0.79153985, 0, 0.11603759, 4.607114, 2.8648405, -26.872618)
+
+[node name="Fall Tree10" parent="." unique_id=1848125233 instance=ExtResource("15_bxad3")]
+transform = Transform3D(0.070906825, 0, -0.79685146, 0, 0.80000013, 0, 0.79685146, 0, 0.070906825, 37.72599, 2.6225867, -19.897427)
+
+[node name="Fall Tree9" parent="." unique_id=580806151 instance=ExtResource("15_bxad3")]
+transform = Transform3D(-0.029510323, 0, -0.7994556, 0, 0.8, 0, 0.7994556, 0, -0.029510323, 29.124226, 3.005838, -28.0072)
+
+[node name="Fall Tree7" parent="." unique_id=239806478 instance=ExtResource("15_bxad3")]
+transform = Transform3D(-0.029510323, 0, -0.7994556, 0, 0.8, 0, 0.7994556, 0, -0.029510323, 33.862747, 2.885109, 3.8890715)
