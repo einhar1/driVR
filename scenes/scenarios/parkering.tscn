@@ -1,16 +1,20 @@
 [gd_scene format=3 uid="uid://bhcfk3bjh0s3k"]
 
-[ext_resource type="Texture2D" uid="uid://btcflb6oa8efw" path="res://assets/textures/Floor_1m x 1m.png" id="1_3go5b"]
 [ext_resource type="Script" uid="uid://bkcs6n8i7q30a" path="res://scripts/scenarios/point_select_scenario.gd" id="1_pwhbx"]
+[ext_resource type="Texture2D" uid="uid://ca38gxmv3wipr" path="res://assets/textures/mossy_cobblestone.webp" id="2_77bi5"]
 [ext_resource type="Script" uid="uid://bgmxg26pbs61k" path="res://addons/road-generator/nodes/road_manager.gd" id="2_vc3tq"]
 [ext_resource type="Script" uid="uid://8rexspiwygyx" path="res://addons/road-generator/nodes/road_container.gd" id="3_5a5wi"]
 [ext_resource type="Script" uid="uid://duqa0xc87gd6a" path="res://addons/road-generator/nodes/road_point.gd" id="4_pwhbx"]
 [ext_resource type="PackedScene" uid="uid://nsvttjhht1sj" path="res://scenes/components/Doge_npc.tscn" id="5_5obwr"]
 [ext_resource type="Material" uid="uid://dpashsuk5lr4x" path="res://addons/road-generator/resources/road_texture.material" id="5_77bi5"]
 [ext_resource type="Script" uid="uid://1q1682ce700f" path="res://scripts/scenarios/point_select_target.gd" id="7_5obwr"]
+[ext_resource type="PackedScene" uid="uid://iyi1tlht1hwk" path="res://assets/environment/rural/GLTF format/fence_planksDouble.glb" id="9_k4ob4"]
+[ext_resource type="PackedScene" uid="uid://be5hdoqtupxmq" path="res://assets/environment/tree low poly/Fall Tree.glb" id="11_iwrkx"]
+[ext_resource type="PackedScene" uid="uid://crdrkxlb7dqj5" path="res://assets/environment/tree low poly/Tree (2).glb" id="11_k4ob4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x6krw"]
-albedo_texture = ExtResource("1_3go5b")
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+albedo_texture = ExtResource("2_77bi5")
 uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_vc3tq"]
@@ -26,7 +30,6 @@ size = Vector3(1.9175415, 1.7988281, 4.7373657)
 [node name="Parkering" type="Node3D" unique_id=1335064262]
 script = ExtResource("1_pwhbx")
 correct_selection_ids = PackedStringArray("car_2")
-allow_retry_after_incorrect = null
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=516828348]
 metadata/_edit_lock_ = true
@@ -118,3 +121,66 @@ scenario_root_path = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="car3/SelectableTarget" unique_id=1740631630]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01626587, 0.39941406, -0.01260376)
 shape = SubResource("BoxShape3D_77bi5")
+
+[node name="fence_planksDouble2" parent="." unique_id=1889382133 instance=ExtResource("9_k4ob4")]
+transform = Transform3D(27, 0, 0, 0, 4, 0, 0, 0, 2, 12.611755, 0.30000192, -8.121706)
+
+[node name="fence_planksDouble5" parent="." unique_id=1355310911 instance=ExtResource("9_k4ob4")]
+transform = Transform3D(-26.999912, 0, 0.0051314253, 0, 4, 0, -0.06927422, 0, -1.9999934, 4.4317265, 0.30000192, 6.6891193)
+
+[node name="fence_planksDouble7" parent="." unique_id=1812127130 instance=ExtResource("9_k4ob4")]
+transform = Transform3D(-26.999912, 0, 0.0051314253, 0, 4, 0, -0.06927422, 0, -1.9999934, -12.397909, 0.30000192, 6.6891193)
+
+[node name="fence_planksDouble6" parent="." unique_id=903737155 instance=ExtResource("9_k4ob4")]
+transform = Transform3D(-26.999912, 0, 0.0051314253, 0, 4, 0, -0.06927422, 0, -1.9999934, 29.315617, 0.30000192, 6.6891193)
+
+[node name="fence_planksDouble4" parent="." unique_id=2075460184 instance=ExtResource("9_k4ob4")]
+transform = Transform3D(27, 0, 0, 0, 4, 0, 0, 0, 2, 29.327555, 0.30000192, -8.121706)
+
+[node name="fence_planksDouble3" parent="." unique_id=970150079 instance=ExtResource("9_k4ob4")]
+transform = Transform3D(27, 0, 0, 0, 4, 0, 0, 0, 2, -12.59299, 0.30000192, -8.121706)
+
+[node name="Fall Tree" parent="." unique_id=958900952 instance=ExtResource("11_iwrkx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.419632, 3.503323, -23.433815)
+
+[node name="Fall Tree4" parent="." unique_id=861851042 instance=ExtResource("11_iwrkx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.628317, 3.503323, -23.433815)
+
+[node name="Fall Tree5" parent="." unique_id=172738396 instance=ExtResource("11_iwrkx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.628317, 3.4262457, 18.715302)
+
+[node name="Fall Tree7" parent="." unique_id=1433754329 instance=ExtResource("11_iwrkx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.7023945, 3.4262457, 14.067192)
+
+[node name="Fall Tree6" parent="." unique_id=566005746 instance=ExtResource("11_iwrkx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.561453, 3.4262457, 28.173763)
+
+[node name="Fall Tree2" parent="." unique_id=39646983 instance=ExtResource("11_iwrkx")]
+transform = Transform3D(0.94480604, 0, -0.32763016, 0, 1, 0, 0.32763016, 0, 0.94480604, -4.872698, 3.7316136, -22.316355)
+
+[node name="Tree (2)" parent="." unique_id=2039611557 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.4695921, 0, -0.17170691, 0, 0.5, 0, 0.17170691, 0, 0.4695921, 2.5764818, 0, -22.558325)
+
+[node name="Tree (2)4" parent="." unique_id=736317485 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.4695921, 0, -0.17170691, 0, 0.5, 0, 0.17170691, 0, 0.4695921, -23.025288, 0, -27.867926)
+
+[node name="Tree (2)5" parent="." unique_id=1092422370 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.4695921, 0, -0.17170691, 0, 0.5, 0, 0.17170691, 0, 0.4695921, -23.025288, 0, 24.015093)
+
+[node name="Tree (2)6" parent="." unique_id=45251335 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.13853994, 0, -0.48042345, 0, 0.5, 0, 0.48042345, 0, 0.13853994, -6.5913963, 0, 28.00097)
+
+[node name="Tree (2)7" parent="." unique_id=736079309 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.13853994, 0, -0.48042345, 0, 0.5, 0, 0.48042345, 0, 0.13853994, 11.041966, 0, 28.00097)
+
+[node name="Tree (2)8" parent="." unique_id=299032303 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.13853994, 0, -0.48042345, 0, 0.5, 0, 0.48042345, 0, 0.13853994, 21.99588, 0, 17.277119)
+
+[node name="Tree (2)3" parent="." unique_id=436461408 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.4695921, 0, -0.17170691, 0, 0.5, 0, 0.17170691, 0, 0.4695921, 32.03711, 0, -36.95397)
+
+[node name="Tree (2)9" parent="." unique_id=2009395181 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.4695921, 0, -0.17170691, 0, 0.5, 0, 0.17170691, 0, 0.4695921, 36.46085, 0, -24.238678)
+
+[node name="Tree (2)2" parent="." unique_id=697456583 instance=ExtResource("11_k4ob4")]
+transform = Transform3D(0.25076294, 0, 0.43257132, 0, 0.5, 0, -0.43257132, 0, 0.25076294, 13.707665, 0, -28.967108)
