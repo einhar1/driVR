@@ -249,7 +249,7 @@ size = Vector3(100, 1, 100)
 
 [node name="vilken_skylt" type="Node3D" unique_id=1000000000]
 script = ExtResource("2_scn")
-correct_selection_ids = PackedStringArray("stopSign")
+correct_selection_ids = PackedStringArray("noEntry")
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=1000000004]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)

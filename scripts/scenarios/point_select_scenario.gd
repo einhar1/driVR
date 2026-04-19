@@ -8,10 +8,13 @@ class_name PointSelectScenario
 @export var correct_selection_ids: PackedStringArray = PackedStringArray()
 ## When disabled, the first incorrect click locks the scenario.
 @export var allow_retry_after_incorrect: bool = true
+## Delay in seconds before accepting another click after a wrong answer.
+@export_range(0.0, 3.0, 0.05) var post_wrong_answer_delay_seconds: float = 0.5
 
 var _question_manager: QuestionManager = null
 var _selected_ids: PackedStringArray = PackedStringArray()
 var _selection_completed: bool = false
+var _input_locked: bool = false
 
 
 func _ready() -> void:
@@ -27,6 +30,10 @@ func _ready() -> void:
 
 ## Registers a target click and returns [code]true[/code] when the click was accepted.
 func submit_selection(p_selection_id: String) -> bool:
+	if _input_locked:
+		print("PointSelectScenario: Selection ignored because input is locked (waiting for delay)")
+		return false
+
 	if _selection_completed:
 		print("PointSelectScenario: Selection ignored because the scenario is already complete")
 		return false
@@ -56,7 +63,9 @@ func submit_selection(p_selection_id: String) -> bool:
 
 	print("PointSelectScenario: Incorrect selection '%s'" % p_selection_id)
 	_validate_custom_answer(false)
-	if not allow_retry_after_incorrect:
+	if allow_retry_after_incorrect:
+		await _apply_wrong_answer_delay()
+	else:
 		_selection_completed = true
 	return false
 
@@ -68,3 +77,11 @@ func _validate_custom_answer(p_is_correct: bool) -> void:
 		return
 
 	_question_manager.validate_custom_answer(p_is_correct, -1, -1)
+
+
+## Applies delay after a wrong answer and unlocks input.
+func _apply_wrong_answer_delay() -> void:
+	_input_locked = true
+	if post_wrong_answer_delay_seconds > 0.0:
+		await get_tree().create_timer(post_wrong_answer_delay_seconds).timeout
+	_input_locked = false

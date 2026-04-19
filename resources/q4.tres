@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_qdata")
-question = "Vilken skylt betyder att stanna?"
+question = "Vilken skylt betyder förbud mot infart med fordon?"
 options = null
 scene_path = "uid://b63527rb54s2l"
 answer_outcomes = null

@@ -39,8 +39,13 @@ func _on_pointer_event(p_event: XRToolsPointerEvent) -> void:
 		push_error("PointSelectTarget: Scenario root not found for %s" % name)
 		return
 
-	var was_accepted: bool = _scenario_root.submit_selection(selection_id)
-	print("PointSelectTarget: Pressed '%s'" % selection_id)
+	Callable(self, "_submit_selection_async").bind(selection_id).call_deferred()
+
+
+## Async wrapper to handle the coroutine result.
+func _submit_selection_async(p_selection_id: String) -> void:
+	var was_accepted: bool = await _scenario_root.submit_selection(p_selection_id)
+	print("PointSelectTarget: Pressed '%s'" % p_selection_id)
 	if lock_after_successful_selection and was_accepted:
 		_selection_locked = true
 
