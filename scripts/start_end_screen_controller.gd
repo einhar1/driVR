@@ -76,7 +76,7 @@ func _on_quiz_completed() -> void:
 	var total_questions: int = _question_manager.get_total_questions()
 	var wrong_answers: int = _question_manager.get_wrong_answer_count()
 	var correct_answers: int = total_questions - wrong_answers
-	_score_label.text = "Du svarade rätt på %d av %d frågor." % [correct_answers, total_questions]
+	_score_label.text = "Du svarade rätt på %d av %d frågor på första försöket." % [correct_answers, total_questions]
 	_show_end_screen()
 
 
