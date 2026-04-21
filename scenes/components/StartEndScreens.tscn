@@ -14,7 +14,6 @@ script = ExtResource("1_cdd2k")
 
 [node name="StartScreen" type="Panel" parent="." unique_id=1348294939]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -41,8 +40,18 @@ offset_bottom = 384.0
 theme_override_font_sizes/font_size = 64
 text = "Starta"
 
+[node name="ResetPositionButton" type="Button" parent="StartScreen" unique_id=1901947924]
+layout_mode = 0
+offset_left = 451.0
+offset_top = 400.0
+offset_right = 676.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 32
+text = "Återställ position"
+
 [node name="EndScreen" type="Panel" parent="." unique_id=721307903]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -86,4 +95,5 @@ theme_override_font_sizes/font_size = 64
 text = "Starta ny omgång"
 
 [connection signal="pressed" from="StartScreen/Button" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="StartScreen/ResetPositionButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="EndScreen/Button" to="." method="_on_restart_button_pressed"]

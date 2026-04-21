@@ -69,6 +69,13 @@ func _on_xr_started() -> void:
 	_has_applied_spawn_alignment = true
 
 
+## Resets the player position and heading alignment. Can be called at any time.
+func reset_player_position() -> void:
+	await _align_origin_for_spawn()
+	_align_heading_for_spawn()
+	await _align_origin_for_spawn()
+
+
 ## Samples tracking over multiple frames and applies one averaged alignment.
 func _align_origin_for_spawn() -> void:
 	var xr_origin: XROrigin3D = get_node_or_null(xr_origin_path) as XROrigin3D
