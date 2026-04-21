@@ -23,12 +23,14 @@ extends XRToolsStartXR
 @export_range(-180.0, 180.0, 1.0) var heading_offset_degrees: float = 0.0
 
 var _camera_baseline_local_position: Vector3 = Vector3.ZERO
+var _origin_baseline_local_position: Vector3 = Vector3.ZERO
 var _has_applied_spawn_alignment: bool = false
 var _desktop_debug_added: bool = false
 
 
 func _ready() -> void:
 	_has_applied_spawn_alignment = false
+	_cache_origin_baseline()
 	_cache_camera_baseline()
 	xr_started.connect(_on_xr_started)
 	xr_failed_to_initialize.connect(_add_desktop_debug)
@@ -98,7 +100,15 @@ func _align_origin_for_spawn() -> void:
 		return
 
 	var offset_in_parent_space: Vector3 = xr_origin.transform.basis * average_local_offset
-	xr_origin.position -= offset_in_parent_space
+	xr_origin.position = _origin_baseline_local_position - offset_in_parent_space
+
+
+## Caches authored origin local position used as the stable reset baseline.
+func _cache_origin_baseline() -> void:
+	var xr_origin: XROrigin3D = get_node_or_null(xr_origin_path) as XROrigin3D
+	if xr_origin == null:
+		return
+	_origin_baseline_local_position = xr_origin.position
 
 
 ## Caches the authored camera local pose before tracking updates it.

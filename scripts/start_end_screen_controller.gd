@@ -68,6 +68,19 @@ func _on_restart_button_pressed() -> void:
 	# _on_quiz_started handles the rest.
 
 
+## Called by the Återställ position button.
+func _on_reset_button_pressed() -> void:
+	var current_scene: Node = get_tree().current_scene
+	if current_scene == null:
+		push_warning("StartEndScreenController: Cannot reset position because current_scene is null")
+		return
+
+	if current_scene.has_method("reset_player_position"):
+		current_scene.call("reset_player_position")
+	else:
+		push_warning("StartEndScreenController: Current scene does not implement reset_player_position()")
+
+
 func _on_quiz_started() -> void:
 	_hide_all()
 
