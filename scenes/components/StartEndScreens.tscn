@@ -94,6 +94,16 @@ offset_bottom = 599.0
 theme_override_font_sizes/font_size = 64
 text = "Starta ny omgång"
 
+[node name="ResetPositionButton" type="Button" parent="EndScreen" unique_id=233111866]
+layout_mode = 0
+offset_left = 451.0
+offset_top = 400.0
+offset_right = 676.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 32
+text = "Återställ position"
+
 [connection signal="pressed" from="StartScreen/Button" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="StartScreen/ResetPositionButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="EndScreen/Button" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="EndScreen/ResetPositionButton" to="." method="_on_reset_button_pressed"]
