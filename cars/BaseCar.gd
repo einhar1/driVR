@@ -1,6 +1,9 @@
 extends VehicleBody3D
 
 
+const SILENT_VOLUME_DB: float = -80.0
+
+
 @export var STEER_SPEED: float = 1.5
 @export var STEER_LIMIT: float = 0.6
 @export_group("VR Assisted Steering")
@@ -33,17 +36,27 @@ extends VehicleBody3D
 @export_range(-80.0, 24.0, 0.1) var running_volume_db_min: float = -24.0
 ## Volume (dB) of the running loop at max speed. Raise toward 0 to increase overall engine loudness.
 @export_range(-80.0, 24.0, 0.1) var running_volume_db_max: float = -4.0
+@export_group("Horn Audio")
+## AudioStreamPlayer3D that plays the horn one-shot when the in-car button is pressed.
+@export var horn_player_path: NodePath
+## Target horn volume when the horn is fully active.
+@export_range(-24.0, 12.0, 0.1) var horn_volume_db: float = 0.0
+## Time to fade the horn loop out when the player releases the button.
+@export_range(0.0, 1.0, 0.01) var horn_fade_out_seconds: float = 0.08
 var steer_target: float = 0.0
 @onready var auto_driver: Node = get_node_or_null("AutoDriver")
 @onready var _left_controller: XRController3D = get_node_or_null(left_controller_path) as XRController3D
 @onready var _speed_label: Label = get_node_or_null("Hud/speed") as Label
 @onready var _startup_player: AudioStreamPlayer3D = get_node_or_null(startup_player_path) as AudioStreamPlayer3D
 @onready var _running_player: AudioStreamPlayer3D = get_node_or_null(running_player_path) as AudioStreamPlayer3D
+@onready var _horn_player: AudioStreamPlayer3D = get_node_or_null(horn_player_path) as AudioStreamPlayer3D
 
 var _engine_audio_started: bool = false
 var _startup_end_time_msec: int = -1
 var _engine_audio_enabled: bool = true
 var _manual_steer_input: float = 0.0
+var _horn_active: bool = false
+var _horn_fade_tween: Tween = null
 
 
 ## Applies only the autonomous driving commands required by the quiz experience.
@@ -116,6 +129,74 @@ func set_engine_audio_enabled(p_enabled: bool) -> void:
 		if _running_player.playing:
 			_running_player.stop()
 		_set_running_mix(0.0)
+
+
+## Starts the horn loop immediately if a horn player is configured.
+func honk() -> void:
+	start_horn()
+
+
+## Starts the horn loop immediately if a horn player is configured.
+func start_horn() -> void:
+	if not is_instance_valid(_horn_player):
+		push_warning("BaseCar: horn_player_path is not configured on %s" % name)
+		return
+
+	_horn_active = true
+	_kill_horn_fade_tween()
+	_horn_player.volume_db = horn_volume_db
+
+	if not _horn_player.playing:
+		_horn_player.play()
+
+
+## Starts fading the horn loop out and stops it when the fade completes.
+func stop_horn() -> void:
+	if not is_instance_valid(_horn_player):
+		return
+
+	_horn_active = false
+	if not _horn_player.playing:
+		return
+
+	_kill_horn_fade_tween()
+
+	if horn_fade_out_seconds <= 0.0:
+		_stop_horn_player()
+		return
+
+	_horn_fade_tween = create_tween()
+	_horn_fade_tween.set_trans(Tween.TRANS_SINE)
+	_horn_fade_tween.set_ease(Tween.EASE_IN)
+	_horn_fade_tween.tween_property(_horn_player, "volume_db", SILENT_VOLUME_DB, horn_fade_out_seconds)
+	_horn_fade_tween.tween_callback(_stop_horn_player)
+
+
+## Handles the XR button pressed signal from the in-car horn button.
+func trigger_horn_from_button(_p_button: XRToolsInteractableAreaButton) -> void:
+	start_horn()
+
+
+## Handles the XR button released signal from the in-car horn button.
+func stop_horn_from_button(_p_button: XRToolsInteractableAreaButton) -> void:
+	stop_horn()
+
+
+## Stops any active horn volume tween before starting another horn transition.
+func _kill_horn_fade_tween() -> void:
+	if is_instance_valid(_horn_fade_tween):
+		_horn_fade_tween.kill()
+	_horn_fade_tween = null
+
+
+## Stops horn playback once the fade-out has completed.
+func _stop_horn_player() -> void:
+	if _horn_active or not is_instance_valid(_horn_player):
+		return
+
+	_horn_player.stop()
+	_horn_player.volume_db = horn_volume_db
+	_horn_fade_tween = null
 
 
 ## Updates startup and running engine audio based on vehicle speed.

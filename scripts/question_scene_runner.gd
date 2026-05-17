@@ -239,22 +239,52 @@ func _set_car_visuals_visible(p_visible: bool) -> void:
 		return
 
 	var xr_anchor: Node = _persistent_car.get_node_or_null("DriversSeatAnchor")
+	var xr_origin: Node = _persistent_car.get_node_or_null("DriversSeatAnchor/XROrigin3D")
 	var stack: Array[Node] = []
 	for child_variant: Variant in _persistent_car.get_children():
 		if child_variant is Node:
-			stack.append(child_variant as Node)
+			var child_node: Node = child_variant as Node
+			if child_node == xr_anchor:
+				for xr_child_variant: Variant in child_node.get_children():
+					if xr_child_variant is Node:
+						var xr_child: Node = xr_child_variant as Node
+						if xr_child != xr_origin:
+							stack.append(xr_child)
+				continue
+
+			stack.append(child_node)
 
 	while not stack.is_empty():
 		var node: Node = stack.pop_back()
-		if node == xr_anchor:
+		if node == xr_anchor or node == xr_origin:
 			continue
+
+		if node is Node3D and _is_descendant_of(node, xr_anchor):
+			(node as Node3D).visible = p_visible
 
 		if node is VisualInstance3D:
 			(node as VisualInstance3D).visible = p_visible
+		elif node is Area3D:
+			(node as Area3D).monitoring = p_visible
+			(node as Area3D).monitorable = p_visible
 
 		for child_variant: Variant in node.get_children():
 			if child_variant is Node:
 				stack.append(child_variant as Node)
+
+
+## Returns true when p_node belongs to the subtree rooted at p_ancestor.
+func _is_descendant_of(p_node: Node, p_ancestor: Node) -> bool:
+	if not is_instance_valid(p_node) or not is_instance_valid(p_ancestor):
+		return false
+
+	var current_node: Node = p_node.get_parent()
+	while is_instance_valid(current_node):
+		if current_node == p_ancestor:
+			return true
+		current_node = current_node.get_parent()
+
+	return false
 
 
 ## Caches the panel transform relative to the car using the authored scene state.
